@@ -1,0 +1,57 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>FrOSCon 2020 - Cloud Edition</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="robots" content="index,follow" />
+		<meta name="author" content="FrOSCon e.V." />
+		<meta name="date" content="2020-08-28" />
+		<meta name="description" content="FrOSCon 2020 - Cloud Edition" />
+		<meta name="keywords" content="FrOSCon, Open Source, Free Software, Conference" />
+		<meta name="DC.Date" content="2020-08-28" />
+		<meta name="DC.Language" content="de" />
+		<meta name="DC.Coverage" content="FrOSCon 2020 - Cloud Edition" />
+		<meta name="DC.Title" content="FrOSCon 2020 - Cloud Edition" />
+		<meta name="DC.Description" content="Landing Page der FrOSCon 2020 - Cloud Edition" />
+		<link rel="shortcut icon" href="{% static "favicon.ico" %}" type="image/x-icon">
+		<meta name="http-equiv" content="text/javascript" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+		<link rel="stylesheet" type="text/css" href="{% static "styles/index.css" %}" />
+		<link rel="stylesheet" type="text/css" href="{% static "styles/bootstrap.min.css" %}" />
+	</head>
+
+	<body>
+		<form method="post" action="{% url 'set_language' %}" id="langform">
+			{% csrf_token %}
+			<input name="next" type="hidden" value="" />
+			<input name="language" type="hidden" value="{% if LANGUAGE_CODE == "de" %}en{% else %}de{% endif %}" />
+		<!--	<a class="lang-select" href="#" onclick="document.getElementById('langform').submit();">
+				{% if LANGUAGE_CODE == "de" %}
+				<img src="{% static "images/us.png" %}" alt="en"> English
+				{% else  %}
+				<img src="{% static "images/de.png" %}" alt="en"> Deutsch
+				{% endif %}
+		</a>-->
+		</form>
+
+		{% block header %}
+		<header>
+			<div class="container jumbotron" style="padding: 2px ! important;">
+				<a class="lang-select" href="#" onclick="document.getElementById('langform').submit();">
+						{% if LANGUAGE_CODE == "de" %}
+						<img src="{% static "images/us.png" %}" alt="en"> English
+						{% else  %}
+						<img src="{% static "images/de.png" %}" alt="en"> Deutsch
+						{% endif %}
+				</a>
+				<img class="title-logo mb-3" src="{% static "images/title_logo.jpg" %}" alt="FrOSCon 2020 - Cloud Edition" style="height: 64px" />
+			</div>
+		</header>
+		{% endblock %}
+		{% block content %}{% endblock %}
+
+		{% include "footer.html" %}
+	</body>
+</html>
