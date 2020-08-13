@@ -27,6 +27,9 @@ class Command(BaseCommand):
         if not obj.title_modified:
             obj.title = event['title']
 
+        if not obj.evtype_modified:
+            obj.evtype = event['type'] if event['type'] else 'undefined'
+
         if not obj.room_modified:
             if Room.objects.filter(name=event["room"]).exists():
                 room = Room.objects.get(name=event["room"])

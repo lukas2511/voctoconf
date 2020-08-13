@@ -3,6 +3,7 @@ from bbb.models import Room, RoomStats
 import requests
 import json
 import dateutil.parser
+import traceback
 
 class Command(BaseCommand):
     help = 'Update room statistics'
@@ -23,10 +24,16 @@ class Command(BaseCommand):
                     stats.moderators = int(meetinginfo['moderatorCount'])
                     stats.videocount = int(meetinginfo['videoCount'])
                     stats.listeners = int(meetinginfo['listenerCount'])
-                    presenters = [a for a in meetinginfo['attendees']['attendee'] if a['isPresenter'] == 'true']
+
+                    if isinstance(meetinginfo['attendees']['attendee'], list):
+                        attendees = meetinginfo['attendees']['attendee']
+                    else:
+                        attendees = [meetinginfo['attendees']['attendee']]
+                    presenters = [a for a in attendees if a['isPresenter'] == 'true']
                     if presenters:
                         stats.presenter = presenters[0]['fullName']
 
                 stats.save()
             except:
                 print("Failed refreshing stats for %s" % room.id)
+                traceback.print_exc()

@@ -33,6 +33,8 @@ class Server(models.Model):
     url = models.URLField(blank=False, null=False)
     secret = models.CharField(max_length=200, blank=False, null=False)
 
+    for_workshops = models.BooleanField(default=False)
+
     class Meta:
         verbose_name = 'BigBlueButton Server'
 
@@ -65,7 +67,7 @@ class Room(models.Model):
     logo = models.ImageField('Room branding', upload_to="room-logos", blank=True, null=True)
     slides = models.FileField('Default slides', upload_to="room-logos", blank=True, null=True)
 
-    start_as_guest = models.BooleanField("Allow guests to start the conference", null=False, blank=False, default=True)
+    start_as_guest = models.BooleanField("Allow guests to start the conference", null=False, blank=False, default=False)
 
     mute_on_start = models.BooleanField("Join muted", null=False, blank=False, default=True)
     lock_mics = models.BooleanField("Lock microphones", null=False, blank=False, default=False)

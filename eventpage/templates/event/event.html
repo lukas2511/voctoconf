@@ -16,13 +16,32 @@
 			Ein toller Vortrag<br/>
 			Mensch Mitname<br />
 			<span style='font-size:12px'>Next Up: 18:30 - 19:00 End of the World – Kim Zhou Donald Putin</span>
-			{% if room.bbb and room.bbb.get_stats.running %}<br/><span style='font-size:12px'>{{ room.bbb.get_stats.participants }} Teilnehmer</span>{% endif %}
+			{% if room.bbb and room.bbb.get_stats.running %}<br/><span style='font-size:12px'>Aktuell {{ room.bbb.get_stats.participants }} Teilnehmer</span>{% endif %}
+			{% if room.bbb and not room.bbb.get_stats.running %}<br/><span style='font-size:12px'>Der Raum ist aktuell geschlossen.</span>{% endif %}
 		</div>
 		{% endif %}
 		{% endfor %}
 	</div>
 
 	<h2>Workshops</h2>
+	{% for workshop in workshops|slice:":5" %}
+	{% if workshop.bbb %}
+	<div class="row">
+		<div class="col-sm-10 col-12 py-1">
+			<span style='font-size:12px'>{{ workshop.date }}</span><br/>
+			{{ workshop.title }}<br/>
+			<span style='font-size:12px'>{{ workshop.persons_str }}</span>
+		</div>
+		<div class="col-sm-2 col-12 py-1">
+			<a class="btn btn-{% if workshop.bbb.get_stats.running %}primary{% else %}secondary{% endif %} btn-lg w-100" href="/bbb/{{ workshop.bbb.id }}" role="button">
+				Join
+			</a>
+			{% if workshop.bbb.get_stats.running %}<br/><center><span style='font-size:12px'>{{ workshop.bbb.get_stats.participants }} Teilnehmer</span></center>{% endif %}
+			{% if workshop.bbb and not workshop.bbb.get_stats.running %}<br/><center><span style='font-size:12px'>Der Raum ist aktuell inaktiv</span></center>{% endif %}
+		</div>
+	</div>
+	{% endif %}
+	{% endfor %}
 
 	<h2>Partner</h2>
 </main>
