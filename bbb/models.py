@@ -23,9 +23,9 @@ def bbb_apiurl(url, secret, apicall, params):
 
 def bbb_apicall(url, secret, apicall, params, post_data=None):
     if post_data is not None:
-        ret = requests.post(bbb_apiurl(url, secret, apicall, params), data=post_data, allow_redirects=False)
+        ret = requests.post(bbb_apiurl(url, secret, apicall, params), data=post_data, allow_redirects=False, timeout=5)
     else:
-        ret = requests.get(bbb_apiurl(url, secret, apicall, params), allow_redirects=False)
+        ret = requests.get(bbb_apiurl(url, secret, apicall, params), allow_redirects=False, timeout=5)
     response = xmltodict.parse(ret.text)
     return response["response"]
 
@@ -82,6 +82,12 @@ class Room(models.Model):
 
     class Meta:
         verbose_name = 'BigBlueButton Room'
+
+    def get_stats(self):
+        stats = self.stats.all().order_by('-date')
+        if not stats:
+            return None
+        return stats[0]
 
     def __str__(self):
         return "%s on %s" % (self.name, self.server)
@@ -204,3 +210,22 @@ class Room(models.Model):
             post_data = '<modules><module name="presentation"><document url="%s" filename="default.pdf"/></document></module></modules>' % self.slides.url
 
         return bbb_apicall(self.server.url, self.server.get_secret(), "create", params, post_data)
+
+class RoomStats(models.Model):
+    room = models.ForeignKey(Room, related_name='stats', on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+
+    running = models.BooleanField()
+    moderators = models.IntegerField(default=0)
+    participants = models.IntegerField(default=0)
+    presenter = models.CharField(max_length=100, blank=True, default="")
+
+    recording = models.BooleanField(default=False)
+    voiceparticipants = models.IntegerField(default=0)
+    listeners = models.IntegerField(default=0)
+    videocount = models.IntegerField(default=0)
+
+    creation_date = models.DateTimeField(blank=True, null=True)
+
+    def __str__(self):
+        return "Stats for %s (Collected: %s)" % (self.room.id, self.creation_date)
