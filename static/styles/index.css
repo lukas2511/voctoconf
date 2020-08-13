@@ -1,8 +1,7 @@
-body.de .en{
-display: none;
-}
-body.en .de{
-display: none;
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0px ! important;
 }
 
 a[href].lang-select { color: white; position:absolute; top:0px; right: 0px; padding: .5em; }
@@ -29,10 +28,17 @@ footer{
     background-color: #404040;
     color: #999;
 }
+footer .row {
+  margin: 0px ! important;
+}
+
 footer ul{
     padding-left: 0;
     list-style: none;
-    margin-left: -10px;
+}
+
+footer .col-3 {
+  padding: 0px ! important;
 }
 footer a[href]{ color: #999; }
 footer a[href]:hover{ color: #ccc; text-decoration: none; }

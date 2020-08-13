@@ -21,8 +21,11 @@ def bbb_apiurl(url, secret, apicall, params):
 
     return "%s%sapi/%s?%s" % (url, "?" if not url.endswith("/") else "", apicall, urlparams)
 
-def bbb_apicall(url, secret, apicall, params):
-    ret = requests.get(bbb_apiurl(url, secret, apicall, params), allow_redirects=False)
+def bbb_apicall(url, secret, apicall, params, post_data=None):
+    if post_data is not None:
+        ret = requests.post(bbb_apiurl(url, secret, apicall, params), data=post_data, allow_redirects=False)
+    else:
+        ret = requests.get(bbb_apiurl(url, secret, apicall, params), allow_redirects=False)
     response = xmltodict.parse(ret.text)
     return response["response"]
 
@@ -96,16 +99,16 @@ class Room(models.Model):
             return None
 
     def is_moderator(self, user):
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
 
-        if request.user.is_superuser or request.user.is_staff:
+        if user.is_superuser or user.is_staff:
             return True
 
-        if self.moderators.filter(username=request.user.username).exists():
+        if self.moderators.filter(username=user.username).exists():
             return True
 
-        if self.for_partner.all() and any([(x.owner and x.owner == request.user) for x in self.for_partner.all()]):
+        if self.for_partner.all() and any([(x.owner and x.owner == user) for x in self.for_partner.all()]):
             return True
 
         return False
@@ -130,7 +133,7 @@ class Room(models.Model):
             params['meetingID'] = self.id
             params['password'] = meetinginfo['moderatorPW'] if as_moderator else meetinginfo['attendeePW']
             params['createTime'] = meetinginfo['createTime']
-            if request and request.user.is_authenticated():
+            if request and request.user.is_authenticated:
                 params['fullName'] = request.user.username
                 params['userID'] = request.user.id
             elif name is not None:
@@ -196,4 +199,8 @@ class Room(models.Model):
         params['lockSettingsLockedLayout'] = "true" if self.lock_layout else "false"
         params['guestPolicy'] = self.guest_policy
 
-        return bbb_apicall(self.server.url, self.server.get_secret(), "create", params)
+        post_data = None
+        if self.slides:
+            post_data = '<modules><module name="presentation"><document url="%s" filename="default.pdf"/></document></module></modules>' % self.slides.url
+
+        return bbb_apicall(self.server.url, self.server.get_secret(), "create", params, post_data)
