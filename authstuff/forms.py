@@ -17,7 +17,9 @@ class RegisterForm(forms.Form):
     def clean(self):
         cleaned_data = super().clean()
         username = cleaned_data["username"]
-        if username.startswith("guest-"):
+        if len(cleaned_data["name"]) > 23:
+            raise ValidationError("Usernames can only consist of 23 characters or less")
+        elif username.startswith("guest-"):
             raise ValidationError("Username can not start with guest- prefix")
         elif '<script>' in username:
             raise ValidationError("rly?!")
@@ -34,8 +36,8 @@ class NameForm(forms.Form):
     def clean(self):
         cleaned_data = super().clean()
         username = "guest-%s" % cleaned_data["name"]
-        if len(cleaned_data["name"]) > 20:
-            raise ValidationError("Names can only consist of 20 characters or less")
+        if len(cleaned_data["name"]) > 17:
+            raise ValidationError("Names can only consist of 17 characters or less")
         elif '<script>' in username:
             raise ValidationError("rly?!")
         elif not re.match(r"^[a-z0-9-_]+$", username):
