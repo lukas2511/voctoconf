@@ -19,24 +19,18 @@
 		{% endif %}
 		<div class="row">
 			{% if LANGUAGE_CODE == "de" %}
-			<div class="col-sm-4 col-12 py-1">
-				<a class="btn btn-primary btn-lg w-100" href="#" role="button">Zur Veranstaltung</a>
+			<div class="col-sm-6 col-12 py-1">
+				<a class="btn btn-primary btn-lg w-100" href="/event" role="button">Zur Veranstaltung</a>
 			</div>
-			<div class="col-sm-4 col-12 py-1">
-				<a class="btn btn-primary btn-lg w-100" href="#" role="button">Zu den Vorträgen</a>
-			</div>
-			<div class="col-sm-4 col-12 py-1">
-				<a class="btn btn-primary btn-lg w-100" href="#" role="button">Fahrplan</a>
+			<div class="col-sm-6 col-12 py-1">
+				<a class="btn btn-primary btn-lg w-100" href="/schedule" role="button">Fahrplan</a>
 			</div>
 			{% else %}
-			<div class="col-sm-4 col-12 py-1">
-				<a class="btn btn-primary btn-lg w-100" href="#" role="button">To the Event</a>
+			<div class="col-sm-6 col-12 py-1">
+				<a class="btn btn-primary btn-lg w-100" href="/event" role="button">To the Event</a>
 			</div>
-			<div class="col-sm-4 col-12 py-1">
-				<a class="btn btn-primary btn-lg w-100" href="#" role="button">To the Lectures</a>
-			</div>
-			<div class="col-sm-4 col-12 py-1">
-				<a class="btn btn-primary btn-lg w-100" href="#" role="button">Schedule</a>
+			<div class="col-sm-6 col-12 py-1">
+				<a class="btn btn-primary btn-lg w-100" href="/schedule" role="button">Schedule</a>
 			</div>
 			{% endif %}
 		</div>
