@@ -1,5 +1,6 @@
 from django.db import models
 import bbb.models
+from django.contrib.auth import get_user_model
 
 class Track(models.Model):
     name = models.CharField(max_length=100)
@@ -22,11 +23,16 @@ class Person(models.Model):
     name = models.CharField(max_length=100)
     name_modified = models.BooleanField(default=False)
 
+    user = models.OneToOneField(get_user_model(), related_name='speaker', blank=True, null=True, on_delete=models.SET_NULL)
+
     def __str__(self):
         return "%d: %s" % (self.id, self.name)
 
 class Event(models.Model):
     id = models.IntegerField(primary_key=True)
+
+    hide = models.BooleanField(default=False)
+    bbb = models.ForeignKey(bbb.models.Room, blank=True, null=True, related_name='schedule_events', on_delete=models.SET_NULL)
 
     date = models.DateTimeField()
     date_modified = models.BooleanField(default=False)
@@ -45,6 +51,13 @@ class Event(models.Model):
 
     persons = models.ManyToManyField(Person, related_name='holding', blank=True)
     persons_modified = models.BooleanField(default=False)
+
+    evtype = models.CharField(max_length=200, blank=False, null=False)
+    evtype_modified = models.BooleanField(default=False)
+
+    def persons_str(self):
+        persons = [p.name for p in self.persons.all()]
+        return ", ".join(persons)
 
     def __str__(self):
         return "%d: %s" % (self.id, self.title)
