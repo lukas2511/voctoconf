@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<main class="container">
+	<h2>Vorträge</h2>
+
+	<div class="row">
+		{% for room in event_rooms %}
+		{% if room.bbb or room.stream %}
+		<div class="col-sm-{{ room.view_size }} col-12 py-1">
+			<a class="btn btn-{% if room.bbb and room.bbb.get_stats and not room.bbb.get_stats.running %}secondary{% else %}primary{% endif %} btn-lg w-100" href="{% if room.bbb %}/bbb/{{ room.bbb.id }}{% else %}/stream/{{ room.stream.id }}{% endif %}" role="button">
+				{{ room.name }}
+			</a>
+			<span style='font-size:12px'>18:00 - 18:30</span><br/>
+			Ein toller Vortrag<br/>
+			Mensch Mitname<br />
+			<span style='font-size:12px'>Next Up: 18:30 - 19:00 End of the World – Kim Zhou Donald Putin</span>
+			{% if room.bbb and room.bbb.get_stats.running %}<br/><span style='font-size:12px'>{{ room.bbb.get_stats.participants }} Teilnehmer</span>{% endif %}
+		</div>
+		{% endif %}
+		{% endfor %}
+	</div>
+
+	<h2>Workshops</h2>
+
+	<h2>Partner</h2>
+</main>
+{% endblock %}

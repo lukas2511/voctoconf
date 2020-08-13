@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from authstuff.names import name_required
 from django.http import HttpResponse
+from .models import Room as EventRoom
 
-@name_required
 def event_view(request):
-    return HttpResponse(request.username)
+    context = {}
+    context['event_rooms'] = EventRoom.objects.filter(hide=False).order_by('order')
+    return render(request, "event/event.html", context)
