@@ -1,0 +1,15 @@
+{% extends "bbb/dialog.html" %}
+{% load i18n %}
+
+{% block content %}
+{% if LANGUAGE_CODE == "de" %}
+<h1 class="title">Sitzung geschlossen</h1>
+<div class="text">Du hast die Sitzung verlassen.</div>
+{% else %}
+<h1 class="title">Session closed</h1>
+<div class="text">You have left the session</div>
+{% endif %}
+
+<button class="button" onclick="window.location.href='?noframe=1';"><span class="label">{% if LANGUAGE_CODE == "de" %}Erneut verbinden{% else %}Reconnect{% endif %}</span></button>
+
+{% endblock %}

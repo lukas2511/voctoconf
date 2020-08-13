@@ -6,6 +6,9 @@ from django.conf.urls.static import static
 from django.conf.urls.i18n import urlpatterns as i18n_urlpatterns
 import landingpage.urls
 import chat.urls
+import bbb.urls
+import authstuff.urls
+import eventpage.urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -18,3 +21,6 @@ if settings.DEBUG:
 
 urlpatterns += landingpage.urls.urlpatterns
 urlpatterns += chat.urls.urlpatterns
+urlpatterns += bbb.urls.urlpatterns
+urlpatterns += authstuff.urls.urlpatterns
+urlpatterns += eventpage.urls.urlpatterns

@@ -1,0 +1,22 @@
+{% extends "bbb/dialog.html" %}
+{% load i18n %}
+
+{% block head %}
+<meta http-equiv="refresh" content="5" />
+{% endblock %}
+{% block content %}
+{% if LANGUAGE_CODE == "de" %}
+<h1 class="title">Keine aktive Sitzung gefunden</h1>
+<div class="text">
+	In diesem Raum wurde keine aktive Sitzung gefunden.<br />
+	Bitte versuche es später noch einmal.
+</div>
+{% else %}
+<h1 class="title">No active session</h1>
+<div class="text">
+	No active session has been found.<br />
+	Please try again later.
+</div>
+{% endif %}
+<button class="button" onclick="window.location.reload()"><span class="label">{% if LANGUAGE_CODE == "de" %}Erneut versuchen{% else %}Try again{% endif %}</span></button>
+{% endblock %}

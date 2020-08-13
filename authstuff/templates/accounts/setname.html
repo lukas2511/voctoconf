@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+<main class="container">
+  <h2>{% if LANGUAGE_CODE == "de" %}Event Anmeldung{% else %}Event Login{% endif %}</h2>
+
+  {% if LANGUAGE_CODE == "de" %}
+  <p>
+    Hallo!<br/>
+    Für diese Funktion benötigen wir Namen um die beteiligten auseinanderhalten zu können.<br/>
+    Du musst nicht deinen echten Namen angeben, irgendein ausgedachter reicht auch.<br/>
+    <br/>
+    Solltest du den 'guest-'-Präfix loswerden wollen oder falls dir Rechte für einen
+    BigBlueButton-Raum gegeben werden sollen kannst du dich <a href="/login">hier</a>
+    mit einem Passwort einloggen.
+  </p>
+  {% else %}
+  <p>
+    Hello!<br/>
+    We are requiring names for the requested function to distinguish between the participants.<br/>
+    You don't need to put your real name, something made-up will suffice.<br/>
+    <br/>
+    If you want to get rid of the 'guest-'-prefix or if you should be given permissions for
+    a BigBlueButton-room you can log in with a password right <a href="/login">here</a>.
+  </p>
+  {% endif %}
+
+  {% if form.non_field_errors %}
+  <div class="alert alert-danger" role="alert">
+    {% for error in form.non_field_errors %}{{ error|linebreaksbr }}<br />{% endfor %}
+  </div>
+  {% endif %}
+  <form action="" method="post" class="">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="form-group">
+      <label for="{{ field.id_for_label }}"><b>{{ field.label }}</b></label>
+      {% if field.errors %}
+      <div class="alert alert-danger" role="alert">
+        {% for error in field.errors %}{{ error|linebreaksbr }}<br />{% endfor %}
+      </div>
+      {% endif %}
+      {{ field }}
+    </div>
+    {% endfor %}
+    <div class="form-group">
+      <input class="form-control" type="submit" name="login" value="OK" />
+    </div>
+  </form>
+</main>
+{% endblock %}
+

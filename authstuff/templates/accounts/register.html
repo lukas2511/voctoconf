@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+<main class="container">
+  <h2>{% if LANGUAGE_CODE == "de" %}Event Registrierung{% else %}Event Registration{% endif %}</h2>
+
+  {% if LANGUAGE_CODE == "de" %}
+  <p>
+    Hier kannst du neue Anmeldedaten für unser Online-Event erstellen.<br/>
+    <br/>
+    Eine Anmeldung ist nicht verpflichtend, diese wird nur benötigt wenn du den 'guest-'-Präfix von deinem Namen
+    entfernen willst, oder du für einen BigBlueButton-Raum Moderatoren-Rechte bekommen sollst.
+  </p>
+  {% else %}
+  <p>
+    Here you can register a new account for our online-event.<br/>
+    <br/>
+    A login is not mandatory and only really is required if you want to get rid of the 'guest-' prefix in your
+    name, or if you should receive moderator permissions for a BigBlueButton-room.
+  </p>
+  {% endif %}
+
+  {% if form.non_field_errors %}
+  <div class="alert alert-danger" role="alert">
+    {% for error in form.non_field_errors %}{{ error|linebreaksbr }}<br />{% endfor %}
+  </div>
+  {% endif %}
+  <form action="" method="post" class="">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="form-group">
+      <label for="{{ field.id_for_label }}"><b>{{ field.label }}</b></label>
+      {% if field.errors %}
+      <div class="alert alert-danger" role="alert">
+        {% for error in field.errors %}{{ error|linebreaksbr }}<br />{% endfor %}
+      </div>
+      {% endif %}
+      {{ field }}
+    </div>
+    {% endfor %}
+    <div class="form-group">
+      <input class="form-control" type="submit" name="login" value="{% if LANGUAGE_CODE == "de" %}Registrieren{% else %}Register{% endif %}" />
+    </div>
+  </form>
+</main>
+{% endblock %}
+

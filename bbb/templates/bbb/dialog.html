@@ -1,0 +1,91 @@
+{% load static %}
+
+<html>
+	<head>
+		<link rel="stylesheet" href="{% static "styles/sourcesanspro.css" %}" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<style type="text/css">
+			html {
+				box-sizing: border-box;
+				padding: 0;
+			}
+
+			*, *:before, *:after {
+				box-sizing: inherit;
+			}
+
+			body {
+				background-color: #06172A;
+				font-family: 'Source Sans Pro', Arial, sans-serif;
+				font-size: 1rem;
+				height: 100%;
+				padding: 0;
+			}
+
+			.parent {
+				width: 100%;
+				height: 100%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+
+			.modal {
+				display: flex;
+				padding: 1.25rem;
+				background-color: #FFFFFF;
+				flex-direction: column;
+				border-radius: .2rem;
+				width: 600px;
+			}
+
+			.content {
+				text-align: center;
+			}
+
+			.content .title {
+				margin: 0;
+				font-size: 1.25rem;
+				font-weight: 500;
+			}
+
+			.content .text {
+				color: #4E5A66;
+				font-weight: normal;
+				padding: 1rem 0 1rem 0;
+			}
+
+			.button {
+				background-color: #0F70D7;
+				color: #FFFFFF;
+				padding: .45rem 1rem;
+				font-size: .85rem;
+				overflow: visible;
+				display: inline-block;
+				border-radius: 2px;
+				border: 3px solid transparent;
+				font-weight: 600;
+				line-height: 1;
+				text-align: center;
+				white-space: nowrap;
+				vertical-align: middle;
+				cursor: pointer;
+				user-select: none;
+				outline: none;
+				outline-width: 2px;
+				outline-style: solid;
+				text-decoration: none;
+			}
+		</style>
+		{% block head %}{% endblock %}
+	</head>
+	<body>
+		<div class="parent">
+			<div class="modal">
+				<div class="content">
+					{% block content %}{% endblock %}
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
