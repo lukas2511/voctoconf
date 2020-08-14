@@ -10,6 +10,14 @@ class Track(models.Model):
     def __str__(self):
         return self.name
 
+class Announcement(models.Model):
+    ident = models.CharField('Identification (visible to admin only)', blank=False, null=False, max_length=250)
+    html = models.TextField(blank=False, null=False)
+    hide = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.ident
+
 class Room(models.Model):
     name = models.CharField(max_length=100)
     bbb = models.OneToOneField(bbb.models.Room, blank=True, null=True, related_name='schedule_room', on_delete=models.SET_NULL)

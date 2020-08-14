@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from authstuff.names import name_required
 from django.http import HttpResponse
-from .models import Room as EventRoom, Event
+from .models import Room as EventRoom, Event, Announcement
 import partners.models
 from django.utils.timezone import utc
 import datetime
@@ -10,6 +10,7 @@ def event_view(request):
     context = {}
     context['event_rooms'] = EventRoom.objects.filter(hide=False).order_by('order')
     context['partners'] = partners.models.Partner.objects.all().order_by("order")
+    context['announcements'] = Announcement.objects.filter(hide=False).order_by('-id')
 
     context['workshops'] = []
     now = datetime.datetime.utcnow().replace(tzinfo=utc)
