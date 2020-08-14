@@ -39,13 +39,19 @@
 		{% block header %}
 		<header>
 			<div class="container jumbotron" style="padding: 2px ! important;">
-				<a class="lang-select" href="#" onclick="document.getElementById('langform').submit();">
+				<div class="topright">
+					<a href="#" onclick="document.getElementById('langform').submit();">
 						{% if LANGUAGE_CODE == "de" %}
 						<img src="{% static "images/us.png" %}" alt="en"> English
 						{% else  %}
 						<img src="{% static "images/de.png" %}" alt="en"> Deutsch
 						{% endif %}
-				</a>
+					</a>
+					{% if request.user.is_authenticated %}
+					<br/>
+					{% if LANGUAGE_CODE == "de" %}Hallo{% else %}Hello{% endif %} {{ request.user.username }}! :) (<a href="/logout">Logout</a>)
+					{% endif %}
+				</div>
 				<a href="/event"><img class="title-logo mb-3" src="{% static "images/title_logo.jpg" %}" alt="FrOSCon 2020 - Cloud Edition" style="height: 48px" /></a>
 			</div>
 		</header>

@@ -4,8 +4,20 @@ html, body {
   margin: 0px ! important;
 }
 
-a[href].lang-select { color: white; position:absolute; top:0px; right: 0px; padding: .5em; }
-a[href].lang-select:hover { text-decoration: none; color: aqua; }
+.topright {
+  float: right;
+  text-align:right;
+}
+
+.topright a {
+  color: #fff;
+
+}
+
+.topright a:hover {
+  text-decoration: none;
+  color: aqua;
+}
 
 header, header > .jumbotron { 
     background-color: #12a1db;

@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 import bbb.models
-from markupfield.fields import MarkupField
 import urllib.parse
 
 class Partner(models.Model):
@@ -11,16 +10,18 @@ class Partner(models.Model):
 
     order = models.IntegerField(default=9000)
 
-    description_de = MarkupField(blank=True, null=True, escape_html=True, default_markup_type='markdown')
-    description_en = MarkupField(blank=True, null=True, escape_html=True, default_markup_type='markdown')
+    description_de = models.TextField(blank=True, null=True)
+    description_en = models.TextField(blank=True, null=True)
 
     owner = models.ForeignKey(get_user_model(), related_name='owns_partnerinfo', blank=True, null=True, on_delete=models.SET_NULL)
     bbb = models.ForeignKey(bbb.models.Room, related_name='for_partner', blank=True, null=True, on_delete=models.SET_NULL)
 
-    def save(self, *args, **kwargs):
-        self.description_de.raw = self.description_de.raw.replace("javascript:", "nope:")
-        self.description_en.raw = self.description_en.raw.replace("javascript:", "nope:")
-        return models.Model.save(self, *args, **kwargs)
+    # TODO
+    def render_description_de(self):
+        return None
+
+    def render_description_en(self):
+        return None
 
     def __str__(self):
         return self.name
