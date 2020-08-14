@@ -36,7 +36,7 @@
 			{% endwith %}
 			{% endif %}
 			{% if room.bbb and room.bbb.get_stats.running %}<br/><span style='font-size:12px'>Aktuell {{ room.bbb.get_stats.participants }} Teilnehmer</span>{% endif %}
-			{% if room.bbb and not room.bbb.get_stats.running %}<br/><span style='font-size:12px'>Der Raum ist aktuell inaktiv.</span>{% endif %}
+			{% if room.bbb and not room.bbb.get_stats.running %}<br/><span style='font-size:12px'>{% if LANGUAGE_CODE == "de" %}Dieser Raum ist (noch) nicht aktiv{% else %}This room is not (yet) active{% endif %}</span>{% endif %}
 		</div>
 		{% endif %}
 		{% endfor %}
@@ -48,12 +48,12 @@
 	{% for workshop in workshops %}
 	{% if workshop.bbb %}
 	<div class="row">
-		<div class="col-sm-10 col-12 py-1">
+		<div class="col-sm-8 col-12 py-1">
 			<span style='font-size:12px'>{{ workshop.start }}</span><br/>
 			{% if workshop.nextup %}Next Up: {% endif %}{{ workshop.title }}<br/>
 			<span style='font-size:12px'>{{ workshop.persons_str }}</span>
 		</div>
-		<div class="col-sm-2 col-12 py-1">
+		<div class="col-sm-4 col-12 py-1">
 			{% if workshop.bbb.get_stats.running %}
 			<a class="btn btn-primary btn-lg w-100" href="/bbb/{{ workshop.bbb.id }}" role="button">
 				Join
@@ -68,7 +68,7 @@
 			</div>
 			{% endif %}
 			{% if workshop.bbb.get_stats.running %}<br/><center><span style='font-size:12px'>{{ workshop.bbb.get_stats.participants }} Teilnehmer</span></center>{% endif %}
-			{% if workshop.bbb and not workshop.bbb.get_stats.running %}<br/><center><span style='font-size:12px'>Der Raum ist aktuell inaktiv</span></center>{% endif %}
+			{% if workshop.bbb and not workshop.bbb.get_stats.running %}<br/><center><span style='font-size:12px'>{% if LANGUAGE_CODE == "de" %}Dieser Raum ist (noch) nicht aktiv{% else %}This room is not (yet) active{% endif %}</span></center>{% endif %}
 		</div>
 	</div>
 	<div class="border-top my-3"></div>
