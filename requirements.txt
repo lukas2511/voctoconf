@@ -3,3 +3,5 @@ django-extensions
 xmltodict
 psycopg2
 markdown
+channels
+channels_redis

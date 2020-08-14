@@ -17,4 +17,4 @@ class Message(models.Model):
             async_to_sync(channel_layer.group_send)('chat_%s' % self.room, {'message': self.chatmsg(), 'type': 'chat_message'})
 
     def chatmsg(self):
-        return "%s <%s> %s" % (self.date.strftime("%H:%M:%S"), self.sender, self.content)
+        return {'date': self.date.strftime("%H:%M:%S"), 'sender': self.sender, 'content': self.content}
