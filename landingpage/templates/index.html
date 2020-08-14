@@ -38,33 +38,36 @@
 {% endblock %}
 {% block content %}
 <main class="container">
+
+	{% if venue_partners is defined or venueless_partners is defined %}
 	{% if LANGUAGE_CODE == "de" %}
 	<h2>Partner</h2>
 	{% else %}
 	<h2>Partners</h2>
 	{% endif %}
+	{% if venue_partners is defined %}
 	<div class="row align-items-center align-content-around text-center mb-4 w-100 venue-partners">
-		{% for partner in partners %}
-		{% if partner.bbb %}
+		{% for partner in venue_partners %}
 		<figure class="col partner-logo">
 			<a href="/partner/{{ partner.id }}" title="{{ partner.name }}">
 				<img src="{{ partner.logo.url }}" alt="{{ partner.name }}" />
 			</a>
 		</figure>
-		{% endif %}
 		{% endfor %}
 	</div>
+	{% endif %}
+	{% if venueless_partners is defined %}
 	<div class="row align-items-center align-content-around text-center w-100">
-		{% for partner in partners %}
-		{% if not partner.bbb %}
+		{% for partner in venueless_partners %}
 		<figure class="col partner-logo">
 			<a href="/partner/{{ partner.id }}" title="{{ partner.name }}">
 				<img src="{{ partner.logo.url }}" alt="{{ partner.name }}" />
 			</a>
 		</figure>
-		{% endif %}
 		{% endfor %}
 	</div>
+	{% endif %}
+	{% endif %}
 	<div class="landing-page-explaination">
 		{{ 'landingpage-explanation'|staticpage:LANGUAGE_CODE|safe }}
 	</div>
