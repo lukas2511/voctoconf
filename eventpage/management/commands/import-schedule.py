@@ -3,6 +3,7 @@ from eventpage.models import Room, Event, Person, Track
 import requests
 import json
 import dateutil.parser
+import datetime
 
 class Command(BaseCommand):
     help = 'Import JSON schedule'
@@ -17,12 +18,12 @@ class Command(BaseCommand):
             obj = Event()
             obj.id = event['id']
 
-        if not obj.date_modified:
-            obj.date = dateutil.parser.parse(event['date'])
+        if not obj.start_modified:
+            obj.start = dateutil.parser.parse(event['date'])
 
-        if not obj.duration_modified:
-            hoursstr, minutsstr = event['duration'].split(':')
-            obj.duration = int(hoursstr) * 3600 + int(minutsstr) * 60
+        if not obj.end_modified:
+            hoursstr, minutesstr = event['duration'].split(':')
+            obj.end = obj.start + datetime.timedelta(hours=int(hoursstr), minutes=int(minutesstr))
 
         if not obj.title_modified:
             obj.title = event['title']

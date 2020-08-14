@@ -1,6 +1,8 @@
 from django.db import models
 import bbb.models
 from django.contrib.auth import get_user_model
+from django.utils.timezone import utc
+import datetime
 
 class Track(models.Model):
     name = models.CharField(max_length=100)
@@ -14,6 +16,18 @@ class Room(models.Model):
     view_size = models.IntegerField(default=4)
     order = models.IntegerField(default=9000)
     hide = models.BooleanField(default=False)
+
+    def current_event(self):
+        now = datetime.datetime.utcnow().replace(tzinfo=utc)
+        events = self.events.filter(start__lte=now).order_by('-start')
+        if events:
+            return events[0]
+
+    def next_event(self):
+        now = datetime.datetime.utcnow().replace(tzinfo=utc)
+        events = self.events.filter(start__gte=now).order_by('start')
+        if events:
+            return events[0]
 
     def __str__(self):
         return self.name
@@ -32,18 +46,18 @@ class Event(models.Model):
     id = models.IntegerField(primary_key=True)
 
     hide = models.BooleanField(default=False)
-    bbb = models.ForeignKey(bbb.models.Room, blank=True, null=True, related_name='schedule_events', on_delete=models.SET_NULL)
+    bbb = models.ForeignKey(bbb.models.Room, blank=True, null=True, related_name='events', on_delete=models.SET_NULL)
 
-    date = models.DateTimeField()
-    date_modified = models.BooleanField(default=False)
+    start = models.DateTimeField()
+    start_modified = models.BooleanField(default=False)
 
-    duration = models.IntegerField("Duration (seconds)", default=1800)
-    duration_modified = models.BooleanField(default=False)
+    end = models.DateTimeField()
+    end_modified = models.BooleanField(default=False)
 
     title = models.CharField(max_length=200, blank=False, null=False)
     title_modified = models.BooleanField(default=False)
 
-    room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True, blank=False)
+    room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True, blank=False, related_name='events')
     room_modified = models.BooleanField(default=False)
 
     track = models.ForeignKey(Track, on_delete=models.SET_NULL, null=True, blank=False)
