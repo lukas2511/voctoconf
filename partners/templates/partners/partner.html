@@ -34,11 +34,11 @@
 			{% elif partner.description_de_html %}
 			{{ partner.description_de_html|safe }}
 			{% elif LANGUAGE_CODE == 'de' %}
-			Zu diesem Partner liegt uns leider kein Vorstellungstext bereit, besuche doch einfach die
-			Partner-Webseite unter <a href="{{ partner.url }}">{{ partner.url }}</a>.
+			<p>Zu diesem Partner liegt uns leider kein Vorstellungstext bereit, besuche doch einfach die
+			Partner-Webseite.</p>
 			{% else %}
-			Unfortunately we don't have any introductionary text for this partner, but you can simply
-			visit their web page at <a href="{{ partner.url }}">{{ partner.url }}</a>.
+			<p>Unfortunately we don't have any introductionary text for this partner, but you can simply
+			visit their web page.</p>
 			{% endif %}
 			<p><i class="fa fa-link"></i> <a href="{{ partner.url }}">{{ partner.url }}</a></p>
 		</div>
