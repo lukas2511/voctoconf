@@ -4,38 +4,45 @@ html, body {
   margin: 0px ! important;
 }
 
-.topright {
-  float: right;
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  height: 5rem;
+}
+.header .header-logo img {
+  height: 4em;
+  padding: 0px;
+  margin: 0px;
+}
+.header-controls {
+  margin-left: auto;
   text-align:right;
 }
-
-.topright a {
+.header .header-controls a, .lang-select a {
   color: #fff;
-
 }
-
-.topright a:hover {
+.header .header-controls a:hover, .lang-select a:hover {
   text-decoration: none;
   color: aqua;
 }
 
 header, header > .jumbotron { 
-    background-color: #12a1db;
-    color: white;
-    text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+  background-color: #12a1db;
+  color: white;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.3);
 }
-header img.title-logo {
-    max-height: 10em;
-    padding: 0px;
-    margin: 0px;
+header .jumbotron .btn {
+  background-color: #258bb5;
+  border-color: #2285af;
 }
-header .btn {
-    background-color: #258bb5;
-    border-color: #2285af;
+header .jumbotron .btn:hover {
+  background-color: #237da2;
+  border-color: #207394;
 }
-header .btn:hover {
-    background-color: #237da2;
-    border-color: #207394;
+header .jumbotron .logo {
+  max-height: 10rem;
 }
 
 .venue-partners {
@@ -45,8 +52,8 @@ header .btn:hover {
   padding-bottom: .25em;
 }
 .partner-logo img {
-    max-height: 100px;
-    max-width: 200px;
+  max-height: 100px;
+  max-width: 200px;
 }
 .venue-partners .partner-logo img {
   max-height: 105px;
@@ -54,16 +61,16 @@ header .btn:hover {
 }
 
 footer{
-    background-color: #404040;
-    color: #999;
+  background-color: #404040;
+  color: #999;
 }
 footer .row {
   margin: 0px ! important;
 }
 
 footer ul{
-    padding-left: 0;
-    list-style: none;
+  padding-left: 0;
+  list-style: none;
 }
 
 footer .col-3 {
@@ -82,10 +89,10 @@ footer a[href]:hover{ color: #ccc; text-decoration: none; }
 
 @keyframes pulse {
   from {
-    opacity: 1;
+  opacity: 1;
   }
   to {
-    opacity: 0.5;
+  opacity: 0.5;
   }
 }
 

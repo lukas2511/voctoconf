@@ -4,16 +4,16 @@
 {% block header %}
 <header>
 	<div class="container jumbotron">
-		<div class="topright">
+		<div class="float-right lang-select">
 			<a href="#" onclick="document.getElementById('langform').submit();">
 				{% if LANGUAGE_CODE == "de" %}
 				<img src="{% static "images/us.png" %}" alt="en"> English
 				{% else  %}
 				<img src="{% static "images/de.png" %}" alt="en"> Deutsch
 				{% endif %}
-			</a><br/>
+			</a>
 		</div>
-		<img class="title-logo mb-3" src="{% static "images/title_logo.jpg" %}" alt="FrOSCon 2020 - Cloud Edition" />
+		<img class="logo mb-3" src="{% static "images/title_logo.jpg" %}" alt="FrOSCon 2020 - Cloud Edition" />
 		{% if LANGUAGE_CODE == "de" %}
 		<p>Da die FrOSCon dieses Jahr leider nicht vor Ort stattfinden kann findet sie dieses mal online statt. Alles was du benötigst um teilzunehmen ist Internet und euren Webbrowser. Klicke einfach auf den Knopf unten um direkt zur Veranstaltung zu gelangen.</p>
 		{% else %}

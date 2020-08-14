@@ -17,7 +17,7 @@ class RegisterForm(forms.Form):
     def clean(self):
         cleaned_data = super().clean()
         username = cleaned_data["username"]
-        if len(cleaned_data["name"]) > 23:
+        if len(username) > 23:
             raise ValidationError("Usernames can only consist of 23 characters or less")
         elif username.startswith("guest-"):
             raise ValidationError("Username can not start with guest- prefix")
