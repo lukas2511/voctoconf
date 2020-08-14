@@ -14,7 +14,7 @@ def partner_view(request, partnerid):
                 partner.description_de = form.cleaned_data['description_de']
                 partner.description_en = form.cleaned_data['description_en']
                 partner.save()
-                return redirect("?saved=1")
+                return redirect("/partner/%d?saved=1" % partner.id)
 
         form = PartnerForm(initial={'description_de': partner.description_de, 'description_en': partner.description_en})
 
