@@ -133,16 +133,16 @@ footer.slim-footer .footer .footer-logo {
 
 .landing-page-explaination a[href], .landing-page-main a[href]:hover { color: inherit; text-decoration: underline; }
 
-.partneronline {
+.partneronline img {
   animation: pulse 1s infinite alternate;
 }
 
 @keyframes pulse {
   from {
-    opacity: 1;
+    transform: scale(1,1) translateZ(0);
   }
   to {
-    opacity: 0.5;
+    transform: scale(1.075,1.075) translateZ(0);
   }
 }
 
