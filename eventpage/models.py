@@ -3,6 +3,7 @@ import bbb.models
 from django.contrib.auth import get_user_model
 from django.utils.timezone import utc
 import datetime
+import html
 
 class Track(models.Model):
     name = models.CharField(max_length=100)
@@ -27,7 +28,7 @@ class Room(models.Model):
 
     def current_event(self):
         now = datetime.datetime.utcnow().replace(tzinfo=utc)
-        events = self.events.filter(start__lte=now).order_by('-start')
+        events = self.events.filter(start__lte=now, end__gte=now).order_by('-start')
         if events:
             return events[0]
 
@@ -44,6 +45,15 @@ class Person(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100)
     name_modified = models.BooleanField(default=False)
+
+    image = models.CharField(max_length=200, blank=True, null=True)
+    image_modified = models.BooleanField(default=False)
+
+    abstract = models.TextField(blank=True, null=True)
+    abstract_modified = models.BooleanField(default=False)
+
+    description = models.TextField(blank=True, null=True)
+    description_modified = models.BooleanField(default=False)
 
     user = models.OneToOneField(get_user_model(), related_name='speaker', blank=True, null=True, on_delete=models.SET_NULL)
 
@@ -65,6 +75,9 @@ class Event(models.Model):
     title = models.CharField(max_length=200, blank=False, null=False)
     title_modified = models.BooleanField(default=False)
 
+    logo = models.CharField(max_length=200, blank=True, null=True)
+    logo_modified = models.BooleanField(default=False)
+
     room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True, blank=False, related_name='events')
     room_modified = models.BooleanField(default=False)
 
@@ -77,8 +90,18 @@ class Event(models.Model):
     evtype = models.CharField(max_length=200, blank=False, null=False)
     evtype_modified = models.BooleanField(default=False)
 
+    abstract = models.TextField(blank=True, null=True)
+    abstract_modified = models.BooleanField(default=False)
+
+    description = models.TextField(blank=True, null=True)
+    description_modified = models.BooleanField(default=False)
+
     def persons_str(self):
         persons = [p.name for p in self.persons.all()]
+        return ", ".join(persons)
+
+    def persons_html(self):
+        persons = ['<a href="/person/%d">%s</a>' % (p.id, html.escape(p.name)) for p in self.persons.all()]
         return ", ".join(persons)
 
     def __str__(self):

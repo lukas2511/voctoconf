@@ -8,6 +8,8 @@ class Partner(models.Model):
     url = models.URLField(blank=False, null=False)
     logo = models.ImageField(blank=False, null=False, upload_to='partners')
 
+    hide = models.BooleanField(default=False)
+
     order = models.IntegerField(default=9000)
 
     description_de = models.TextField(blank=True, null=True)

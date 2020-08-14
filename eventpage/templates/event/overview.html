@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load is_bbb_mod %}
+
+{% block content %}
+<main class="container">
+	{% if announcements %}
+	<h1>{% if LANGUAGE_CODE == "de" %}Ankündigungen{% else %}Announcements{% endif %}</h1>
+	{% for announcement in announcements %}
+	<div class="row">
+		<div class="col py-1">
+			{{ announcement.html|safe }}
+		</div>
+	</div>
+	<div class="border-top my-3"></div>
+	{% endfor %}
+	{% endif %}
+
+	<h1>{% if LANGUAGE_CODE == "de" %}Vorträge{% else %}Lectures{% endif %}</h1>
+
+	<div class="row">
+		{% for room in event_rooms %}
+		{% if room.bbb or room.stream %}
+		<div class="col-sm-{{ room.view_size }} col-12 py-1">
+			{% if not room.bbb or room.bbb.get_stats.running %}
+			<a class="btn btn-primary btn-lg w-100" href="{% if room.bbb %}/bbb/{{ room.bbb.id }}{% else %}/stream/{{ room.stream.id }}{% endif %}" role="button">
+				{{ room.name }}
+			</a>
+			{% elif room.bbb and room.bbb|is_bbb_mod:request.user %}
+			<a class="btn btn-secondary btn-lg w-100" href="{% if room.bbb %}/bbb/{{ room.bbb.id }}{% else %}/stream/{{ room.stream.id }}{% endif %}" role="button">
+				{{ room.name }}
+			</a>
+			{% else %}
+			<div class="btn btn-secondary btn-lg w-100 disabled">
+				{{ room.name }}
+			</div>
+			{% endif %}
+			{% if room.current_event %}
+			{% with room.current_event as event %}
+			<span style='font-size:12px'>{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }}</span><br/>
+			<a href="event/{{ event.id }}">{{ event.title }}</a><br/>
+			{{ event.persons_html|safe }}<br />
+			{% endwith %}
+			{% endif %}
+			{% if room.next_event %}
+			{% with room.next_event as event %}
+			<span style='font-size:12px'>Next Up: <a href="/event/{{ event.id }}">{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }} {{ event.title }}</a></span>
+			{% endwith %}
+			{% endif %}
+			{% if room.bbb and room.bbb.get_stats.running %}<br/><span style='font-size:12px'>Aktuell {{ room.bbb.get_stats.participants }} Teilnehmer</span>{% endif %}
+			{% if room.bbb and not room.bbb.get_stats.running %}<br/><span style='font-size:12px'>{% if LANGUAGE_CODE == "de" %}Dieser Raum ist (noch) nicht aktiv{% else %}This room is not (yet) active{% endif %}</span>{% endif %}
+		</div>
+		{% endif %}
+		{% endfor %}
+	</div>
+	<div class="border-top my-3"></div>
+
+	{% if workshops %}
+	<h1>Workshops</h1>
+	{% for workshop in workshops %}
+	{% if workshop.bbb %}
+	<div class="row">
+		<div class="col-sm-8 col-12 py-1">
+			<span style='font-size:12px'>{{ workshop.start|date:'H:i' }} - {{ workshop.end|date:'H:i' }}</span><br/>
+			{% if workshop.nextup %}Next Up: {% endif %}{{ workshop.title }}<br/>
+			<span style='font-size:12px'>{{ workshop.persons_html|safe }}</span>
+		</div>
+		<div class="col-sm-4 col-12 py-1">
+			{% if workshop.bbb.get_stats.running %}
+			<a class="btn btn-primary btn-lg w-100" href="/bbb/{{ workshop.bbb.id }}" role="button">
+				Join
+			</a>
+			{% elif workshop.bbb|is_bbb_mod:request.user %}
+			<a class="btn btn-primary btn-lg w-100" href="/bbb/{{ workshop.bbb.id }}" role="button">
+				Start
+			</a>
+			{% else %}
+			<div class="btn btn-secondary btn-lg w-100 disabled" role="button">
+				Join
+			</div>
+			{% endif %}
+			{% if workshop.bbb.get_stats.running %}<br/><center><span style='font-size:12px'>{{ workshop.bbb.get_stats.participants }} Teilnehmer</span></center>{% endif %}
+			{% if workshop.bbb and not workshop.bbb.get_stats.running %}<br/><center><span style='font-size:12px'>{% if LANGUAGE_CODE == "de" %}Dieser Raum ist (noch) nicht aktiv{% else %}This room is not (yet) active{% endif %}</span></center>{% endif %}
+		</div>
+	</div>
+	<div class="border-top my-3"></div>
+	{% endif %}
+	{% endfor %}
+
+	<h1>{% if LANGUAGE_CODE == "de" %}Unsere Partner{% else %}Our partners{% endif %}</h1>
+	<div class="row align-items-center align-content-around text-center w-100" style="margin-top:20px;margin-bottom:10px;">
+		{% for partner in partners %}
+		<figure class="col partner-logo">
+			<a href="/partner/{{ partner.id }}" class="{% if partner.bbb.is_running %}partneronline{% else %}partneroffline{% endif %}" title="{{ partner.name }}">
+				<img src="{{ partner.logo.url }}" alt="{{ partner.name }}">
+			</a>
+		</figure>
+		{% endfor %}
+	</div>
+	{% endif %}
+
+</main>
+{% endblock %}
