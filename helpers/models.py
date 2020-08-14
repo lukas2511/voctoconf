@@ -15,3 +15,21 @@ def lock(key):
             yield None
     finally:
         pass
+
+class StaticPage(models.Model):
+    name = models.CharField(max_length=100)
+    text_de = models.TextField(blank=True, null=True)
+    text_en = models.TextField(blank=True, null=True)
+
+    def text(self, locale="de"):
+        if locale == "de" and self.text_de:
+            return self.text_de
+        elif locale == "en" and self.text_en:
+            return self.text_en
+        elif self.text_de:
+            return self.text_de
+        else:
+            return self.text_en
+
+    def __str__(self):
+        return self.name

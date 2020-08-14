@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load staticpage %}
 
 {% block header %}
 <header>
@@ -14,11 +15,7 @@
 			</a>
 		</div>
 		<img class="logo mb-3" src="{% static "images/title_logo.jpg" %}" alt="FrOSCon 2020 - Cloud Edition" />
-		{% if LANGUAGE_CODE == "de" %}
-		<p>Da die FrOSCon dieses Jahr leider nicht vor Ort stattfinden kann findet sie dieses mal online statt. Alles was du benötigst um teilzunehmen ist Internet und euren Webbrowser. Klicke einfach auf den Knopf unten um direkt zur Veranstaltung zu gelangen.</p>
-		{% else %}
-		<p>Because FrOSCon can sadly not take place on site this year it will be held online. All that you need to participace is an internet connection and your web browser. Just click on the button below to go directly to the event.</p>
-		{% endif %}
+		<p>{{ 'landingpage-header'|staticpage:LANGUAGE_CODE|safe }}</p>
 		<div class="row">
 			{% if LANGUAGE_CODE == "de" %}
 			<div class="col-sm-6 col-12 py-1">
@@ -69,17 +66,7 @@
 		{% endfor %}
 	</div>
 	<div class="landing-page-explaination">
-		{% if LANGUAGE_CODE == "de" %}
-		<h2>Wie es funktioniert</h2>
-		<p>Um an der Veranstaltung teilnehmen zu können musst du nur dem Link folgen. Du wirst dann auf das Veranstaltungsportal geleitet, das die Vortragslivestreams zeigt aber auch als Social Hub fungiert. Du kannst dich dort in Text-Chaträumen und Videochaträumen mit anderen Teilnehmern und Vortragenden austauschen. Auch die Workshops finden dort statt. Du musst dich nirgendwo anmelden, lediglich einen Namen musst du angeben, sodass du an den Text- und Videochats teilnehmen kannst.</p>
-		<p>Die Vortäge werden aufgenommen und sollten zeitnah als Video auf <a href="https://media.ccc.de/">media.ccc.de</a> verfügbar sein.</p>
-		<p>Falls du wissen möchtest welche Vorträge und Workshops wann laufen kannst du einen Blick in den <a href="https://programm.froscon.de/2020/index.html">Fahrplan</a> werfen. Livestreams kannst du dir entweder über das Veranstaltungsportal oder im Nachhinein auf <a href="https://media.ccc.de/">media.ccc.de</a> ansehen, die Teilnahme an Workshops ist aber nur über das Veranstaltungsportal möglich.</p>
-		{% else %}
-		<h2>How it works</h2>
-		<p>To participate in the conference all you need to do is follow the link. Doing so you will be directed to the conference portal, that functions as both a place for you to see the lectures but also as a social hub. There you can talk to other participants as well as speakers. This is also where you need to go to participate in workshops. You do not need to sign up but will only be asked to choose a name, otherwise you would not be able to participate in chat.</p>
-		<p>The lectures will be recorded and and will be available on <a href="https://media.ccc.de/">media.ccc.de</a> as soon as possible.</p>
-		<p>If you want to know which lectures are being held you can have a look at the <a href="https://programm.froscon.de/2020/index.html">Schedule</a>. You can watch the lectures live from the conference portal or watch the recordings on <a href="https://media.ccc.de/">media.ccc.de</a> after the event. The participation in workshops is only possible from the event portal though.</p>
-		{% endif %}
+		{{ 'landingpage-explanation'|staticpage:LANGUAGE_CODE|safe }}
 	</div>
 </main>
 {% endblock %}
