@@ -6,12 +6,14 @@ import partners.models
 from django.utils.timezone import utc
 import datetime
 from django.shortcuts import get_object_or_404
+import bbb.models
 
 def event_overview(request):
     context = {}
     context['event_rooms'] = EventRoom.objects.filter(hide=False).order_by('order')
     context['partners'] = partners.models.Partner.objects.filter(hide=False).order_by("order")
     context['announcements'] = Announcement.objects.filter(hide=False).order_by('-id')
+    context['hangouts'] = bbb.models.Room.objects.filter(hangout_room=True)
 
     context['workshops'] = []
     now = datetime.datetime.utcnow().replace(tzinfo=utc)

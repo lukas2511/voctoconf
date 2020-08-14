@@ -80,6 +80,8 @@ class Room(models.Model):
     moderator_pw = models.CharField(max_length=100, blank=True, null=True)
     attendee_pw = models.CharField(max_length=100, blank=True, null=True)
 
+    hangout_room = models.BooleanField(default=False)
+
     guest_policy = models.CharField("Guest policy", null=False, blank=False, default='ALWAYS_ACCEPT', choices=(('ALWAYS_ACCEPT', 'Always accept'), ('ALWAYS_DENY', 'Always deny'), ('ASK_MODERATOR', 'Ask moderator')), max_length=30)
 
     class Meta:
