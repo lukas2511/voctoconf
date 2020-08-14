@@ -4,7 +4,7 @@
 
 {% block content %}
 <main class="container">
-	<h1>Vorträge</h1>
+	<h1>{% if LANGUAGE_CODE == "de" %}Vorträge{% else %}Lectures{% endif %}</h1>
 
 	<div class="row">
 		{% for room in event_rooms %}
@@ -43,13 +43,14 @@
 	</div>
 	<div class="border-top my-3"></div>
 
+	{% if workshops %}
 	<h1>Workshops</h1>
-	{% for workshop in workshops|slice:":5" %}
+	{% for workshop in workshops %}
 	{% if workshop.bbb %}
 	<div class="row">
 		<div class="col-sm-10 col-12 py-1">
 			<span style='font-size:12px'>{{ workshop.start }}</span><br/>
-			{{ workshop.title }}<br/>
+			{% if workshop.nextup %}Next Up: {% endif %}{{ workshop.title }}<br/>
 			<span style='font-size:12px'>{{ workshop.persons_str }}</span>
 		</div>
 		<div class="col-sm-2 col-12 py-1">
@@ -78,12 +79,13 @@
 	<div class="row align-items-center align-content-around text-center w-100" style="margin-top:20px;margin-bottom:10px;">
 		{% for partner in partners %}
 		<figure class="col partner-logo">
-			<a href="/partner/{{ partner.id }}" target="_blank" class="{% if partner.bbb.is_running %}partneronline{% else %}partneroffline{% endif %}" title="{{ partner.name }}">
+			<a href="/partner/{{ partner.id }}" class="{% if partner.bbb.is_running %}partneronline{% else %}partneroffline{% endif %}" title="{{ partner.name }}">
 				<img src="{{ partner.logo.url }}" alt="{{ partner.name }}">
 			</a>
 		</figure>
 		{% endfor %}
 	</div>
+	{% endif %}
 
 </main>
 {% endblock %}
