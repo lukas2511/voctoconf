@@ -1,0 +1,30 @@
+{% load static %}
+<header>
+    <div class="header container" style="padding: 2px ! important;">
+        <div class="header-logo">
+            <a href="/event"><img class="title-logo" src="{% static "images/title_logo.jpg" %}" alt="FrOSCon 2020 - Cloud Edition" /></a>
+        </div>
+        <div class="header-controls">
+            <a href="#" onclick="document.getElementById('langform').submit();">
+                {% if LANGUAGE_CODE == "de" %}
+                <img src="{% static "images/us.png" %}" alt="en"> English
+                {% else  %}
+                <img src="{% static "images/de.png" %}" alt="en"> Deutsch
+                {% endif %}
+            </a><br/>
+            {% if request.user.is_authenticated %}
+            <i class="fa fa-sm fa-user"></i> {{ request.user.username }} <br/>
+            <a href="/logout">
+                <i class="fa fa-sm fa-sign-out-alt"></i>
+                {% if LANGUAGE_CODE == "de" %}Abmelden{% else %}Sign Out{% endif %}
+            </a>
+            {% else %}
+            <a href="/login">
+                <i class="fa fa-sm fa-sign-in-alt"></i>
+                {% if LANGUAGE_CODE == "de" %}Anmelden{% else %}Sign In{% endif %}
+            </a>
+            {% endif %}
+        </div>
+    </div>
+        
+</header>

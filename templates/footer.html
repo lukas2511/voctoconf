@@ -1,29 +1,28 @@
 {% load static %}
 {% load i18n %}
 
-<footer class="pt-4 pb-3 mt-1" style="margin-top: 0 ! important; padding-top: 10px ! important; padding-bottom: 10px ! important;">
-	<div class="container">
-		<div class="row">
-			<div class="col-6">
-				<a href="https://froscon.de{% if LANGUAGE_CODE == "en" %}/en/{% endif %}"><img src="{% static "images/froscon_logo_small.png" %}" style="height:48px" /></a>
-			</div>
-			<div class="col-3">
-				<ul>
-					<li><a href="https://twitter.com/froscon">Twitter</li>
-					<li><a href="https://www.instagram.com/froscon/">Instagram</li>
-				</ul>
-			</div>
-			<div class="col-3">
-				<ul>
-					{% if LANGUAGE_CODE == "de" %}
-					<li><a href="https://www.froscon.de/datenschutzerklaerung/">Datenschutzerklärung</a></li>
-					<li><a href="https://www.froscon.de/impressum/">Impressum</a>
-					{% else %}
-					<li><a href="https://www.froscon.de/en/imprint/">Imprint</a></li>
-					<li><a href="https://www.froscon.de/en/privacy-policy/">Privacy Policy</a></li>
-					{% endif %}
-				</ul>
-			</div>
+<footer class="py-2" >
+	<div class="footer container">
+		<div class="col-6">
+			<a href="https://froscon.de{% if LANGUAGE_CODE == "en" %}/en/{% endif %}"><img src="{% static "images/froscon_logo_small.png" %}" style="height:48px" /></a>
+		</div>
+		<div class="col-3">
+			<ul>
+				<li><a href="https://twitter.com/froscon"><i class="fab fa-twitter"></i> Twitter</a></li>
+				<li><a href="https://bonn.social/@froscon"><i class="fab fa-mastodon"></i> Mastodon</a></li>
+				<li><a href="https://www.instagram.com/froscon/"><i class="fab fa-instagram"></i> Instagram</a></li>
+			</ul>
+		</div>
+		<div class="col-3">
+			<ul>
+				{% if LANGUAGE_CODE == "de" %}
+				<li><a href="https://www.froscon.de/datenschutzerklaerung/">Datenschutzerklärung</a></li>
+				<li><a href="https://www.froscon.de/impressum/">Impressum</a>
+				{% else %}
+				<li><a href="https://www.froscon.de/en/imprint/">Imprint</a></li>
+				<li><a href="https://www.froscon.de/en/privacy-policy/">Privacy Policy</a></li>
+				{% endif %}
+			</ul>
 		</div>
 	</div>
 </footer>
