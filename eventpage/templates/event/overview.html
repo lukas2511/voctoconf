@@ -73,6 +73,21 @@
 	</div>
 	<div class="border-top my-3"></div>
 
+	<div class="row">
+		<div class="col-sm-6 col-12">
+			<a class="btn btn-primary btn-lg w-100" href="/chat/lobby" role="button">
+				Chat
+			</a>
+		</div>
+		<div class="col-sm-6 col-12">
+			<a class="btn btn-primary btn-lg w-100" href="https://programm.froscon.de" role="button">
+				{% if LANGUAGE_CODE == "de" %}Fahrplan{% else %}Schedule{% endif %}
+			</a>
+		</div>
+	</div>
+	<div class="border-top my-3"></div>
+
+
 	{% if workshops %}
 	<h1><i class="fa fa-wrench"></i> Workshops</h1>
 	{% for workshop in workshops %}
