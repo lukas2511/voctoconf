@@ -45,6 +45,7 @@ def register_view(request):
             user.email = ""
             user.set_password(form.cleaned_data["password"])
             user.save()
+            login(request, user)
             return redirect(request.GET.get("next") if request.GET.get("next") is not None else "/event")
     else:
         form = RegisterForm()
