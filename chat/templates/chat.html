@@ -28,7 +28,11 @@
 
   var chatSocket;
   function connect() {
-    chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/' + roomName + '/');
+    if (window.location.protocol == 'https:' ) {
+      chatSocket = new WebSocket('wss://' + window.location.host + '/ws/chat/' + roomName + '/');
+    } else {
+      chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/' + roomName + '/');
+    }
     chatSocket.onopen = function() {
       console.log('WS connected')
     };
