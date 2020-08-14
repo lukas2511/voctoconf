@@ -118,12 +118,12 @@ footer {
 .footer a[href]{ color: #999; }
 .footer a[href]:hover{ color: #ccc; text-decoration: none; }
 
-/* Slim Footer */
+/* Slim Footer (requires body.wide) */
 footer.slim-footer {
   margin-top: -3.5rem;
   height: 3.5rem;
 }
-body:has(footer.slim-footer) .page {
+body.wide .page {
   padding-bottom: 3.5rem;
 }
 footer.slim-footer .footer .footer-logo {
