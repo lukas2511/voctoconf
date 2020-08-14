@@ -23,10 +23,18 @@
 				{{ room.name }}
 			</div>
 			{% endif %}
-			<span style='font-size:12px'>18:00 - 18:30</span><br/>
-			Ein toller Vortrag<br/>
-			Mensch Mitname<br />
-			<span style='font-size:12px'>Next Up: 18:30 - 19:00 End of the World – Kim Zhou Donald Putin</span>
+			{% if room.current_event %}
+			{% with room.current_event as event %}
+			<span style='font-size:12px'>{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }}</span><br/>
+			{{ event.title }}<br/>
+			{{ event.persons_str }}<br />
+			{% endwith %}
+			{% endif %}
+			{% if room.next_event %}
+			{% with room.next_event as event %}
+			<span style='font-size:12px'>Next Up: {{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }} {{ event.title }}</span>
+			{% endwith %}
+			{% endif %}
 			{% if room.bbb and room.bbb.get_stats.running %}<br/><span style='font-size:12px'>Aktuell {{ room.bbb.get_stats.participants }} Teilnehmer</span>{% endif %}
 			{% if room.bbb and not room.bbb.get_stats.running %}<br/><span style='font-size:12px'>Der Raum ist aktuell inaktiv.</span>{% endif %}
 		</div>
@@ -40,7 +48,7 @@
 	{% if workshop.bbb %}
 	<div class="row">
 		<div class="col-sm-10 col-12 py-1">
-			<span style='font-size:12px'>{{ workshop.date }}</span><br/>
+			<span style='font-size:12px'>{{ workshop.start }}</span><br/>
 			{{ workshop.title }}<br/>
 			<span style='font-size:12px'>{{ workshop.persons_str }}</span>
 		</div>
