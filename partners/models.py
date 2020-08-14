@@ -18,7 +18,8 @@ class Partner(models.Model):
     bbb = models.ForeignKey(bbb.models.Room, related_name='for_partner', blank=True, null=True, on_delete=models.SET_NULL)
 
     def save(self, *args, **kwargs):
-        self.description.raw = self.description.raw.replace("javascript:", "nope:")
+        self.description_de.raw = self.description_de.raw.replace("javascript:", "nope:")
+        self.description_en.raw = self.description_en.raw.replace("javascript:", "nope:")
         return models.Model.save(self, *args, **kwargs)
 
     def __str__(self):
