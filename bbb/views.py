@@ -17,7 +17,7 @@ def roomview(request, roomid):
         if request.GET.get("noframe"):
             return redirect(meeting)
         else:
-            return render(request, "bbb/roomframe.html", {'meeting': meeting})
+            return render(request, "bbb/roomframe.html", {'meeting': meeting, 'room': room})
     else:
-        return render(request, "bbb/notactive.html")
+        return render(request, "bbb/notactive.html", {'room': room})
 

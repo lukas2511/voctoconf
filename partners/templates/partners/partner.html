@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block title %}{{ partner.name }} - {% endblock %}
+
 {% block content %}
 <main class="container">
 	<h1><a href="{{ partner.url }}">{{ partner.name }}</a></h1>

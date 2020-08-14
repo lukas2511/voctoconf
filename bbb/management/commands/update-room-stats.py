@@ -12,7 +12,6 @@ class Command(BaseCommand):
         for room in Room.objects.all():
             try:
                 meetinginfo = room.api_meetinginfo()
-
                 stats = RoomStats()
                 stats.room = room
                 stats.running = (meetinginfo['running'] == "true")

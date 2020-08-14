@@ -2,6 +2,8 @@
 {% load i18n %}
 {% load is_bbb_mod %}
 
+{% block title %}{{ event.title }} - {% endblock %}
+
 {% block content %}
 <main class="container">
 	{% if announcements %}
