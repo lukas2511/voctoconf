@@ -3,9 +3,9 @@
 {% load is_bbb_mod %}
 
 {% block content %}
-<main class="container">
+<main class="container py-4">
 	{% if announcements %}
-	<h1>{% if LANGUAGE_CODE == "de" %}Ankündigungen{% else %}Announcements{% endif %}</h1>
+	<h1><i class="fa fa-bullhorn"></i> {% if LANGUAGE_CODE == "de" %}Ankündigungen{% else %}Announcements{% endif %}</h1>
 	{% for announcement in announcements %}
 	<div class="row">
 		<div class="col py-1">
@@ -16,7 +16,7 @@
 	{% endfor %}
 	{% endif %}
 
-	<h1>{% if LANGUAGE_CODE == "de" %}Vorträge{% else %}Lectures{% endif %}</h1>
+	<h1><i class="fa fa-tv"></i> {% if LANGUAGE_CODE == "de" %}Vorträge{% else %}Lectures{% endif %}</h1>
 
 	<div class="row">
 		{% for room in event_rooms %}
@@ -74,7 +74,7 @@
 	<div class="border-top my-3"></div>
 
 	{% if workshops %}
-	<h1>Workshops</h1>
+	<h1><i class="fa fa-wrench"></i> Workshops</h1>
 	{% for workshop in workshops %}
 	{% if workshop.bbb %}
 	<div class="row">
@@ -105,8 +105,8 @@
 	{% endif %}
 	{% endfor %}
 
-	<h1>{% if LANGUAGE_CODE == "de" %}Unsere Partner{% else %}Our partners{% endif %}</h1>
-	<div class="row align-items-center align-content-around text-center w-100" style="margin-top:20px;margin-bottom:10px;">
+	<h1><i class="fa fa-user-friends"></i> {% if LANGUAGE_CODE == "de" %}Unsere Partner{% else %}Our partners{% endif %}</h1>
+	<div class="row align-items-center align-content-around text-center mb-10 w-100" style='padding-top:16px;'>
 		{% for partner in partners %}
 		<figure class="col partner-logo">
 			<a href="/partner/{{ partner.id }}" class="{% if partner.bbb.is_running %}partneronline{% else %}partneroffline{% endif %}" title="{{ partner.name }}">

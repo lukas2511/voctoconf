@@ -1,36 +1,64 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load is_bbb_mod %}
 
 {% block title %}{{ partner.name }} - {% endblock %}
 
 {% block content %}
 <main class="container">
-	<h1><a href="{{ partner.url }}">{{ partner.name }}</a></h1>
+	{% if request.GET.saved %}
+	{% if request.user.is_superuser or request.user == partner.owner %}
 	<div class="row">
-		<div class="col-sm-9 col-12 py-1">
-			{% if LANGUAGE_CODE == 'de' and partner.render_description_de %}
-			{{ partner.render_description_de|safe }}
-			{% elif partner.render_description_en %}
-			{{ partner.render_description_en|safe }}
-			{% elif partner.render_description_de %}
-			{{ partner.render_description_de|safe }}
+		<div class="col pt-4">
+			<div class="alert alert-success" role="alert">
+				{% if LANGUAGE_CODE == "de" %}
+				Änderungen wurden gespeichert!
+				{% else %}
+				Changes have been saved!
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	{% endif %}
+	{% endif %}
+
+	<div class="row py-4">
+		<div class="col-sm-12 col-12">
+			<h1>{{ partner.name }}</h1>
+		</div>
+		<div class="col-sm-9 col-12">
+			{% if LANGUAGE_CODE == 'de' and partner.description_de_html %}
+			{{ partner.description_de_html|safe }}
+			{% elif partner.description_en_html %}
+			{{ partner.description_en_html|safe }}
+			{% elif partner.description_de_html %}
+			{{ partner.description_de_html|safe }}
 			{% elif LANGUAGE_CODE == 'de' %}
-			Zu diesem Partner liegt uns leider kein Vorstellungstext bereit, besuche doch einfach die
-			Partner-Webseite unter <a href="{{ partner.url }}">{{ partner.url }}</a>.
+			<p>Zu diesem Partner liegt uns leider kein Vorstellungstext bereit, besuche doch einfach die
+			Partner-Webseite.</p>
 			{% else %}
-			Unfortunately we don't have any introductionary text for this partner, but you can simply
-			visit their web page at <a href="{{ partner.url }}">{{ partner.url }}</a>.
+			<p>Unfortunately we don't have any introductionary text for this partner, but you can simply
+			visit their web page.</p>
 			{% endif %}
+			<p><i class="fa fa-link"></i> <a href="{{ partner.url }}">{{ partner.url }}</a></p>
 		</div>
 		<div class="col-sm-3 col-12 py-1">
 			<p>
 				<a href="{{ partner.url }}">
 					<img src="{{ partner.logo.url }}" alt="{{ partner.name }}" style="max-width:100%;" /><br/>
-					{{ partner.short_url }}
 				</a>
 			</p>
 		</div>
 	</div>
 
+	{% if partner.bbb %}
+	<div class="border-top my-3"></div>
+	{% include "partners/partner/bbbjoin.html" %}
+	{% endif %}
+
+	{% if request.user.is_superuser or request.user == partner.owner %}
+	<div class="border-top my-3"></div>
+	{% include "partners/partner/editform.html" %}
+	{% endif %}
 </main>
 {% endblock %}
