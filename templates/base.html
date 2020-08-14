@@ -26,8 +26,8 @@
 		<link rel="stylesheet" type="text/css" href="{% static "styles/fontawesome/css/brands.min.css" %}" />
 	</head>
 
-	<body>
-		<form method="post" action="{% url 'set_language' %}" id="langform">
+	<body class="{% block body_class %}{% endblock %}">
+		<form method="post" action="{% url 'set_language' %}" id="langform" class="d-none">
 			{% csrf_token %}
 			<input name="next" type="hidden" value="" />
 			<input name="language" type="hidden" value="{% if LANGUAGE_CODE == "de" %}en{% else %}de{% endif %}" />
@@ -40,13 +40,15 @@
 		</a>-->
 		</form>
 
-		<div class="page">
+		<div class="{% block page_class %}page{% endblock %}">
 			{% block header %}
 				{% include "header.html" %}
 			{% endblock %}
 			{% block content %}{% endblock %}
 		</div>
 
-		{% include "footer.html" %}
+		{% block footer %}
+			{% include "footer.html" %}
+		{% endblock %}
 	</body>
 </html>

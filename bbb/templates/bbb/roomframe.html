@@ -2,14 +2,15 @@
 {% load i18n %}
 
 {% block title %}BBB - {{ room.name }} - {% endblock %}
+{% block body_class %}wide{% endblock  %}
+{% block page_class %}page h-100{% endblock  %}
 
 {% block content %}
-
-<style type="text/css">
-	/* @TODO: fix this dirty hack, although it works quite well */
-	.page { height:100% }
-</style>
 <main class="full-height-content">
 	<iframe src="{{ meeting }}" allow="camera; autoplay; microphone; fullscreen; display-capture" allowfullscreen allowusermedia class="full-size"></iframe>
 </main>
+{% endblock %}
+
+{% block footer %}
+	{% include "slim_footer.html" %}
 {% endblock %}

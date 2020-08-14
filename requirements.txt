@@ -2,3 +2,4 @@ django
 django-extensions
 xmltodict
 psycopg2
+markdown

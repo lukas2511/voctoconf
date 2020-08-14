@@ -1,7 +1,7 @@
 {% load static %}
 {% load i18n %}
 
-<footer>
+<footer class="slim-footer">
 	<div class="footer container">
 		<div>
 			<a href="https://froscon.de{% if LANGUAGE_CODE == "en" %}/en/{% endif %}">
@@ -9,13 +9,6 @@
 			</a>
 		</div>
 		<div class="row ml-auto">
-			<div class="col pr-5">
-				<ul>
-					<li><a href="https://twitter.com/froscon"><i class="fab fa-twitter"></i> Twitter</a></li>
-					<li><a href="https://bonn.social/@froscon"><i class="fab fa-mastodon"></i> Mastodon</a></li>
-					<li><a href="https://www.instagram.com/froscon/"><i class="fab fa-instagram"></i> Instagram</a></li>
-				</ul>
-			</div>
 			<div class="col">
 				<ul>
 					{% if LANGUAGE_CODE == "de" %}
