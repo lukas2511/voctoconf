@@ -35,20 +35,18 @@
 				{{ room.name }}
 			</div>
 			{% endif %}
-			{% if False %}
-			{% if room.current_event %}
 			{% with room.current_event as event %}
+			{% if event %}
 			<span style='font-size:12px'>{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }}</span><br/>
 			<a href="event/{{ event.id }}">{{ event.title }}</a><br/>
 			{{ event.persons_html|safe }}<br />
-			{% endwith %}
 			{% endif %}
-			{% if room.next_event %}
+			{% endwith %}
 			{% with room.next_event as event %}
+			{% if event %}
 			<span style='font-size:12px'>Next Up: <a href="/event/{{ event.id }}">{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }} {{ event.title }}</a></span>
+			{% endif %}
 			{% endwith %}
-			{% endif %}
-			{% endif %}
 			{% if room.bbb %}
 			{% with room.bbb.get_stats as stats %}
 			<br/>
