@@ -10,23 +10,4 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RenameField(
-            model_name='partner',
-            old_name='_description_rendered',
-            new_name='_description_de_rendered',
-        ),
-        migrations.RenameField(
-            model_name='partner',
-            old_name='description',
-            new_name='description_de',
-        ),
-        migrations.RemoveField(
-            model_name='partner',
-            name='description_markup_type',
-        ),
-        migrations.AddField(
-            model_name='partner',
-            name='description_de_markup_type',
-            field=models.CharField(choices=[('', '--'), ('html', 'HTML'), ('plain', 'Plain'), ('markdown', 'Markdown')], default='markdown', max_length=30),
-        ),
     ]

@@ -1,1 +1,3 @@
-voctoconf/settings.py
+voctoconf/local_settings.py
+/_*
+/sync.sh
