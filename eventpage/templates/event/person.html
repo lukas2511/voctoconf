@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load is_bbb_mod %}
+
+{% block title %}{{ person.name }} - {% endblock %}
+
+{% block content %}
+<main class="container">
+	<h1>{{ person.name }}</h1>
+	<div class="row">
+		<div class="col">
+			{% if person.image %}<img src="{{ person.image }}" style="float:right;margin-left:12px;margin-bottom:12px;max-width:256px;max-height:256px;" />{% endif %}
+			<i>{{ person.abstract|linebreaks }}</i>
+			{{ person.description|linebreaks }}
+		</div>
+	</div>
+</main>
+{% endblock %}
