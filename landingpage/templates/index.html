@@ -46,9 +46,9 @@
 	{% else %}
 	<h2>Partners</h2>
 	{% endif %}
-	<div class="row align-items-center align-content-around text-center w-100 venue-partners">
+	<div class="row align-items-center align-content-around text-center mb-4 w-100 venue-partners">
 		{% for partner in partners %}
-		{% if partner.bbb_id %}
+		{% if partner.bbb %}
 		<figure class="col partner-logo">
 			<a href="/partner/{{ partner.id }}" title="{{ partner.name }}">
 				<img src="{{ partner.logo.url }}" alt="{{ partner.name }}" />
@@ -59,7 +59,7 @@
 	</div>
 	<div class="row align-items-center align-content-around text-center w-100">
 		{% for partner in partners %}
-		{% if not partner.bbb_id %}
+		{% if not partner.bbb %}
 		<figure class="col partner-logo">
 			<a href="/partner/{{ partner.id }}" title="{{ partner.name }}">
 				<img src="{{ partner.logo.url }}" alt="{{ partner.name }}" />
