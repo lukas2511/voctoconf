@@ -4,6 +4,18 @@
 
 {% block content %}
 <main class="container">
+	{% if announcements %}
+	<h1>{% if LANGUAGE_CODE == "de" %}Ankündigungen{% else %}Announcements{% endif %}</h1>
+	{% for announcement in announcements %}
+	<div class="row">
+		<div class="col py-1">
+			{{ announcement.html|safe }}
+		</div>
+	</div>
+	<div class="border-top my-3"></div>
+	{% endfor %}
+	{% endif %}
+
 	<h1>{% if LANGUAGE_CODE == "de" %}Vorträge{% else %}Lectures{% endif %}</h1>
 
 	<div class="row">
@@ -49,7 +61,7 @@
 	{% if workshop.bbb %}
 	<div class="row">
 		<div class="col-sm-8 col-12 py-1">
-			<span style='font-size:12px'>{{ workshop.start }}</span><br/>
+			<span style='font-size:12px'>{{ workshop.start|date:'H:i' }} - {{ workshop.end|date:'H:i' }}</span><br/>
 			{% if workshop.nextup %}Next Up: {% endif %}{{ workshop.title }}<br/>
 			<span style='font-size:12px'>{{ workshop.persons_str }}</span>
 		</div>

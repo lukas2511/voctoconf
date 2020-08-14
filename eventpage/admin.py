@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Room, Person, Event, Track
+from .models import Room, Person, Event, Track, Announcement
 
 class TrackAdmin(admin.ModelAdmin):
     list_display = ['name']
@@ -22,3 +22,5 @@ class EventAdmin(admin.ModelAdmin):
     autocomplete_fields = ['persons']
 
 admin.site.register(Event, EventAdmin)
+
+admin.site.register(Announcement)
