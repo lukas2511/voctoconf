@@ -3,26 +3,30 @@
 
 <footer>
 	<div class="footer container">
-		<div class="col-6">
-			<a href="https://froscon.de{% if LANGUAGE_CODE == "en" %}/en/{% endif %}"><img src="{% static "images/froscon_logo_small.png" %}" style="height:48px" /></a>
+		<div>
+			<a href="https://froscon.de{% if LANGUAGE_CODE == "en" %}/en/{% endif %}">
+				<img class="footer-logo" src="{% static "images/froscon_logo_small.png" %}" />
+			</a>
 		</div>
-		<div class="col-3">
-			<ul>
-				<li><a href="https://twitter.com/froscon"><i class="fab fa-twitter"></i> Twitter</a></li>
-				<li><a href="https://bonn.social/@froscon"><i class="fab fa-mastodon"></i> Mastodon</a></li>
-				<li><a href="https://www.instagram.com/froscon/"><i class="fab fa-instagram"></i> Instagram</a></li>
-			</ul>
-		</div>
-		<div class="col-3">
-			<ul>
-				{% if LANGUAGE_CODE == "de" %}
-				<li><a href="https://www.froscon.de/datenschutzerklaerung/">Datenschutzerklärung</a></li>
-				<li><a href="https://www.froscon.de/impressum/">Impressum</a>
-				{% else %}
-				<li><a href="https://www.froscon.de/en/imprint/">Imprint</a></li>
-				<li><a href="https://www.froscon.de/en/privacy-policy/">Privacy Policy</a></li>
-				{% endif %}
-			</ul>
+		<div class="row ml-auto">
+			<div class="col pr-5">
+				<ul>
+					<li><a href="https://twitter.com/froscon"><i class="fab fa-twitter"></i> Twitter</a></li>
+					<li><a href="https://bonn.social/@froscon"><i class="fab fa-mastodon"></i> Mastodon</a></li>
+					<li><a href="https://www.instagram.com/froscon/"><i class="fab fa-instagram"></i> Instagram</a></li>
+				</ul>
+			</div>
+			<div class="col">
+				<ul>
+					{% if LANGUAGE_CODE == "de" %}
+					<li><a href="https://www.froscon.de/datenschutzerklaerung/">Datenschutzerklärung</a></li>
+					<li><a href="https://www.froscon.de/impressum/">Impressum</a>
+					{% else %}
+					<li><a href="https://www.froscon.de/en/imprint/">Imprint</a></li>
+					<li><a href="https://www.froscon.de/en/privacy-policy/">Privacy Policy</a></li>
+					{% endif %}
+				</ul>
+			</div>
 		</div>
 	</div>
 </footer>

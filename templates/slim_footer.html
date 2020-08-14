@@ -1,0 +1,26 @@
+{% load static %}
+{% load i18n %}
+
+<footer class="slim-footer">
+	<div class="footer container">
+		<div>
+			<a href="https://froscon.de{% if LANGUAGE_CODE == "en" %}/en/{% endif %}">
+				<img class="footer-logo" src="{% static "images/froscon_logo_small.png" %}" />
+			</a>
+		</div>
+		<div class="row ml-auto">
+			<div class="col">
+				<ul>
+					{% if LANGUAGE_CODE == "de" %}
+					<li><a href="https://www.froscon.de/datenschutzerklaerung/">Datenschutzerklärung</a></li>
+					<li><a href="https://www.froscon.de/impressum/">Impressum</a>
+					{% else %}
+					<li><a href="https://www.froscon.de/en/imprint/">Imprint</a></li>
+					<li><a href="https://www.froscon.de/en/privacy-policy/">Privacy Policy</a></li>
+					{% endif %}
+				</ul>
+			</div>
+		</div>
+	</div>
+</footer>
+
