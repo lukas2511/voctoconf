@@ -48,7 +48,7 @@
 	{% endif %}
 	<div class="row align-items-center align-content-around text-center w-100 venue-partners">
 		{% for partner in partners %}
-		{% if partner.bbb_id %}
+		{% if partner.bbb %}
 		<figure class="col partner-logo">
 			<a href="/partner/{{ partner.id }}" title="{{ partner.name }}">
 				<img src="{{ partner.logo.url }}" alt="{{ partner.name }}" />
