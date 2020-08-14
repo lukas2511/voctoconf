@@ -24,16 +24,33 @@ header, header > .jumbotron {
     color: white;
     text-shadow: 0 1px 1px rgba(0,0,0,0.3);
 }
-/* header .btn { background-color: #41afff; } */
 header img.title-logo {
     max-height: 10em;
     padding: 0px;
     margin: 0px;
 }
+header .btn {
+    background-color: #258bb5;
+    border-color: #2285af;
+}
+header .btn:hover {
+    background-color: #237da2;
+    border-color: #207394;
+}
 
+.venue-partners {
+  background-color: rgba(0, 0, 0, .075);
+  border-radius: 1em;
+  padding-top: .75em;
+  padding-bottom: .25em;
+}
 .partner-logo img {
     max-height: 100px;
     max-width: 200px;
+}
+.venue-partners .partner-logo img {
+  max-height: 105px;
+  max-width: 240px;
 }
 
 footer{
@@ -54,6 +71,9 @@ footer .col-3 {
 }
 footer a[href]{ color: #999; }
 footer a[href]:hover{ color: #ccc; text-decoration: none; }
+
+
+.landing-page-explaination a[href], .landing-page-main a[href]:hover { color: inherit; text-decoration: underline; }
 
 
 .partneronline {

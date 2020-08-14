@@ -1,3 +1,4 @@
 voctoconf/local_settings.py
 /_*
 /sync.sh
+*.pyc
