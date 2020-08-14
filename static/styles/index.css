@@ -42,3 +42,18 @@ footer .col-3 {
 }
 footer a[href]{ color: #999; }
 footer a[href]:hover{ color: #ccc; text-decoration: none; }
+
+
+.partneronline {
+  animation: pulse 1s infinite alternate;
+}
+
+@keyframes pulse {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.5;
+  }
+}
+

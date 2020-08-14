@@ -8,7 +8,7 @@ class RoomAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Basics', {'fields': ('name', 'server', 'record')}),
         ('Joining', {'fields': ('moderators', 'guest_policy', 'max_participants', 'mute_on_start', 'start_as_guest')}),
-        ('Branding', {'fields': ('logo', 'welcome_msg')}),
+        ('Branding', {'fields': ('logo', 'welcome_msg', 'slides')}),
         ('Lockdown', {'fields': ('lock_cams', 'lock_mics', 'lock_private_chat', 'lock_public_chat', 'lock_shared_notes', 'lock_layout')}),
     )
 

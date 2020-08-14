@@ -9,6 +9,7 @@ import chat.urls
 import bbb.urls
 import authstuff.urls
 import eventpage.urls
+import partners.urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,3 +25,4 @@ urlpatterns += chat.urls.urlpatterns
 urlpatterns += bbb.urls.urlpatterns
 urlpatterns += authstuff.urls.urlpatterns
 urlpatterns += eventpage.urls.urlpatterns
+urlpatterns += partners.urls.urlpatterns
