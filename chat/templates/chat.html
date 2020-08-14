@@ -1,28 +1,46 @@
 {% extends "base.html" %}
+{% block page_class %}page h-100{% endblock  %}
 
 {% block content %}
-<main class="container">
-	<h1>Chat</h1>
-  <div class="row">
-    <div class="col">
-      <textarea id="chat-log" class="form-control" cols="100" rows="20">{{ backlog }}</textarea>
+<main class="container full-height-content">
+  <div class="d-flex flex-column h-100">
+    <div>
+	    <h1>Chat</h1>
+    </div>
+    <div id="chat-scroll-container" class="flex-grow-1" style="overflow-y: scroll">
+      <table id="chat-log" class="w-100 table table-striped table-sm">
+        <tbody class="w-100">
+          {% for message in backlog %}
+          <tr>
+            <td>{{ message.date }}</td><td>{{ message.sender }}</td><td>{{ message.content }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <style>
+        #chat-log { overflow-wrap: anywhere; }
+        #chat-log td:nth-child(1), #chat-log td:nth-child(2) {
+          width: 10em;
+        }
+      </style>
+    </div>
+    <div class="row">
+      <div class="col-10">
+        <input id="chat-message-input" type="text" class="form-control" placeholder="Message..." size="100">
+      </div>
+      <div class="col-2">
+        <input id="chat-message-submit" type="button" class="form-control" value="Send">
+      </div>
+      {{ room_name|json_script:"room-name" }}
     </div>
   </div>
-  <div class="row">
-    <div class="col-10">
-      <input id="chat-message-input" type="text" class="form-control" placeholder="Message..." size="100">
-    </div>
-    <div class="col-2">
-      <input id="chat-message-submit" type="button" class="form-control" value="Send">
-    </div>
-    {{ room_name|json_script:"room-name" }}
 </main>
 
 <script>
 	const roomName = JSON.parse(document.getElementById('room-name').textContent);
 
   function scrollChatDown() {
-    document.querySelector('#chat-log').scrollTo(0, document.querySelector('#chat-log').scrollHeight)
+    document.querySelector('#chat-scroll-container').scrollTo(0, document.querySelector('#chat-scroll-container').scrollHeight)
   }
   scrollChatDown();
 
@@ -39,8 +57,19 @@
 
     chatSocket.onmessage = function(e) {
       console.log('WS message:', e.data);
-      const data = JSON.parse(e.data);
-      document.querySelector('#chat-log').value += ('\n' + data.message);
+      const message = JSON.parse(e.data).message;
+      const row = document.createElement('tr');
+      row.appendChild(document.createElement('td'))
+          .appendChild(document.createTextNode(message.date))
+      row.appendChild(document.createElement('td'))
+          .appendChild(document.createTextNode(message.sender))
+      row.appendChild(document.createElement('td'))
+          .appendChild(document.createTextNode(message.content));
+      const chat = document.querySelector('#chat-log > tbody');
+      chat.appendChild(row);
+      // remove old messages
+      if(chat.childNodes.length>150)
+        chat.removeChild(chat.childNodes[0]);
       scrollChatDown();
     };
 
@@ -75,5 +104,6 @@
     scrollChatDown();
 	};
 
+  scrollChatDown();
 </script>
 {% endblock %}

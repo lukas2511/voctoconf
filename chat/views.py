@@ -9,8 +9,8 @@ def chatview(request, room=None):
 
     messages = Message.objects.filter(room=room).order_by('-date')
     if messages:
-        backlog = "\n".join([msg.chatmsg() for msg in messages[:100][::-1]])
+        backlog = [msg.chatmsg() for msg in messages[:100][::-1]]
     else:
-        backlog = ""
+        backlog = []
 
     return render(request, "chat.html", {'room_name': room, 'backlog': backlog})

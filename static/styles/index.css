@@ -15,7 +15,8 @@ footer {
 .page .full-height-content {
   height: 100%;
   padding-bottom: 5rem;
-  margin: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 
 /* Page Filling (iframe) */
