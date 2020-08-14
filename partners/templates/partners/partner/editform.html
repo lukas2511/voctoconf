@@ -1,0 +1,46 @@
+{% load i18n %}
+{% if form %}
+
+{% if LANGUAGE_CODE == "de" %}
+<h1>Partner-Beschreibung bearbeiten</h1>
+{% else %}
+<h1>Change partner description</h1>
+{% endif %}
+
+<p>
+{% if LANGUAGE_CODE == "de" %}
+Es können Beschreibungen für die Deutsche und Englische Version der Seite angeboten werden.<br/>
+Sollte nur eine Sprache angegeben sein wird diese für beide angezeigt.<br/>
+<br/>
+Beschreibungen können in Form von Markdown oder einfach als simpler Text angegeben werden
+{% else %}
+Descriptions can be given for the german and english version of the page.<br/>
+If only one language is given it will be shown for both.<br/>
+<br/>
+Descriptions can be entered as markdown or simply as plain text
+{% endif %}
+</p>
+
+{% if form.non_field_errors %}
+<div class="alert alert-danger" role="alert">
+	{% for error in form.non_field_errors %}{{ error|linebreaksbr }}<br />{% endfor %}
+</div>
+{% endif %}
+<form action="" method="post" class="">
+	{% csrf_token %}
+	{% for field in form %}
+	<div class="form-group">
+		<label for="{{ field.id_for_label }}"><b>{{ field.label }}</b></label>
+		{% if field.errors %}
+		<div class="alert alert-danger" role="alert">
+			{% for error in field.errors %}{{ error|linebreaksbr }}<br />{% endfor %}
+		</div>
+		{% endif %}
+		{{ field }}
+	</div>
+	{% endfor %}
+	<div class="form-group">
+		<input class="form-control" type="submit" value="{% if LANGUAGE_CODE == "de" %}Speichern{% else %}Save{% endif %}" />
+	</div>
+</form>
+{% endif %}
