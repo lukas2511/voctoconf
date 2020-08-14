@@ -86,10 +86,10 @@ class Room(models.Model):
         verbose_name = 'BigBlueButton Room'
 
     def get_stats(self):
-        stats = self.stats.all().order_by('-date')
-        if not stats:
+        try:
+            return self.stats.all().latest('date')
+        except:
             return None
-        return stats[0]
 
     def __str__(self):
         return "%s on %s" % (self.name, self.server)

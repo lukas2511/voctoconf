@@ -35,6 +35,7 @@
 				{{ room.name }}
 			</div>
 			{% endif %}
+			{% if False %}
 			{% if room.current_event %}
 			{% with room.current_event as event %}
 			<span style='font-size:12px'>{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }}</span><br/>
@@ -47,8 +48,27 @@
 			<span style='font-size:12px'>Next Up: <a href="/event/{{ event.id }}">{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }} {{ event.title }}</a></span>
 			{% endwith %}
 			{% endif %}
-			{% if room.bbb and room.bbb.get_stats.running %}<br/><span style='font-size:12px'>Aktuell {{ room.bbb.get_stats.participants }} Teilnehmer</span>{% endif %}
-			{% if room.bbb and not room.bbb.get_stats.running %}<br/><span style='font-size:12px'>{% if LANGUAGE_CODE == "de" %}Dieser Raum ist (noch) nicht aktiv{% else %}This room is not (yet) active{% endif %}</span>{% endif %}
+			{% endif %}
+			{% if room.bbb %}
+			{% with room.bbb.get_stats as stats %}
+			<br/>
+			<span style='font-size:12px'>
+				{% if stats.running %}
+					{% if LANGUAGE_CODE == "de" %}
+					{{ stats.participants }} Teilnehmer</span>
+					{% else %}
+					{{ stats.participants }} participants</span>
+					{% endif %}
+				{% else %}
+					{% if LANGUAGE_CODE == "de" %}
+					Dieser Raum ist (noch) nicht aktiv
+					{% else %}
+					This room is not (yet) active
+					{% endif %}
+				{% endif %}
+			</span>
+			{% endwith %}
+			{% endif %}
 		</div>
 		{% endif %}
 		{% endfor %}
