@@ -16,12 +16,13 @@ class Command(BaseCommand):
             if not event.bbb:
                 new_room = True
                 event.bbb = bbb.models.Room()
+                event.bbb.record = False
+                event.bbb.start_as_guest = False
             event.bbb.name = "Workshop: %s" % event.title
             event.bbb.server = random.choice(bbb.models.Server.objects.filter(for_workshops=True))
-            event.bbb.record = False
-            event.bbb.start_as_guest = True
-            if new_room: event.bbb.save()
-            event.save()
+            if new_room:
+                event.bbb.save()
+                event.save()
 
             for person in event.persons.all():
                 if person.user and person.user not in event.bbb.moderators:

@@ -43,8 +43,8 @@
 	<div class="row align-items-center align-content-around text-center w-100">
 		{% for partner in partners %}
 		<figure class="col partner-logo">
-			<a href="{{ partner.url }}" target="_blank" title="{{ partner.name }}">
-				<img src="{{ partner.logo.url }}" alt="{{ partner.name }}">
+			<a href="/partner/{{ partner.id }}" target="_blank" title="{{ partner.name }}">
+				<img src="{{ partner.logo.url }}" alt="{{ partner.name }}" />
 			</a>
 		</figure>
 		{% endfor %}

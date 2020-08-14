@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<main class="container">
+	<h1><a href="{{ partner.url }}">{{ partner.name }}</a></h1>
+	<div class="row">
+		<div class="col-sm-9 col-12 py-1">
+			{% if LANGUAGE_CODE == 'de' and partner.description_de.rendered %}
+			{{ partner.description_de.rendered|safe }}
+			{% elif partner.description_en.rendered %}
+			{{ partner.description_en.rendered|safe }}
+			{% elif LANGUAGE_CODE == 'de' %}
+			Zu diesem Partner liegt uns leider kein Vorstellungstext bereit, besuche doch einfach die
+			Partner-Webseite unter <a href="{{ partner.url }}">{{ partner.url }}</a>.
+			{% else %}
+			Unfortunately we don't have any introductionary text for this partner, but you can simply
+			visit their web page at <a href="{{ partner.url }}">{{ partner.url }}</a>.
+			{% endif %}
+		</div>
+		<div class="col-sm-3 col-12 py-1">
+			<a href="{{ partner.url }}">
+				<img src="{{ partner.logo.url }}" alt="{{ partner.name }}" style="max-width:100%;" /><br/>
+				{{ partner.short_url }}
+			</a>
+		</div>
+	</div>
+
+
+	
+</main>
+{% endblock %}

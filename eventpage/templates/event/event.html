@@ -1,29 +1,41 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load is_bbb_mod %}
 
 {% block content %}
 <main class="container">
-	<h2>Vorträge</h2>
+	<h1>Vorträge</h1>
 
 	<div class="row">
 		{% for room in event_rooms %}
 		{% if room.bbb or room.stream %}
 		<div class="col-sm-{{ room.view_size }} col-12 py-1">
-			<a class="btn btn-{% if room.bbb and room.bbb.get_stats and not room.bbb.get_stats.running %}secondary{% else %}primary{% endif %} btn-lg w-100" href="{% if room.bbb %}/bbb/{{ room.bbb.id }}{% else %}/stream/{{ room.stream.id }}{% endif %}" role="button">
+			{% if not room.bbb or room.bbb.get_stats.running %}
+			<a class="btn btn-primary btn-lg w-100" href="{% if room.bbb %}/bbb/{{ room.bbb.id }}{% else %}/stream/{{ room.stream.id }}{% endif %}" role="button">
 				{{ room.name }}
 			</a>
+			{% elif room.bbb and room.bbb|is_bbb_mod:request.user %}
+			<a class="btn btn-secondary btn-lg w-100" href="{% if room.bbb %}/bbb/{{ room.bbb.id }}{% else %}/stream/{{ room.stream.id }}{% endif %}" role="button">
+				{{ room.name }}
+			</a>
+			{% else %}
+			<div class="btn btn-secondary btn-lg w-100 disabled">
+				{{ room.name }}
+			</div>
+			{% endif %}
 			<span style='font-size:12px'>18:00 - 18:30</span><br/>
 			Ein toller Vortrag<br/>
 			Mensch Mitname<br />
 			<span style='font-size:12px'>Next Up: 18:30 - 19:00 End of the World – Kim Zhou Donald Putin</span>
 			{% if room.bbb and room.bbb.get_stats.running %}<br/><span style='font-size:12px'>Aktuell {{ room.bbb.get_stats.participants }} Teilnehmer</span>{% endif %}
-			{% if room.bbb and not room.bbb.get_stats.running %}<br/><span style='font-size:12px'>Der Raum ist aktuell geschlossen.</span>{% endif %}
+			{% if room.bbb and not room.bbb.get_stats.running %}<br/><span style='font-size:12px'>Der Raum ist aktuell inaktiv.</span>{% endif %}
 		</div>
 		{% endif %}
 		{% endfor %}
 	</div>
+	<div class="border-top my-3"></div>
 
-	<h2>Workshops</h2>
+	<h1>Workshops</h1>
 	{% for workshop in workshops|slice:":5" %}
 	{% if workshop.bbb %}
 	<div class="row">
@@ -33,16 +45,37 @@
 			<span style='font-size:12px'>{{ workshop.persons_str }}</span>
 		</div>
 		<div class="col-sm-2 col-12 py-1">
-			<a class="btn btn-{% if workshop.bbb.get_stats.running %}primary{% else %}secondary{% endif %} btn-lg w-100" href="/bbb/{{ workshop.bbb.id }}" role="button">
+			{% if workshop.bbb.get_stats.running %}
+			<a class="btn btn-primary btn-lg w-100" href="/bbb/{{ workshop.bbb.id }}" role="button">
 				Join
 			</a>
+			{% elif workshop.bbb|is_bbb_mod:request.user %}
+			<a class="btn btn-primary btn-lg w-100" href="/bbb/{{ workshop.bbb.id }}" role="button">
+				Start
+			</a>
+			{% else %}
+			<div class="btn btn-secondary btn-lg w-100 disabled" role="button">
+				Join
+			</div>
+			{% endif %}
 			{% if workshop.bbb.get_stats.running %}<br/><center><span style='font-size:12px'>{{ workshop.bbb.get_stats.participants }} Teilnehmer</span></center>{% endif %}
 			{% if workshop.bbb and not workshop.bbb.get_stats.running %}<br/><center><span style='font-size:12px'>Der Raum ist aktuell inaktiv</span></center>{% endif %}
 		</div>
 	</div>
+	<div class="border-top my-3"></div>
 	{% endif %}
 	{% endfor %}
 
-	<h2>Partner</h2>
+	<h1>{% if LANGUAGE_CODE == "de" %}Unsere Partner{% else %}Our partners{% endif %}</h1>
+	<div class="row align-items-center align-content-around text-center w-100" style="margin-top:20px;margin-bottom:10px;">
+		{% for partner in partners %}
+		<figure class="col partner-logo">
+			<a href="/partner/{{ partner.id }}" target="_blank" class="{% if partner.bbb.is_running %}partneronline{% else %}partneroffline{% endif %}" title="{{ partner.name }}">
+				<img src="{{ partner.logo.url }}" alt="{{ partner.name }}">
+			</a>
+		</figure>
+		{% endfor %}
+	</div>
+
 </main>
 {% endblock %}

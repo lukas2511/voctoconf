@@ -94,18 +94,6 @@ class Room(models.Model):
     def __str__(self):
         return "%s on %s" % (self.name, self.server)
 
-    def get_moderators(self):
-        return self.moderators.all() + self.for_sponsorinfo.all()
-
-    def get_logo(self):
-        partner = self.for_partner.all()[0] if self.for_partner.all() else None
-        if self.logo:
-            return self.logo
-        elif partner and partner.logo:
-            return partner.logo
-        else:
-            return None
-
     def is_moderator(self, user):
         if not user.is_authenticated:
             return False
@@ -120,6 +108,18 @@ class Room(models.Model):
             return True
 
         return False
+
+    def get_moderators(self):
+        return self.moderators.all() + self.for_sponsorinfo.all()
+
+    def get_logo(self):
+        partner = self.for_partner.all()[0] if self.for_partner.all() else None
+        if self.logo:
+            return self.logo
+        elif partner and partner.logo:
+            return partner.logo
+        else:
+            return None
 
     def join(self, request=None, name=None, as_moderator=None):
         with lock("bbbroom-%s" % self.id):
@@ -209,7 +209,12 @@ class Room(models.Model):
 
         post_data = None
         if self.slides:
-            post_data = '<modules><module name="presentation"><document url="%s" filename="default.pdf"/></document></module></modules>' % self.slides.url
+            post_data = '<modules>'
+            post_data += '<module name="presentation">'
+            post_data += '<document url="%s" filename="default.pdf"/>' % self.slides.url
+            post_data += '</module>'
+            post_data += '</modules>'
+            print(post_data)
 
         return bbb_apicall(self.server.url, self.server.get_secret(), "create", params, post_data)
 
@@ -230,4 +235,4 @@ class RoomStats(models.Model):
     creation_date = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return "Stats for %s (Collected: %s)" % (self.room.id, self.creation_date)
+        return "Stats for %s (Collected: %s)" % (self.room.name, self.date)
