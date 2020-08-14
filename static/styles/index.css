@@ -123,7 +123,7 @@ footer.slim-footer {
   margin-top: -3.5rem;
   height: 3.5rem;
 }
-body:has(footer.slim-footer).page {
+body:has(footer.slim-footer) .page {
   padding-bottom: 3.5rem;
 }
 footer.slim-footer .footer .footer-logo {
