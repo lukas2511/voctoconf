@@ -1,0 +1,4 @@
+django
+django-extensions
+xmltodict
+psycopg2
