@@ -12,6 +12,19 @@ footer {
   clear: both;
   height: 6rem;
 }
+.page .full-height-content {
+  height: 100%;
+  padding-bottom: 5rem;
+  margin: 0px;
+}
+
+.full-size{
+  width: 100%;
+  height: 100%;
+  border: 0px;
+  margin: 0px;
+  padding: 0px;
+}
 
 .header {
   display: flex;
