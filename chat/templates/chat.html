@@ -2,6 +2,74 @@
 
 {% block content %}
 <main class="container">
-	<iframe src="https://kiwiirc.com/client/irc.freenode.org/?nick=froscon|?#froscon-test" style="border:0; width:100%; height:600px;"></iframe>
+	<h1>Chat</h1>
+  <div class="row">
+    <div class="col">
+      <textarea id="chat-log" class="form-control" cols="100" rows="20">{{ backlog }}</textarea>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-10">
+      <input id="chat-message-input" type="text" class="form-control" placeholder="Message..." size="100">
+    </div>
+    <div class="col-2">
+      <input id="chat-message-submit" type="button" class="form-control" value="Send">
+    </div>
+    {{ room_name|json_script:"room-name" }}
 </main>
+
+<script>
+	const roomName = JSON.parse(document.getElementById('room-name').textContent);
+
+  function scrollChatDown() {
+    document.querySelector('#chat-log').scrollTo(0, document.querySelector('#chat-log').scrollHeight)
+  }
+  scrollChatDown();
+
+  var chatSocket;
+  function connect() {
+    chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/' + roomName + '/');
+    chatSocket.onopen = function() {
+      console.log('WS connected')
+    };
+
+    chatSocket.onmessage = function(e) {
+      console.log('WS message:', e.data);
+      const data = JSON.parse(e.data);
+      document.querySelector('#chat-log').value += ('\n' + data.message);
+      scrollChatDown();
+    };
+
+    chatSocket.onclose = function(e) {
+      console.log('WS is closed. Reconnect will be attempted in 1 second.', e.reason);
+      setTimeout(function() {
+        connect();
+      }, 1000);
+    };
+
+    chatSocket.onerror = function(err) {
+      console.error('WS encountered error: ', err.message, 'Closing socket');
+      ws.close();
+    };
+  }
+  connect();
+
+	document.querySelector('#chat-message-input').focus();
+	document.querySelector('#chat-message-input').onkeyup = function(e) {
+		if (e.keyCode === 13) {  // enter, return
+			document.querySelector('#chat-message-submit').click();
+		}
+	};
+
+	document.querySelector('#chat-message-submit').onclick = function(e) {
+		const messageInputDom = document.querySelector('#chat-message-input');
+		const message = messageInputDom.value;
+		chatSocket.send(JSON.stringify({
+				'message': message
+		}));
+		messageInputDom.value = '';
+    scrollChatDown();
+	};
+
+</script>
 {% endblock %}

@@ -32,6 +32,8 @@ DATABASES = {
 
 # Application definition
 INSTALLED_APPS = [
+    'channels',
+    'chat',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,7 +44,6 @@ INSTALLED_APPS = [
     'partners',
     'bbb',
     'eventpage',
-    'chat',
     'helpers',
     'authstuff',
 ]
@@ -117,6 +118,16 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+ASGI_APPLICATION = 'voctoconf.routing.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 try:
     from .local_settings import *
