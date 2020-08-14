@@ -10,6 +10,8 @@
 			{{ partner.description_de.rendered|safe }}
 			{% elif partner.description_en.rendered %}
 			{{ partner.description_en.rendered|safe }}
+			{% elif partner.description_de.rendered %}
+			{{ partner.description_de.rendered|safe }}
 			{% elif LANGUAGE_CODE == 'de' %}
 			Zu diesem Partner liegt uns leider kein Vorstellungstext bereit, besuche doch einfach die
 			Partner-Webseite unter <a href="{{ partner.url }}">{{ partner.url }}</a>.
@@ -26,7 +28,5 @@
 		</div>
 	</div>
 
-
-	
 </main>
 {% endblock %}

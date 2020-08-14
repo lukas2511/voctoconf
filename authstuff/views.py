@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import get_user_model
+from django.http import HttpResponse
 import traceback
 from .forms import LoginForm, RegisterForm, NameForm
+from django.shortcuts import get_object_or_404
+from .models import AuthToken
 
 def logout_view(request):
     request.session["name"] = None
@@ -47,6 +50,11 @@ def register_view(request):
         form = RegisterForm()
 
     return render(request, "accounts/register.html", {"form": form})
+
+def token_login_view(request, token):
+    authtoken = get_object_or_404(AuthToken, token=token)
+    login(request, authtoken.user)
+    return redirect(request.GET.get("next") if request.GET.get("next") is not None else "/event")
 
 def login_view(request):
     if request.user.is_authenticated:
