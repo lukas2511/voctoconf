@@ -26,10 +26,10 @@
     </div>
     <div class="row">
       <div class="col-10">
-        <input id="chat-message-input" type="text" class="form-control" placeholder="Message..." size="100">
+        <input id="chat-message-input" type="text" class="form-control" placeholder="Message..." maxlength="200" />
       </div>
       <div class="col-2">
-        <input id="chat-message-submit" type="button" class="form-control" value="Send">
+        <input id="chat-message-submit" type="button" class="form-control" value="Send" />
       </div>
       {{ room_name|json_script:"room-name" }}
     </div>
