@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load is_bbb_mod %}
+{% load static %}
 
 {% block title %}{{ event.title }} - {% endblock %}
 
@@ -14,12 +15,21 @@
 			{{ event.description|linebreaks }}
 		</div>
 	</div>
-	{% for person in event.persons.all %}
-	<div class="row">
-		<div class="col">
-			{% if person.image %}<img src="{{ person.image }}" />{% endif %} <a href="/person/{{ person.id }}">{{ person.name }}</a>
+	<div class="d-flex">
+		{% for person in event.persons.all %}
+		<div>
+			<a href="/person/{{ person.id }}">
+			<figure class="col partner-logo">
+				{% if person.image %}
+				<img class="img-thumbnail" src="{{ person.image }}" />
+				{% else %}
+				<img class="img-thumbnail" src="{% static "images/placeholder_user.png" %}" />
+				{% endif %}
+				<figcaption class="w-100 text-center">{{ person.name }}</figcaption>
+			</figure>
+			</a>
 		</div>
+		{% endfor %}
 	</div>
-	{% endfor %}
 </main>
 {% endblock %}
