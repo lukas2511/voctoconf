@@ -116,8 +116,8 @@ footer {
   height: 48px;
 }
 
-.footer a[href]{ color: #999; }
-.footer a[href]:hover{ color: #ccc; text-decoration: none; }
+.footer a[href]:not(.btn){ color: #999; }
+.footer a[href]:not(.btn):hover{ color: #ccc; text-decoration: none; }
 
 /* Slim Footer (requires body.wide) */
 footer.slim-footer {

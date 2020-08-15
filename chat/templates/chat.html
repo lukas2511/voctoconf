@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block page_class %}page h-100{% endblock  %}
+{% load is_chat_moderator %}}
 
 {% block content %}
 <main class="container full-height-content">
@@ -12,7 +13,7 @@
         <tbody class="w-100">
           {% for message in backlog %}
           <tr>
-            <td>{{ message.date }}</td><td>{{ message.sender }}</td><td>{{ message.content }}</td>
+            <td>{{ message.date }}</td><td>{{ message.sender }}</td><td>{{ message.content }}</td><td><a href="/chat/ban/{{ message.sender }}" class="fa fa-ban"></a></td>
           </tr>
           {% endfor %}
         </tbody>
@@ -22,6 +23,11 @@
         #chat-log td:nth-child(1), #chat-log td:nth-child(2) {
           width: 10em;
         }
+        {% if not request.user|is_chat_moderator %}
+        #chat-log td:nth-child(4) {
+          display: none;
+        }
+        {% endif %}
       </style>
     </div>
     <div class="row">
@@ -65,6 +71,10 @@
           .appendChild(document.createTextNode(message.sender))
       row.appendChild(document.createElement('td'))
           .appendChild(document.createTextNode(message.content));
+      const ban_icon = row.appendChild(document.createElement('td'))
+                          .appendChild(document.createElement('a'))
+      ban_icon.setAttribute('href',`/chat/ban/${message.sender}`);
+      ban_icon.classList.add('fa', 'fa-ban');
       const chat = document.querySelector('#chat-log > tbody');
       chat.appendChild(row);
       // remove old messages
