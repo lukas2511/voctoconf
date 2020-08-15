@@ -17,6 +17,7 @@
 		<img class="logo mb-3" src="{% static "images/title_logo.jpg" %}" alt="FrOSCon 2020 - Cloud Edition" />
 		<p>{{ 'landingpage-header'|staticpage:LANGUAGE_CODE|safe }}</p>
 		<div class="row">
+			{% if page_live %}
 			{% if LANGUAGE_CODE == "de" %}
 			<div class="col-sm-6 col-12 py-1">
 				<a class="btn btn-primary btn-lg w-100" href="/event" role="button">Zur Veranstaltung</a>
@@ -30,6 +31,11 @@
 			</div>
 			<div class="col-sm-6 col-12 py-1">
 				<a class="btn btn-primary btn-lg w-100" href="https://programm.froscon.de/2020/" role="button">Schedule</a>
+			</div>
+			{% endif %}
+			{% else %}
+			<div class="col-sm-12 col-12 py-1">
+				<div class="btn btn-secondary btn-lg w-100 disabled">{% if LANGUAGE_CODE == "de" %}BALD GEHTS LOS{% else %}STARTING SOON{% endif %}</div>
 			</div>
 			{% endif %}
 		</div>
@@ -49,9 +55,9 @@
 	<div class="row align-items-center align-content-around text-center mb-4 w-100 venue-partners">
 		{% for partner in venue_partners %}
 		<figure class="col partner-logo">
-			<a href="/partner/{{ partner.id }}" title="{{ partner.name }}">
+			{% if page_live %}<a href="/partner/{{ partner.id }}" title="{{ partner.name }}">{% endif %}
 				<img src="{{ partner.logo.url }}" alt="{{ partner.name }}" />
-			</a>
+			{% if page_live %}</a>{% endif %}
 		</figure>
 		{% endfor %}
 	</div>
@@ -60,16 +66,18 @@
 	<div class="row align-items-center align-content-around text-center w-100">
 		{% for partner in venueless_partners %}
 		<figure class="col partner-logo">
-			<a href="/partner/{{ partner.id }}" title="{{ partner.name }}">
+			{% if page_live %}<a href="/partner/{{ partner.id }}" title="{{ partner.name }}">{% endif %}
 				<img src="{{ partner.logo.url }}" alt="{{ partner.name }}" />
-			</a>
+			{% if page_live %}</a>{% endif %}
 		</figure>
 		{% endfor %}
 	</div>
 	{% endif %}
 	{% endif %}
+	{% if page_live %}
 	<div class="landing-page-explaination">
 		{{ 'landingpage-explanation'|staticpage:LANGUAGE_CODE|safe }}
 	</div>
+	{% endif %}
 </main>
 {% endblock %}

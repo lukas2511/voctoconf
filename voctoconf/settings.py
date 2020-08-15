@@ -7,6 +7,7 @@ DEFAULT_SECRET_KEY = 'lolinsecure1337lolinsecure1337lolinsecure1337lolinsecure13
 SECRET_KEY = DEFAULT_SECRET_KEY
 
 DEBUG = True
+PAGE_LIVE = True
 
 DOMAIN = "localhost"
 ALLOWED_HOSTS = ["*"]
