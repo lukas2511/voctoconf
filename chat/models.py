@@ -1,7 +1,7 @@
 from django.db import models
 import channels.layers
 from asgiref.sync import async_to_sync
-
+from django.utils import timezone
 
 class Message(models.Model):
     date = models.DateTimeField(auto_now_add=True)
@@ -17,4 +17,4 @@ class Message(models.Model):
             async_to_sync(channel_layer.group_send)('chat_%s' % self.room, {'message': self.chatmsg(), 'type': 'chat_message'})
 
     def chatmsg(self):
-        return {'date': self.date.strftime("%H:%M:%S"), 'sender': self.sender, 'content': self.content}
+        return {'date': timezone.localtime(self.date).strftime("%H:%M:%S"), 'sender': self.sender, 'content': self.content}
