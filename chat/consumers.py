@@ -38,7 +38,7 @@ class ChatConsumer(WebsocketConsumer):
             msg.sender = "guest-%s" % self.scope['session']['name']
         else:
             return # wat?
-        msg.content = message[:256]
+        msg.content = message[:200]
         msg.room = self.room_name
         msg.save()
 
