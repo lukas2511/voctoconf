@@ -158,7 +158,7 @@
 	<div class="row align-items-center align-content-around text-center mb-10 w-100" style='padding-top:16px;'>
 		{% for partner in partners %}
 		<figure class="col partner-logo">
-			<a href="/partner/{{ partner.id }}" class="{% if partner.bbb.is_running %}partneronline{% else %}partneroffline{% endif %}" title="{{ partner.name }}">
+			<a href="/partner/{{ partner.id }}" class="{% if partner.bbb.get_stats.running %}partneronline{% else %}partneroffline{% endif %}" title="{{ partner.name }}">
 				<img src="{{ partner.logo.url }}" alt="{{ partner.name }}">
 			</a>
 		</figure>
