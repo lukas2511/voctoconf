@@ -39,13 +39,13 @@
 {% block content %}
 <main class="container">
 
-	{% if venue_partners is defined or venueless_partners is defined %}
+	{% if venue_partners or venueless_partners %}
 	{% if LANGUAGE_CODE == "de" %}
 	<h2>Partner</h2>
 	{% else %}
 	<h2>Partners</h2>
 	{% endif %}
-	{% if venue_partners is defined %}
+	{% if venue_partners %}
 	<div class="row align-items-center align-content-around text-center mb-4 w-100 venue-partners">
 		{% for partner in venue_partners %}
 		<figure class="col partner-logo">
@@ -56,7 +56,7 @@
 		{% endfor %}
 	</div>
 	{% endif %}
-	{% if venueless_partners is defined %}
+	{% if venueless_partners %}
 	<div class="row align-items-center align-content-around text-center w-100">
 		{% for partner in venueless_partners %}
 		<figure class="col partner-logo">

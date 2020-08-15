@@ -3,13 +3,8 @@ from partners.models import Partner
 
 # landingpage
 def index(request):
-    partners = Partner.objects.filter(hide=False).order_by("order")
-    return render(
-        request,
-        "index.html",
-        {
-            'venue_partners': [partner for partner in partners if partner.bbb],
-            'venueless_partners': [partner for partner in partners if not partner.bbb] # lul :3
-        })
+    context = {}
+    context['venue_partners'] = Partner.objects.filter(hide=False, bbb__isnull=False).order_by("order")
+    context['venueless_partners'] = Partner.objects.filter(hide=False, bbb__isnull=True).order_by("order") # lul :3
 
-
+    return render(request, "index.html", context)
