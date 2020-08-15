@@ -19,11 +19,11 @@
 		{% for person in event.persons.all %}
 		<div>
 			<a href="/person/{{ person.id }}">
-			<figure class="col partner-logo">
+			<figure class="col person">
 				{% if person.image %}
-				<img class="img-thumbnail" src="{{ person.image }}" />
+				<img style="height:200px" class="img-thumbnail" src="{{ person.image }}" />
 				{% else %}
-				<img class="img-thumbnail" src="{% static "images/placeholder_user.png" %}" />
+				<img  style="height:200px" class="img-thumbnail" src="{% static "images/placeholder_user.png" %}" />
 				{% endif %}
 				<figcaption class="w-100 text-center">{{ person.name }}</figcaption>
 			</figure>

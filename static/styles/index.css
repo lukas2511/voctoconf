@@ -132,6 +132,12 @@ footer.slim-footer .footer .footer-logo {
 }
 
 
+.person img {
+  max-height: 100px;
+  min-width: 80px;
+  max-width: 100px;
+}
+
 .landing-page-explaination a[href], .landing-page-main a[href]:hover { color: inherit; text-decoration: underline; }
 
 .partneronline img {
