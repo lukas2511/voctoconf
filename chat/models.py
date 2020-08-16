@@ -28,9 +28,9 @@ class Message(models.Model):
     def send(self):
         if self._state.adding:
             channel_layer = channels.layers.get_channel_layer()
-            async_to_sync(channel_layer.group_send)('chat_%s' % self.room, 
+            async_to_sync(channel_layer.group_send)('chat_%s' % self.room,
                 {
-                    'type': self.type,
+                    'type': str(next(obj for obj in messagetypes if obj[0]==self.type)[1]),
                     'message': self.chatmsg()
                 })
         
