@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from .models import Room
 from authstuff.names import name_required
 from django.http import HttpResponse
+import json
 
 @name_required
 def roomview(request, roomid):
@@ -25,3 +26,9 @@ def roomview(request, roomid):
 def statsview(request, roomid):
     room = get_object_or_404(Room, id=roomid)
     return HttpResponse(room.get_stats().as_json())
+
+def livestatsview(request, roomid):
+    room = get_object_or_404(Room, id=roomid)
+    stats = {}
+    stats["running"] = room.is_running()
+    return HttpResponse(json.dumps(stats))
