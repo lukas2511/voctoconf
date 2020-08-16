@@ -1,5 +1,6 @@
 django
 django-extensions
+django-templates-macros
 xmltodict
 psycopg2
 markdown

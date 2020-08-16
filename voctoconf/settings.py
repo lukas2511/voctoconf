@@ -33,6 +33,7 @@ DATABASES = {
 
 # Application definition
 INSTALLED_APPS = [
+    'macros',
     'channels',
     'chat',
     'django.contrib.admin',

@@ -1,6 +1,14 @@
 {% extends "base.html" %}
-{% block page_class %}page h-100{% endblock  %}
 {% load is_chat_moderator %}}
+{% load static %}
+{% load macros %}
+
+{% loadmacros "macros.html" %}
+
+{% block scripts %}
+  <script src="{% static "scripts/chat.js" %}"></script>
+{% endblock %}
+{% block page_class %}page h-100{% endblock  %}
 
 {% block content %}
 <main class="container full-height-content">
@@ -11,23 +19,24 @@
     <div id="chat-scroll-container" class="flex-grow-1" style="overflow-y: scroll">
       <table id="chat-log" class="w-100 table table-striped table-sm">
         <tbody class="w-100">
+          {% with moderator as request.user|is_chat_moderator %}
           {% for message in backlog %}
-          <tr>
-            <td>{{ message.date }}</td><td>{{ message.sender }}</td><td>{{ message.content }}</td><td><a href="/chat/ban/{{ message.sender }}" class="fa fa-ban"></a></td>
-          </tr>
+          {% usemacro chat_message message.date message.sender message.content moderator %}
           {% endfor %}
+          {% endwith %}
         </tbody>
       </table>
+      <template id="chat_message">{% usemacro chat_message message.date message.sender message.content request.user|is_chat_moderator %}</template>
+      <template id="whisper_message">{% usemacro whisper_message message.date message.sender message.content request.user|is_chat_moderator %}</template>
+      <template id="system_message">{% usemacro system_message message.date message.sender message.content request.user|is_chat_moderator %}</template>
       <style>
         #chat-log { overflow-wrap: anywhere; }
         #chat-log td:nth-child(1), #chat-log td:nth-child(2) {
           width: 10em;
         }
-        {% if not request.user|is_chat_moderator %}
         #chat-log td:nth-child(4) {
-          display: none;
+          white-space: nowrap;
         }
-        {% endif %}
       </style>
     </div>
     <div class="row">
@@ -42,78 +51,4 @@
   </div>
 </main>
 
-<script>
-	const roomName = JSON.parse(document.getElementById('room-name').textContent);
-
-  function scrollChatDown() {
-    document.querySelector('#chat-scroll-container').scrollTo(0, document.querySelector('#chat-scroll-container').scrollHeight)
-  }
-  scrollChatDown();
-
-  var chatSocket;
-  function connect() {
-    if (window.location.protocol == 'https:' ) {
-      chatSocket = new WebSocket('wss://' + window.location.host + '/ws/chat/' + roomName + '/');
-    } else {
-      chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/' + roomName + '/');
-    }
-    chatSocket.onopen = function() {
-      console.log('WS connected')
-    };
-
-    chatSocket.onmessage = function(e) {
-      console.log('WS message:', e.data);
-      const message = JSON.parse(e.data).message;
-      const row = document.createElement('tr');
-      row.appendChild(document.createElement('td'))
-          .appendChild(document.createTextNode(message.date))
-      row.appendChild(document.createElement('td'))
-          .appendChild(document.createTextNode(message.sender))
-      row.appendChild(document.createElement('td'))
-          .appendChild(document.createTextNode(message.content));
-      const ban_icon = row.appendChild(document.createElement('td'))
-                          .appendChild(document.createElement('a'))
-      ban_icon.setAttribute('href',`/chat/ban/${message.sender}`);
-      ban_icon.classList.add('fa', 'fa-ban');
-      const chat = document.querySelector('#chat-log > tbody');
-      chat.appendChild(row);
-      // remove old messages
-      if(chat.childNodes.length>150)
-        chat.removeChild(chat.childNodes[0]);
-      scrollChatDown();
-    };
-
-    chatSocket.onclose = function(e) {
-      console.log('WS is closed. Reconnect will be attempted in 1 second.', e.reason);
-      setTimeout(function() {
-        connect();
-      }, 1000);
-    };
-
-    chatSocket.onerror = function(err) {
-      console.error('WS encountered error: ', err.message, 'Closing socket');
-      ws.close();
-    };
-  }
-  connect();
-
-	document.querySelector('#chat-message-input').focus();
-	document.querySelector('#chat-message-input').onkeyup = function(e) {
-		if (e.keyCode === 13) {  // enter, return
-			document.querySelector('#chat-message-submit').click();
-		}
-	};
-
-	document.querySelector('#chat-message-submit').onclick = function(e) {
-		const messageInputDom = document.querySelector('#chat-message-input');
-		const message = messageInputDom.value;
-		chatSocket.send(JSON.stringify({
-				'message': message
-		}));
-		messageInputDom.value = '';
-    scrollChatDown();
-	};
-
-  scrollChatDown();
-</script>
 {% endblock %}

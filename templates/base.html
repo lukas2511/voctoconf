@@ -24,6 +24,7 @@
 		<link rel="stylesheet" type="text/css" href="{% static "styles/fontawesome/css/fontawesome.min.css" %}" />
 		<link rel="stylesheet" type="text/css" href="{% static "styles/fontawesome/css/solid.min.css" %}" />
 		<link rel="stylesheet" type="text/css" href="{% static "styles/fontawesome/css/brands.min.css" %}" />
+		{% block assets %}{% endblock %}
 	</head>
 
 	<body class="{% block body_class %}{% endblock %}">
@@ -50,5 +51,7 @@
 		{% block footer %}
 			{% include "footer.html" %}
 		{% endblock %}
+
+		{% block scripts %}{% endblock %}
 	</body>
 </html>
