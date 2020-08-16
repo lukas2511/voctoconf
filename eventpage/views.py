@@ -37,4 +37,6 @@ def person_view(request, pid):
     person = get_object_or_404(Person, id=pid)
     return render(request, "event/person.html", {'person': person})
 
-
+def stream_view(request, roomid):
+    room = get_object_or_404(EventRoom, id=roomid)
+    return render(request, "event/stream.html", {'room': room})

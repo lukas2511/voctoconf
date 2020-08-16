@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load is_bbb_mod %}
+{% load static %}
+
+{% block title %}{{ room.name }} - {% endblock %}
+
+{% block assets %}
+	<link type="text/css" rel="stylesheet" href="{% static "player/mejs/mediaelementplayer.min.css" %}" />
+	<link type="text/css" rel="stylesheet" href="{% static "player/player.css" %}" />
+	<script type="text/javascript" src="{% static "player/lib/jquery.min.js" %}"></script>
+	<script type="text/javascript" src="{% static "player/lib/jquery.scrollTo.min.js" %}"></script>
+	<script type="text/javascript" src="{% static "scripts/bootstrap.min.js" %}"></script>
+	<script type="text/javascript" src="{% static "player/mejs/mediaelement-and-player.min.js" %}"></script>
+	<script type="text/javascript" src="{% static "player/voc-player/player.js" %}"></script>
+	<script type="text/javascript">window.Clappr = window.VOCPlayer;</script>
+	<script type="text/javascript" src="{% static "player/voc-player/clappr-thumbnails-plugin.js" %}"></script>
+	<script type="text/javascript" src="{% static "player/voc-player/clappr-playback-rate-plugin.js" %}"></script>
+	<script type="text/javascript" src="{% static "player/lustiges-script.js" %}"></script>
+{% endblock %}
+
+{% block content %}
+<main class="container">
+	<div class="row py-3">
+		<div class="col-12">
+			<h1>{{ room.name }}</h1>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-12">
+			<div class="video-wrap" style="width:1110px; height: 624px;" data-voc-player data-stream="{{ room.stream }}" data-poster="https://cdn.c3voc.de/thumbnail/{{ room.stream }}/poster.jpeg" data-preferred-language="native"></div>
+		</div>
+	</div>
+
+	{% with room.current_event as event %}
+	{% if event %}
+	<div class="row">
+		<div class="col-12">
+			<span style='font-size:12px'>{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }}</span>
+			<a href="/event/{{ event.id }}">{{ event.title }}</a>
+			({{ event.persons_html|safe }})
+		</div>
+	</div>
+	{% endif %}
+	{% endwith %}
+
+	<div class="row">
+		{% if room.bbb %}
+		<div class="col-sm-6 col-12">
+			<a class="btn btn-primary btn-lg w-100" href="/bbb/{{ room.bbb.id }}" role="button">
+				{% if LANGUAGE_CODE == "de" %}Videokonferenz{% else %}Video conference{% endif %}
+			</a>
+		</div>
+		{% endif %}
+		{% if room.stream_moreformats %}
+		<div class="col-sm-6 col-12">
+			<a class="btn btn-primary btn-lg w-100" href="{{ room.stream_moreformats }}" role="button">
+				{% if LANGUAGE_CODE == "de" %}Mehr Formate{% else %}More formats{% endif %}
+			</a>
+		</div>
+		{% endif %}
+	</div>
+</main>
+{% endblock %}
