@@ -22,6 +22,8 @@ class Announcement(models.Model):
 class Room(models.Model):
     name = models.CharField(max_length=100)
     bbb = models.OneToOneField(bbb.models.Room, blank=True, null=True, related_name='schedule_room', on_delete=models.SET_NULL)
+    stream = models.CharField("HLS Stream URL", max_length=300, blank=True, null=True)
+    stream_moreformats = models.CharField("Link to page with more streaming formats", max_length=300, blank=True, null=True)
     view_size = models.IntegerField(default=4)
     order = models.IntegerField(default=9000)
     hide = models.BooleanField(default=False)
