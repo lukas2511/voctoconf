@@ -1,10 +1,10 @@
 {% load macros %}
 
 {% macro chat_message date sender content moderator %}
-<tr>
-  <td>{{ date }}</td>
-  <td>{{ sender }}</td>
-  <td>{{ content }}</td>
+<tr class="chat-message">
+  <td data-chat-date>{{ date }}</td>
+  <td data-chat-name>{{ sender }}</td>
+  <td data-chat-content>{{ content }}</td>
   <td>
     <a href="#" class="fa fa-comment"></a>
     {% if moderator %}<a href="#" class="fa fa-ban"></a>{% endif %}
@@ -12,11 +12,29 @@
 </tr>
 {% endmacro %}
 
-{% macro whisper_message date sender content  moderator %}
-<tr>
-  <td>{{ date }}</td>
-  <td>{{ sender }}</td>
-  <td>{{ content }}</td>
+{% macro whisper_message_received date sender content  moderator %}
+<tr class="chat-message chat-message-whisper">
+  <td data-chat-date>{{ date }}</td>
+  <td>
+    <span data-chat-name>{{ sender }}</span>
+    <i class="ml-auto fa fa-caret-right"></i>
+  </td>
+  <td data-chat-content>{{ content }}</td>
+  <td>
+    <a href="#" class="fa fa-comment"></a>
+    {% if moderator %}<a href="#" class="fa fa-ban"></a>{% endif %}
+  </td>
+</tr>
+{% endmacro %}
+
+{% macro whisper_message_sent date receiver content moderator %}
+<tr class="chat-message chat-message-whisper">
+  <td data-chat-date>{{ date }}</td>
+  <td>
+    <span data-chat-name>{{ receiver }}</span>
+    <i class="ml-auto fa fa-caret-left"></i>
+  </td>
+  <td data-chat-content>{{ content }}</td>
   <td>
     <a href="#" class="fa fa-comment"></a>
     {% if moderator %}<a href="#" class="fa fa-ban"></a>{% endif %}
@@ -25,9 +43,9 @@
 {% endmacro %}
 
 {% macro system_message date sender content  moderator %}
-<tr class="system text-muted">
-  <td>{{ date }}</td>
-  <td>{% if sender %}{{ sender }}{% else %}*SYSTEM*{% endif %}</td>
-  <td colspan="2">{{ content }}</td>
+<tr class="chat-message chat-message-system">
+  <td data-chat-date>{{ date }}</td>
+  <td data-chat-name>{% if sender %}{{ sender }}{% else %}*SYSTEM*{% endif %}</td>
+  <td colspan="2" data-chat-content>{{ content }}</td>
 </tr>
 {% endmacro %}

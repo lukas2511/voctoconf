@@ -28,36 +28,37 @@ class ChatConsumer(WebsocketConsumer):
         type = text_data_json['type']
         message = text_data_json['message']
 
-        if not message or not type:
+        if not message or not type or message.isspace():
             return
+        
+        msg = Message()
+        msg.sender = self.get_name()
+        if not msg.sender:
+            return # wat?
+        
+        msg.content = message[:200]
+        msg.room = self.room_name
 
         if type == "chat_message":
-            msg = Message()
-            if self.scope['user'].is_authenticated:
-                msg.sender = self.scope['user'].username
-            elif 'name' in self.scope['session']:
-                msg.sender = "guest-%s" % self.scope['session']['name']
-            else:
-                return # wat?
-
-            msg.content = message[:200]
-            msg.room = self.room_name
+            msg.type = "MSG"
             
             msg.send()
             msg.save()
-        elif type == "whisper":
-            msg = Message()
-            if self.scope['user'].is_authenticated:
-                msg.sender = self.scope['user'].username
-            elif 'name' in self.scope['session']:
-                msg.sender = "guest-%s" % self.scope['session']['name']
-            else:
-                return # wat?
 
-            msg.content = message[:200]
-            msg.room = self.room_name
-            
+        elif type == "whisper_message":
+            msg.type = "WPR"
+            msg.receiver = text_data_json['target']
+            if not msg.receiver:
+                return
             msg.send()
+    
+    def get_name(self):
+        if self.scope['user'].is_authenticated:
+            return self.scope['user'].username
+        elif 'name' in self.scope['session']:
+            return "guest-%s" % self.scope['session']['name']
+        else:
+            return 
 
     # Receive message from room group
     def chat_message(self, event):
@@ -69,12 +70,13 @@ class ChatConsumer(WebsocketConsumer):
     # Receive message from room group
     def whisper_message(self, event):
         message = event["message"]
-
-        if self.scope['user'].username != message.receiver:
+        name = self.get_name()
+        if name != message['receiver'] and name != message['sender']:
             return
         
         self.send(text_data=json.dumps({
             'type': event['type'],
+            'sent': name != message['receiver'],
             'message': event['message']
         }))
     
@@ -82,7 +84,7 @@ class ChatConsumer(WebsocketConsumer):
     def system_message(self, event):
         message = event["message"]
 
-        if message.receiver and self.scope['user'].username != message.receiver:
+        if self.scope['user'].username != message['receiver']:
             return
         
         self.send(text_data=json.dumps({

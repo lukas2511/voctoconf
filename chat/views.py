@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Message
 from authstuff.names import name_required
+from .helpers import is_chat_moderator
 
 @name_required
 def chatview(request, room=None):
@@ -13,4 +14,4 @@ def chatview(request, room=None):
     else:
         backlog = []
 
-    return render(request, "chat.html", {'room_name': room, 'backlog': backlog})
+    return render(request, "chat.html", {'room_name': room, 'backlog': backlog, 'is_chat_moderator': is_chat_moderator(request.user)})
