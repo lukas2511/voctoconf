@@ -1,0 +1,33 @@
+{% load macros %}
+
+{% macro chat_message date sender content moderator %}
+<tr>
+  <td>{{ date }}</td>
+  <td>{{ sender }}</td>
+  <td>{{ content }}</td>
+  <td>
+    <a href="#" class="fa fa-comment"></a>
+    {% if moderator %}<a href="#" class="fa fa-ban"></a>{% endif %}
+  </td>
+</tr>
+{% endmacro %}
+
+{% macro whisper_message date sender content  moderator %}
+<tr>
+  <td>{{ date }}</td>
+  <td>{{ sender }}</td>
+  <td>{{ content }}</td>
+  <td>
+    <a href="#" class="fa fa-comment"></a>
+    {% if moderator %}<a href="#" class="fa fa-ban"></a>{% endif %}
+  </td>
+</tr>
+{% endmacro %}
+
+{% macro system_message date sender content  moderator %}
+<tr class="system text-muted">
+  <td>{{ date }}</td>
+  <td>{% if sender %}{{ sender }}{% else %}*SYSTEM*{% endif %}</td>
+  <td colspan="2">{{ content }}</td>
+</tr>
+{% endmacro %}
