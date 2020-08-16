@@ -1,4 +1,7 @@
 const chat_message_template = document.querySelector('#chat_message');
+const whisper_message_received_template = document.querySelector('#whisper_message_received');
+const whisper_message_sent_template = document.querySelector('#whisper_message_sent');
+const system_message_template = document.querySelector('#system_message');
 
 function scrollChatDown() {
     document.querySelector('#chat-scroll-container').scrollTo(0, document.querySelector('#chat-scroll-container').scrollHeight)
@@ -20,16 +23,31 @@ function connect() {
 
     chatSocket.onmessage = function(e) {
         console.debug('WS message:', e.data);
-        const message = JSON.parse(e.data).message;
+        const data = JSON.parse(e.data);
+        const type = data.type;
+        const message = data.message;
+        let name = message.sender;
 
         const chat = document.querySelector('#chat-log > tbody');
+        let template;
+        if(type=='chat_message'){
+            template = chat_message_template;
+        } else if(type=='whisper_message') {
+            if(data.sent){
+                template = whisper_message_sent_template
+                name = message.receiver
+            } else {
+                template = whisper_message_received_template
+            }
+        } else if(type=='system_message') {
+            template = system_message_template
+        }
     
         // Clone the new row and insert it into the table
-        const clone = chat_message_template.content.cloneNode(true);
-        var td = clone.querySelectorAll("td");
-        td[0].textContent = message.date;
-        td[1].textContent = message.sender;
-        td[2].textContent = message.content;
+        const clone = template.content.cloneNode(true);
+        clone.querySelector("[data-chat-date]").textContent = message.date;
+        clone.querySelector("[data-chat-name]").textContent = name;
+        clone.querySelector("[data-chat-content]").textContent = message.content;
         chat.appendChild(clone);
 
         // remove old messages
@@ -63,10 +81,30 @@ document.querySelector('#chat-message-input').onkeyup = function(e) {
 document.querySelector('#chat-message-submit').onclick = function(e) {
     const messageInputDom = document.querySelector('#chat-message-input');
     const message = messageInputDom.value;
-    chatSocket.send(JSON.stringify({
-        'type': 'chat_message',
-        'message': message
-    }));
+    if( message.startsWith("/w ") ||
+        message.startsWith("/msg ") ||
+        message.startsWith("/whisper ")){
+        const components = message.split(" ");
+        if(components[1]){
+            chatSocket.send(JSON.stringify({
+                'type': 'whisper_message',
+                'message': components.slice(2).join(" "),
+                'target': components[1]
+            }));
+        }
+    } else if( message.startsWith("/system ") ){
+        const components = message.split(" ");
+        chatSocket.send(JSON.stringify({
+            'type': 'system_message',
+            'message': components.slice(1).join(" ")
+        }));
+    } else {
+        chatSocket.send(JSON.stringify({
+            'type': 'chat_message',
+            'message': message
+        }));
+    }
+    
     messageInputDom.value = '';
     scrollChatDown();
 };

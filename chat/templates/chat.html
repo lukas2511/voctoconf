@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load is_chat_moderator %}}
 {% load static %}
 {% load macros %}
 
@@ -19,23 +18,31 @@
     <div id="chat-scroll-container" class="flex-grow-1" style="overflow-y: scroll">
       <table id="chat-log" class="w-100 table table-striped table-sm">
         <tbody class="w-100">
-          {% with moderator as request.user|is_chat_moderator %}
           {% for message in backlog %}
-          {% usemacro chat_message message.date message.sender message.content moderator %}
+          {% usemacro chat_message message.date message.sender message.content is_chat_moderator %}
           {% endfor %}
-          {% endwith %}
         </tbody>
       </table>
-      <template id="chat_message">{% usemacro chat_message message.date message.sender message.content request.user|is_chat_moderator %}</template>
-      <template id="whisper_message">{% usemacro whisper_message message.date message.sender message.content request.user|is_chat_moderator %}</template>
-      <template id="system_message">{% usemacro system_message message.date message.sender message.content request.user|is_chat_moderator %}</template>
+      <template id="chat_message">{% usemacro chat_message "" "" "" is_chat_moderator %}</template>
+      <template id="whisper_message_sent">{% usemacro whisper_message_sent "" "" "" is_chat_moderator %}</template>
+      <template id="whisper_message_received">{% usemacro whisper_message_received "" "" "" is_chat_moderator %}</template>
+      <template id="system_message">{% usemacro system_message "" "" "" is_chat_moderator %}</template>
       <style>
         #chat-log { overflow-wrap: anywhere; }
-        #chat-log td:nth-child(1), #chat-log td:nth-child(2) {
-          width: 10em;
+        .chat-message-system { color: #6c757d; }
+        #chat-log td:nth-child(1) {
+          min-width: 5.5em;
+        }
+        #chat-log td:nth-child(2) {
+          white-space: nowrap;
+          min-width: 10em;
+        }
+        #chat-log td:nth-child(3) {
+          width: 100;
         }
         #chat-log td:nth-child(4) {
           white-space: nowrap;
+          text-align: right;
         }
       </style>
     </div>
