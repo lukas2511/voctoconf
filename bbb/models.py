@@ -10,6 +10,7 @@ import requests
 import xmltodict
 import traceback
 import random
+import json
 from django.conf import settings
 from helpers.models import lock
 
@@ -235,6 +236,19 @@ class RoomStats(models.Model):
     videocount = models.IntegerField(default=0)
 
     creation_date = models.DateTimeField(blank=True, null=True)
+
+    def as_json(self):
+        stats = {}
+        stats['date'] = str(self.date)
+        stats['running'] = self.running
+        stats['moderators'] = self.moderators
+        stats['participants'] = self.participants
+        stats['presenter'] = self.presenter
+        stats['recording'] = self.recording
+        stats['voiceparticipants'] = self.voiceparticipants
+        stats['listeners'] = self.listeners
+        stats['videocount'] = self.videocount
+        return json.dumps(stats)
 
     def __str__(self):
         return "Stats for %s (Collected: %s)" % (self.room.name, self.date)
