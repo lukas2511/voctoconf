@@ -24,4 +24,4 @@ def roomview(request, roomid):
 
 def statsview(request, roomid):
     room = get_object_or_404(Room, id=roomid)
-    return HttpResponse(room.stats.as_json())
+    return HttpResponse(room.get_stats().as_json())
