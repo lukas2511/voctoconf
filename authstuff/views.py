@@ -5,7 +5,7 @@ from django.http import HttpResponse
 import traceback
 from .forms import LoginForm, RegisterForm, NameForm
 from django.shortcuts import get_object_or_404
-from .models import AuthToken
+from .models import AuthToken, Guest
 
 def logout_view(request):
     request.session["name"] = None
@@ -20,7 +20,10 @@ def setname_view(request):
     if request.method == 'POST':
         form = NameForm(request.POST)
         if form.is_valid():
-            request.session["name"] = form.cleaned_data["name"]
+            guest = Guest()
+            guest.name = form.cleaned_data["name"]
+            guest.save()
+            request.session["name"] = str(guest)
             return redirect(request.GET.get("next") if request.GET.get("next") is not None else "/event")
     else:
         if 'name' in request.session:
