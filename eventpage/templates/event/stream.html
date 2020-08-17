@@ -19,46 +19,69 @@
 	<script type="text/javascript" src="{% static "player/lustiges-script.js" %}"></script>
 {% endblock %}
 
-{% block content %}
-<main class="container">
-	<div class="row py-3">
-		<div class="col-12">
-			<h1>{{ room.name }}</h1>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-12">
-			<div class="video-wrap" style="width:1110px; height: 624px;" data-voc-player data-stream="{{ room.stream }}" data-poster="https://cdn.c3voc.de/thumbnail/{{ room.stream }}/poster.jpeg" data-preferred-language="native"></div>
-		</div>
-	</div>
+{% block page_class %}page h-100{% endblock  %}
 
+{% block content %}
+<main class="container full-height-content">
+  <div class="d-flex flex-column h-100" style="overflow-y: auto">
+    <div>
+		<h1 class="d-md-block d-none">{{ room.name }}</h1>
+		<h3 class="d-md-none d-block">{{ room.name }}</h3>
+    </div>
+	
+	<div class="video-wrap w-100 flex-grow-1" style="min-height:320px" data-voc-player data-stream="{{ room.stream }}" data-poster="https://cdn.c3voc.de/thumbnail/{{ room.stream }}/poster.jpeg" data-preferred-language="native"></div>
+	
+	<div class="py-2">
+		<span style="font-size:12px">14:00 - 23:42</span>
+		<a href="/event/1337">Existence is futile – Everything will get destroyed eventually</a>
+		(<a href="/person/1337">Lukas Schauer</a>)
+	</div>
 	{% with room.current_event as event %}
 	{% if event %}
-	<div class="row py-3">
-		<div class="col-12">
-			<span style='font-size:12px'>{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }}</span>
-			<a href="/event/{{ event.id }}">{{ event.title }}</a>
-			({{ event.persons_html|safe }})
-		</div>
+	<div class="py-2">
+		<span style='font-size:12px'>{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }}</span>
+		<a href="/event/{{ event.id }}">{{ event.title }}</a>
+		({{ event.persons_html|safe }})
 	</div>
 	{% endif %}
 	{% endwith %}
 
-	<div class="row">
+	<div class="row w-100">
+		<div class="col-sm-6 col-12 p-1">
+			<a class="btn btn-primary btn-lg w-100" href="/bbb/{{ room.bbb.id }}" role="button">
+				{% if LANGUAGE_CODE == "de" %}Videokonferenz{% else %}Video conference{% endif %}
+			</a>
+		</div>
+		<div class="col-sm-6 col-12 p-1">
+			<a class="btn btn-primary btn-lg w-100" href="/bbb/{{ room.bbb.id }}" role="button">
+				{% if LANGUAGE_CODE == "de" %}Videokonferenz{% else %}Video conference{% endif %}
+			</a>
+		</div>
+		<div class="col-sm-6 col-12 p-1">
+			<a class="btn btn-primary btn-lg w-100" href="/bbb/{{ room.bbb.id }}" role="button">
+				{% if LANGUAGE_CODE == "de" %}Videokonferenz{% else %}Video conference{% endif %}
+			</a>
+		</div>
+		<div class="col-sm-6 col-12 p-1">
+			<a class="btn btn-primary btn-lg w-100" href="/bbb/{{ room.bbb.id }}" role="button">
+				{% if LANGUAGE_CODE == "de" %}Videokonferenz{% else %}Video conference{% endif %}
+			</a>
+		</div>
 		{% if room.bbb %}
-		<div class="col-sm-6 col-12">
+		<div class="col-sm-6 col-12 p-1">
 			<a class="btn btn-primary btn-lg w-100" href="/bbb/{{ room.bbb.id }}" role="button">
 				{% if LANGUAGE_CODE == "de" %}Videokonferenz{% else %}Video conference{% endif %}
 			</a>
 		</div>
 		{% endif %}
 		{% if room.stream_moreformats %}
-		<div class="col-sm-6 col-12">
+		<div class="col-sm-6 col-12 p-1">
 			<a class="btn btn-primary btn-lg w-100" href="{{ room.stream_moreformats }}" role="button">
 				{% if LANGUAGE_CODE == "de" %}Mehr Formate{% else %}More formats{% endif %}
 			</a>
 		</div>
 		{% endif %}
 	</div>
+  </div>
 </main>
 {% endblock %}

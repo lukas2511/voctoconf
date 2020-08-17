@@ -115,6 +115,16 @@ footer {
 .footer .footer-logo {
   height: 48px;
 }
+@media(max-width: 575px){
+  .footer .footer-logo {
+    height: 30px;
+  }
+}
+@media(min-width:576px) and (max-width: 767px){
+  .footer .footer-logo {
+    height: 36px;
+  }
+}
 
 .footer a[href]:not(.btn){ color: #999; }
 .footer a[href]:not(.btn):hover{ color: #ccc; text-decoration: none; }
@@ -128,7 +138,7 @@ body.wide .page {
   padding-bottom: 3.5rem;
 }
 footer.slim-footer .footer .footer-logo {
-  height: 40px;
+  height: 30px;
 }
 
 
