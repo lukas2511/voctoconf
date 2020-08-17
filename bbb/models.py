@@ -91,10 +91,10 @@ class Room(models.Model):
         locked = []
         if self.lock_mics: locked.append("mic")
         if self.lock_cams: locked.append("cam")
-        if self.lock_private_chat: lock.append("privchat")
-        if self.lock_public_chat: lock.append("pubchat")
-        if self.lock_shared_notes: lock.append("notes")
-        if self.lock.layout: lock.append("layout")
+        if self.lock_private_chat: locked.append("privchat")
+        if self.lock_public_chat: locked.append("pubchat")
+        if self.lock_shared_notes: locked.append("notes")
+        if self.lock_layout: locked.append("layout")
         return ", ".join(locked)
 
     class Meta:
