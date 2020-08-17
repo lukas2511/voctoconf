@@ -23,11 +23,11 @@
 		{% if room.bbb or room.stream %}
 		<div class="col-sm-{{ room.view_size }} col-12 py-1">
 			{% if not room.bbb or room.bbb.get_stats.running %}
-			<a class="btn btn-primary btn-lg w-100" href="{% if not room.stream %}{{ room.bbb.link }}{% else %}/stream/{{ room.id }}{% endif %}" role="button">
+			<a class="btn btn-primary btn-lg w-100" href="{{ room.link }}" role="button">
 				{{ room.name }}
 			</a>
 			{% elif room.bbb and room.bbb|is_bbb_mod:request.user %}
-			<a class="btn btn-secondary btn-lg w-100" href="{% if not room.stream %}{{ room.bbb.link }}{% else %}/stream/{{ room.id }}{% endif %}" role="button">
+			<a class="btn btn-secondary btn-lg w-100" href="{{ room.link }}" role="button">
 				{{ room.name }}
 			</a>
 			{% else %}
