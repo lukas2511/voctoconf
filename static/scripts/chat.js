@@ -6,7 +6,6 @@ const system_message_template = document.querySelector('#system_message');
 function scrollChatDown() {
     document.querySelector('#chat-scroll-container').scrollTo(0, document.querySelector('#chat-scroll-container').scrollHeight)
 }
-scrollChatDown();
 
 var chatSocket;
 function connect() {
@@ -45,9 +44,10 @@ function connect() {
     
         // Clone the new row and insert it into the table
         const clone = template.content.cloneNode(true);
-        clone.querySelector("[data-chat-date]").textContent = message.date;
-        clone.querySelector("[data-chat-name]").textContent = name;
-        clone.querySelector("[data-chat-content]").textContent = message.content;
+        clone.querySelectorAll('[data-chat-name]').forEach((e)=>e.setAttribute('data-chat-name', name));
+        clone.querySelector('[data-chat-date]').textContent = message.date;
+        clone.querySelector('[data-chat-name]').textContent = name;
+        clone.querySelector('[data-chat-content]').textContent = message.content;
         chat.appendChild(clone);
 
         // remove old messages
@@ -65,11 +65,30 @@ function connect() {
 
     chatSocket.onerror = function(err) {
         console.error('WS encountered error: ', err.message, 'Closing socket');
-        ws.close();
+        chatSocket.close();
     };
 }
 
 connect();
+
+document.body.addEventListener("click",function(event){
+    const target = event.target.closest('[data-chat-action=whisper][data-chat-name]');
+    if (!target)
+        return;
+    
+    event.preventDefault();
+    
+    const action = target.getAttribute('data-chat-action');
+    if (action == 'whisper'){
+        const messageInputDom = document.querySelector('#chat-message-input');
+        const message = messageInputDom.value;
+        const whisper_prefix = `/w ${target.getAttribute('data-chat-name')} `
+        if(!message.startsWith(whisper_prefix))
+            messageInputDom.value = whisper_prefix + message;
+        messageInputDom.focus();
+    }
+        
+})
 
 document.querySelector('#chat-message-input').focus();
 document.querySelector('#chat-message-input').onkeyup = function(e) {
