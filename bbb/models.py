@@ -60,6 +60,8 @@ class Server(models.Model):
 class Room(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100, blank=False, null=False)
+    slug = models.SlugField(max_length=35, blank=True, null=True)
+
     server = models.ForeignKey(Server, blank=False, null=False, on_delete=models.CASCADE)
     moderators = models.ManyToManyField(get_user_model(), related_name='moderating', blank=True)
     welcome_msg = models.TextField("Welcome message", blank=True, null=True)
@@ -70,6 +72,7 @@ class Room(models.Model):
 
     start_as_guest = models.BooleanField("Allow guests to start the conference", null=False, blank=False, default=False)
 
+    yolomode = models.BooleanField("Everybody is moderator", default=False)
     mute_on_start = models.BooleanField("Join muted", null=False, blank=False, default=True)
     lock_mics = models.BooleanField("Lock microphones", null=False, blank=False, default=False)
     lock_cams = models.BooleanField("Lock cameras", null=False, blank=False, default=False)
@@ -85,8 +88,24 @@ class Room(models.Model):
 
     guest_policy = models.CharField("Guest policy", null=False, blank=False, default='ALWAYS_ACCEPT', choices=(('ALWAYS_ACCEPT', 'Always accept'), ('ALWAYS_DENY', 'Always deny'), ('ASK_MODERATOR', 'Ask moderator')), max_length=30)
 
+    def lock_str(self):
+        locked = []
+        if self.lock_mics: locked.append("mic")
+        if self.lock_cams: locked.append("cam")
+        if self.lock_private_chat: locked.append("privchat")
+        if self.lock_public_chat: locked.append("pubchat")
+        if self.lock_shared_notes: locked.append("notes")
+        if self.lock_layout: locked.append("layout")
+        return ", ".join(locked)
+
     class Meta:
         verbose_name = 'BigBlueButton Room'
+
+    def link(self):
+        if self.slug:
+            return "/bbb/%s" % self.slug
+        else:
+            return "/bbb/%s" % self.id
 
     def get_stats(self):
         try:
@@ -98,6 +117,9 @@ class Room(models.Model):
         return "%s on %s" % (self.name, self.server)
 
     def is_moderator(self, user):
+        if self.yolomode:
+            return True
+
         if not user.is_authenticated:
             return False
 

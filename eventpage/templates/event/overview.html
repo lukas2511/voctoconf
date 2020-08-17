@@ -24,11 +24,11 @@
 		{% if room.bbb or room.stream %}
 		<div class="col-sm-{{ room.view_size }} col-12 py-1">
 			{% if not room.bbb or room.bbb.get_stats.running %}
-			<a class="btn btn-primary btn-lg w-100" href="{% if not room.stream %}/bbb/{{ room.bbb.id }}{% else %}/stream/{{ room.id }}{% endif %}" role="button">
+			<a class="btn btn-primary btn-lg w-100" href="{{ room.link }}" role="button">
 				{{ room.name }}
 			</a>
 			{% elif room.bbb and room.bbb|is_bbb_mod:request.user %}
-			<a class="btn btn-secondary btn-lg w-100" href="{% if not room.stream %}/bbb/{{ room.bbb.id }}{% else %}/stream/{{ room.id }}{% endif %}" role="button">
+			<a class="btn btn-secondary btn-lg w-100" href="{{ room.link }}" role="button">
 				{{ room.name }}
 			</a>
 			{% else %}
@@ -102,11 +102,11 @@
 		</div>
 		<div class="col-sm-4 col-12 py-1">
 			{% if workshop.bbb.get_stats.running %}
-			<a class="btn btn-primary btn-lg w-100" href="/bbb/{{ workshop.bbb.id }}" role="button">
+			<a class="btn btn-primary btn-lg w-100" href="{{ workshop.bbb.link }}" role="button">
 				Join
 			</a>
 			{% elif workshop.bbb|is_bbb_mod:request.user %}
-			<a class="btn btn-primary btn-lg w-100" href="/bbb/{{ workshop.bbb.id }}" role="button">
+			<a class="btn btn-primary btn-lg w-100" href="{{ workshop.bbb.link }}" role="button">
 				Start
 			</a>
 			{% else %}
@@ -130,11 +130,11 @@
 		<div class="col-sm-6 col-12">
 			{% with hangout.get_stats as stats %}
 			{% if stats.running %}
-			<a class="btn btn-primary btn-lg w-100" href="/bbb/{{ hangout.id }}" role="button">
+			<a class="btn btn-primary btn-lg w-100" href="{{ hangout.link }}" role="button">
 				{{ hangout.name }}
 			</a>
 			{% elif hangout|is_bbb_mod:request.user or hangout.start_as_guest %}
-			<a class="btn btn-secondary btn-lg w-100" href="/bbb/{{ hangout.id }}" role="button">
+			<a class="btn btn-secondary btn-lg w-100" href="{{ hangout.link }}" role="button">
 				{{ hangout.name }}
 			</a>
 			{% else %}
