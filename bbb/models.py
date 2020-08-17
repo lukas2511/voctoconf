@@ -72,6 +72,7 @@ class Room(models.Model):
 
     start_as_guest = models.BooleanField("Allow guests to start the conference", null=False, blank=False, default=False)
 
+    yolomode = models.BooleanField("YOLO MODE", default=False)
     mute_on_start = models.BooleanField("Join muted", null=False, blank=False, default=True)
     lock_mics = models.BooleanField("Lock microphones", null=False, blank=False, default=False)
     lock_cams = models.BooleanField("Lock cameras", null=False, blank=False, default=False)
@@ -116,6 +117,9 @@ class Room(models.Model):
         return "%s on %s" % (self.name, self.server)
 
     def is_moderator(self, user):
+        if self.yolomode:
+            return True
+
         if not user.is_authenticated:
             return False
 
