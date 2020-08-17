@@ -60,6 +60,8 @@ class Server(models.Model):
 class Room(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100, blank=False, null=False)
+    slug = models.SlugField(max_length=35, blank=True, null=True)
+
     server = models.ForeignKey(Server, blank=False, null=False, on_delete=models.CASCADE)
     moderators = models.ManyToManyField(get_user_model(), related_name='moderating', blank=True)
     welcome_msg = models.TextField("Welcome message", blank=True, null=True)
