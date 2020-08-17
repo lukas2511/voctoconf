@@ -34,7 +34,7 @@
 
 	{% with room.current_event as event %}
 	{% if event %}
-	<div class="row">
+	<div class="row py-3">
 		<div class="col-12">
 			<span style='font-size:12px'>{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }}</span>
 			<a href="/event/{{ event.id }}">{{ event.title }}</a>
