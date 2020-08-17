@@ -7,7 +7,7 @@ class TrackAdmin(admin.ModelAdmin):
 admin.site.register(Track, TrackAdmin)
 
 class RoomAdmin(admin.ModelAdmin):
-    list_display = ['name']
+    list_display = ['name', 'bbb', 'stream']
 
 admin.site.register(Room, RoomAdmin)
 
