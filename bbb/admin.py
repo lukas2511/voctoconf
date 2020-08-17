@@ -5,11 +5,13 @@ admin.site.register(Server)
 
 class RoomAdmin(admin.ModelAdmin):
     autocomplete_fields = ['moderators']
+    list_display = ['name', 'server', 'record', 'start_as_guest', 'yolomode', 'lock_str']
     readonly_fields = ['id']
+    ordering = ['server', 'name']
     fieldsets = (
-        ('Basics', {'fields': ('id', 'name', 'server', 'record')}),
+        ('Basics', {'fields': ('id', 'name', 'slug', 'server', 'record')}),
         ('Visibility', {'fields': ('hangout_room', )}),
-        ('Joining', {'fields': ('moderators', 'guest_policy', 'max_participants', 'mute_on_start', 'start_as_guest')}),
+        ('Joining', {'fields': ('moderators', 'yolomode', 'guest_policy', 'max_participants', 'mute_on_start', 'start_as_guest')}),
         ('Branding', {'fields': ('logo', 'welcome_msg', 'slides')}),
         ('Lockdown', {'fields': ('lock_cams', 'lock_mics', 'lock_private_chat', 'lock_public_chat', 'lock_shared_notes', 'lock_layout')}),
     )

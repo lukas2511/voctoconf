@@ -7,6 +7,7 @@ from django.utils.timezone import utc
 import datetime
 from django.shortcuts import get_object_or_404
 import bbb.models
+import re
 
 def event_overview(request):
     context = {}
@@ -38,5 +39,9 @@ def person_view(request, pid):
     return render(request, "event/person.html", {'person': person})
 
 def stream_view(request, roomid):
-    room = get_object_or_404(EventRoom, id=roomid)
+    if re.match(r'^[0-9]+$', roomid):
+        room = get_object_or_404(EventRoom, id=int(roomid))
+    else:
+        room = get_object_or_404(EventRoom, slug=roomid)
+
     return render(request, "event/stream.html", {'room': room})
