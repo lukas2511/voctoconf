@@ -12,7 +12,8 @@
 			{{ announcement.html|safe }}
 		</div>
 	</div>
-	<div class="border-top my-3"></div>
+
+	<hr />
 	{% endfor %}
 	{% endif %}
 
@@ -71,22 +72,23 @@
 		{% endif %}
 		{% endfor %}
 	</div>
-	<div class="border-top my-3"></div>
+	
+	<hr />
 
 	<div class="row">
-		<div class="col-sm-6 col-12">
+		<div class="col-sm-6 col-12 py-1">
 			<a class="btn btn-primary btn-lg w-100" href="/chat/lobby" role="button">
 				Chat
 			</a>
 		</div>
-		<div class="col-sm-6 col-12">
+		<div class="col-sm-6 col-12 py-1">
 			<a class="btn btn-primary btn-lg w-100" href="https://programm.froscon.de" role="button">
 				{% if LANGUAGE_CODE == "de" %}Fahrplan{% else %}Schedule{% endif %}
 			</a>
 		</div>
 	</div>
-	<div class="border-top my-3"></div>
 
+	<hr />
 
 	{% if workshops %}
 	<h1><i class="fa fa-wrench"></i> Workshops</h1>
@@ -119,6 +121,7 @@
 	<div class="border-top my-3"></div>
 	{% endif %}
 	{% endfor %}
+	{% endif %}
 
 	{% if hangouts %}
 	<h1><i class="fa fa-comments"></i> Community</h1>
@@ -154,7 +157,18 @@
 	<div class="border-top my-3"></div>
 	{% endif %}
 
-	<h1><i class="fa fa-user-friends"></i> {% if LANGUAGE_CODE == "de" %}Unsere Partner{% else %}Our partners{% endif %}</h1>
+	{% if partners %}
+	<div class="d-flex w-100">
+		<div>
+			<h1><i class="fa fa-user-friends"></i> {% if LANGUAGE_CODE == "de" %}Unsere Partner{% else %}Our partners{% endif %}</h1>
+		</div>
+		<div class="ml-auto">
+			<a class="btn btn-secondary ml-auto" href="https://www.froscon.de/partner/jobwall/">
+				Job Wall
+				<i class="fa fa-angle-double-right"></i>
+			</a>
+		</div>
+	</div>
 	<div class="row align-items-center align-content-around text-center mb-10 w-100" style='padding-top:16px;'>
 		{% for partner in partners %}
 		<figure class="col partner-logo">
