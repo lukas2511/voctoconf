@@ -87,6 +87,16 @@ class Room(models.Model):
 
     guest_policy = models.CharField("Guest policy", null=False, blank=False, default='ALWAYS_ACCEPT', choices=(('ALWAYS_ACCEPT', 'Always accept'), ('ALWAYS_DENY', 'Always deny'), ('ASK_MODERATOR', 'Ask moderator')), max_length=30)
 
+    def lock_str(self):
+        locked = []
+        if self.lock_mics: locked.append("mic")
+        if self.lock_cams: locked.append("cam")
+        if self.lock_private_chat: lock.append("privchat")
+        if self.lock_public_chat: lock.append("pubchat")
+        if self.lock_shared_notes: lock.append("notes")
+        if self.lock.layout: lock.append("layout")
+        return ", ".join(locked)
+
     class Meta:
         verbose_name = 'BigBlueButton Room'
 

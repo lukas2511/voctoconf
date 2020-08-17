@@ -5,7 +5,7 @@ admin.site.register(Server)
 
 class RoomAdmin(admin.ModelAdmin):
     autocomplete_fields = ['moderators']
-    list_display = ['name', 'server']
+    list_display = ['name', 'server', 'record', 'start_as_guest', 'lock_str']
     readonly_fields = ['id']
     ordering = ['server', 'name']
     fieldsets = (
