@@ -141,6 +141,9 @@ footer.slim-footer .footer .footer-logo {
   height: 30px;
 }
 
+.aspect-ration-16-9 {
+  padding-top:56.25%;
+}
 
 .person img {
   max-height: 100px;
