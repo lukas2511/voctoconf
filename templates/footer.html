@@ -3,20 +3,20 @@
 
 <footer>
 	<div class="footer container">
-		<div>
+		<div class="">
 			<a href="https://froscon.de{% if LANGUAGE_CODE == "en" %}/en/{% endif %}">
 				<img class="footer-logo" src="{% static "images/froscon_logo_small.png" %}" />
 			</a>
 		</div>
-		<div class="row ml-auto">
-			<div class="col pr-5">
+		<div class="d-flex flex-row ml-auto">
+			<div class="pr-4 d-none d-sm-block">
 				<ul>
 					<li><a href="https://twitter.com/froscon"><i class="fab fa-twitter"></i> Twitter</a></li>
 					<li><a href="https://bonn.social/@froscon"><i class="fab fa-mastodon"></i> Mastodon</a></li>
 					<li><a href="https://www.instagram.com/froscon/"><i class="fab fa-instagram"></i> Instagram</a></li>
 				</ul>
 			</div>
-			<div class="col pr-5">
+			<div class="pr-4">
 				<ul>
 					{% if LANGUAGE_CODE == "de" %}
 					<li><a href="https://www.froscon.de/datenschutzerklaerung/">Datenschutzerklärung</a></li>
@@ -27,8 +27,8 @@
 					{% endif %}
 				</ul>
 			</div>
-			<div class="col">
-				<a class="btn btn-secondary p-4" href="https://presale.froscon.de/FrOSCon/froscon2020/">
+			<div>
+				<a class="btn btn-secondary p-2 pr-sm-3 p-md-4" href="https://presale.froscon.de/FrOSCon/froscon2020/">
 					<i class="fa fa-heart"></i>
 					{% if LANGUAGE_CODE == "de" %}Spenden{% else %}Donate{% endif %}
 				</a>
