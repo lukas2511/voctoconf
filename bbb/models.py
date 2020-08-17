@@ -90,6 +90,12 @@ class Room(models.Model):
     class Meta:
         verbose_name = 'BigBlueButton Room'
 
+    def link(self):
+        if self.slug:
+            return "/bbb/%s" % self.slug
+        else:
+            return "/bbb/%s" % self.id
+
     def get_stats(self):
         try:
             return self.stats.all().latest('date')
