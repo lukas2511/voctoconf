@@ -76,6 +76,16 @@ header .jumbotron .btn:hover {
 header .jumbotron .logo {
   max-height: 10rem;
 }
+@media(max-width: 575px){
+  header .jumbotron .logo {
+    height: 6rem;
+  }
+}
+@media(min-width:576px) and (max-width: 767px){
+  header .jumbotron .logo {
+    height: 8rem;
+  }
+}
 
 /* Partners List */
 .venue-partners {
