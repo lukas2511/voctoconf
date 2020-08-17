@@ -21,12 +21,24 @@ class Announcement(models.Model):
 
 class Room(models.Model):
     name = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=35, blank=True, null=True)
     bbb = models.OneToOneField(bbb.models.Room, blank=True, null=True, related_name='schedule_room', on_delete=models.SET_NULL)
     stream = models.CharField("HLS Stream URL", max_length=300, blank=True, null=True)
     stream_moreformats = models.CharField("Link to page with more streaming formats", max_length=300, blank=True, null=True)
     view_size = models.IntegerField(default=4)
     order = models.IntegerField(default=9000)
     hide = models.BooleanField(default=False)
+
+    def link(self):
+        if self.stream:
+            if self.slug:
+                return "/stream/%s" % self.slug
+            else:
+                return "/stream/%d" % self.id
+        elif self.bbb:
+            return self.bbb.link()
+        else:
+            return '#'
 
     def current_event(self):
         now = datetime.datetime.utcnow().replace(tzinfo=utc)
