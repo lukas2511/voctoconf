@@ -45,6 +45,7 @@
 {% block content %}
 <main class="container">
 
+	{% if venue_partners or venueless_partners %}
 	<div class="d-flex w-100">
 		<div>
 			{% if LANGUAGE_CODE == "de" %}
@@ -60,7 +61,6 @@
 			</a>
 		</div>
 	</div>
-	{% if venue_partners or venueless_partners %}
 	{% if venue_partners %}
 	<div class="row align-items-center align-content-around text-center mb-4 w-100 venue-partners">
 		{% for partner in venue_partners %}
