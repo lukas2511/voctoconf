@@ -7,7 +7,7 @@ class RoomAdmin(admin.ModelAdmin):
     autocomplete_fields = ['moderators']
     readonly_fields = ['id']
     fieldsets = (
-        ('Basics', {'fields': ('id', 'name', 'server', 'record')}),
+        ('Basics', {'fields': ('id', 'name', 'slug', 'server', 'record')}),
         ('Visibility', {'fields': ('hangout_room', )}),
         ('Joining', {'fields': ('moderators', 'guest_policy', 'max_participants', 'mute_on_start', 'start_as_guest')}),
         ('Branding', {'fields': ('logo', 'welcome_msg', 'slides')}),
