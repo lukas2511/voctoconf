@@ -7,6 +7,7 @@ class RoomAdmin(admin.ModelAdmin):
     autocomplete_fields = ['moderators']
     list_display = ['name', 'server']
     readonly_fields = ['id']
+    ordering = ['server', 'name']
     fieldsets = (
         ('Basics', {'fields': ('id', 'name', 'slug', 'server', 'record')}),
         ('Visibility', {'fields': ('hangout_room', )}),
