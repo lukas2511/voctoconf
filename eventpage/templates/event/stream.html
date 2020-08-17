@@ -19,17 +19,17 @@
 	<script type="text/javascript" src="{% static "player/lustiges-script.js" %}"></script>
 {% endblock %}
 
-{% block page_class %}page h-100{% endblock  %}
-
 {% block content %}
-<main class="container full-height-content">
-  <div class="d-flex flex-column h-100" style="overflow-y: auto">
-    <div>
+<main class="container">
+	<div>
 		<h1 class="d-md-block d-none">{{ room.name }}</h1>
 		<h3 class="d-md-none d-block">{{ room.name }}</h3>
-    </div>
-	
-	<div class="video-wrap w-100 flex-grow-1" style="min-height:320px" data-voc-player data-stream="{{ room.stream }}" data-poster="https://cdn.c3voc.de/thumbnail/{{ room.stream }}/poster.jpeg" data-preferred-language="native"></div>
+	</div>
+
+	<div class="w-100 aspect-ration-16-9" style="position: relative;">
+		<div class="video-wrap p-absolute w-100 h-100" style="position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px;" data-voc-player data-stream="{{ room.stream }}" data-poster="https://cdn.c3voc.de/thumbnail/{{ room.stream }}/poster.jpeg" data-preferred-language="native">
+		</div>
+	</div>
 
 	{% with room.current_event as event %}
 	{% if event %}
@@ -57,6 +57,5 @@
 		</div>
 		{% endif %}
 	</div>
-  </div>
 </main>
 {% endblock %}
