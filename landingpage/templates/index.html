@@ -65,7 +65,7 @@
 	<div class="row align-items-center align-content-around text-center mb-4 w-100 venue-partners">
 		{% for partner in venue_partners %}
 		<figure class="col partner-logo">
-			{% if page_live %}<a href="/partner/{{ partner.id }}" title="{{ partner.name }}">{% endif %}
+			{% if page_live %}<a href="{{ partner.link }}" title="{{ partner.name }}">{% endif %}
 				<img src="{{ partner.logo.url }}" alt="{{ partner.name }}" />
 			{% if page_live %}</a>{% endif %}
 		</figure>
