@@ -34,6 +34,8 @@ def parse_markdown(text):
 
 class Partner(models.Model):
     name = models.CharField(max_length=100, blank=False, null=False)
+    slug = models.SlugField(max_length=35, blank=True, null=True)
+
     url = models.URLField(blank=False, null=False)
     logo = models.ImageField(blank=False, null=False, upload_to='partners')
 
@@ -49,6 +51,12 @@ class Partner(models.Model):
 
     owner = models.ForeignKey(get_user_model(), related_name='owns_partnerinfo', blank=True, null=True, on_delete=models.SET_NULL)
     bbb = models.ForeignKey(bbb.models.Room, related_name='for_partner', blank=True, null=True, on_delete=models.SET_NULL)
+
+    def link(self):
+        if self.slug:
+            return "/partner/%s" % self.slug
+        else:
+            return "/partner/%s" % self.id
 
     def save(self, *args, **kwargs):
         self.description_de_html = parse_markdown(self.description_de)
