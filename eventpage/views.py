@@ -38,8 +38,8 @@ def get_event(event_id: str):
     else:
         raise Http404("No room found")
 
-def event_view(request, event_id: str):
-    event = get_event(event_id)
+def event_view(request, eventid: str):
+    event = get_event(eventid)
     return render(request, "event/event.html", {'event': event})
 
 def person_view(request, pid):
