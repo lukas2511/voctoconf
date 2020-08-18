@@ -39,4 +39,5 @@ def livestatsview(request, roomid):
     room = get_room(roomid)
     stats = {}
     stats["running"] = room.is_running()
+    stats["live"] = room.live
     return HttpResponse(json.dumps(stats))
