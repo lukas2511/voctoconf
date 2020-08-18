@@ -45,7 +45,7 @@
 			{% endwith %}
 			{% with room.next_event as event %}
 			{% if event %}
-			<span style='font-size:12px'>Next Up: <a href="{{ event.link }}">{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }} {{ event.title }}</a></span>
+			<span style='font-size:12px'>Next Up: <a href="/event/{{ event.id }}">{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }} {{ event.title }}</a></span>
 			{% endif %}
 			{% endwith %}
 			{% if room.bbb %}
