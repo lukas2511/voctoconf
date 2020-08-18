@@ -108,20 +108,20 @@ document.querySelector('#chat-message-submit').onclick = function(e) {
         if(components[1]){
             chatSocket.send(JSON.stringify({
                 'type': 'whisper_message',
-                'message': components.slice(2).join(" "),
-                'target': components[1]
+                'content': components.slice(2).join(" "),
+                'receiver': components[1]
             }));
         }
     } else if( message.startsWith("/system ") ){
         const components = message.split(" ");
         chatSocket.send(JSON.stringify({
             'type': 'system_message',
-            'message': components.slice(1).join(" ")
+            'content': components.slice(1).join(" ")
         }));
     } else {
         chatSocket.send(JSON.stringify({
             'type': 'chat_message',
-            'message': message
+            'content': message
         }));
     }
     
