@@ -76,8 +76,10 @@ class Person(models.Model):
 
 class Event(models.Model):
     id = models.IntegerField(primary_key=True)
-    slug = models.SlugField(max_length=35, blank=True, null=True)
 
+    slug = models.SlugField(max_length=35, blank=True, null=True)
+    slug_modified = models.BooleanField(default=False)
+    
     hide = models.BooleanField(default=False)
     bbb = models.ForeignKey(bbb.models.Room, blank=True, null=True, related_name='events', on_delete=models.SET_NULL)
 
