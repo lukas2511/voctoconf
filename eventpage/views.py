@@ -30,8 +30,16 @@ def event_overview(request):
 
     return render(request, "event/overview.html", context)
 
-def event_view(request, evid):
-    event = get_object_or_404(Event, id=evid)
+def get_event(event_id: str):
+    if event_id.isdigit():
+        return get_object_or_404(Event, id=int(event_id))
+    elif event_id:
+        return get_object_or_404(Event, slug=event_id)
+    else:
+        raise Http404("No room found")
+
+def event_view(request, event_id: str):
+    event = get_event(event_id)
     return render(request, "event/event.html", {'event': event})
 
 def person_view(request, pid):

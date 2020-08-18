@@ -110,6 +110,12 @@ class Event(models.Model):
     description = models.TextField(blank=True, null=True)
     description_modified = models.BooleanField(default=False)
 
+    def link(self):
+        if self.slug:
+            return "/event/%s" % self.slug
+        else:
+            return "/event/%s" % self.id
+
     def persons_str(self):
         persons = [p.name for p in self.persons.all()]
         return ", ".join(persons)
