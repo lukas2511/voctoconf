@@ -46,7 +46,8 @@ function connect() {
         const clone = template.content.cloneNode(true);
         clone.querySelectorAll('[data-chat-name]').forEach((e)=>e.setAttribute('data-chat-name', name));
         clone.querySelector('[data-chat-date]').textContent = message.date;
-        clone.querySelector('[data-chat-name]').textContent = name;
+        if(name)
+            clone.querySelector('[data-chat-name]').textContent = name;
         clone.querySelector('[data-chat-content]').textContent = message.content;
         chat.appendChild(clone);
 
