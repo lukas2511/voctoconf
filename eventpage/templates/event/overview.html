@@ -39,7 +39,7 @@
 			{% with room.current_event as event %}
 			{% if event %}
 			<span style='font-size:12px'>{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }}</span><br/>
-			<a href="{{ event.link }}">{{ event.title }}</a><br/>
+			<a href="/event/{{ event.id }}">{{ event.title }}</a><br/>
 			{{ event.persons_html|safe }}<br />
 			{% endif %}
 			{% endwith %}
