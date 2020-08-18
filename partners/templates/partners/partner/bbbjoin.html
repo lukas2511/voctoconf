@@ -11,11 +11,11 @@
 	</div>
 	<div class="col-sm-4 col-12 py-1">
 		{% if partner.bbb.get_stats.running %}
-		<a class="btn btn-primary btn-lg w-100" href="/bbb/{{ partner.bbb.id }}" role="button">
+		<a class="btn btn-primary btn-lg w-100" href="{{ partner.bbb.link }}" role="button">
 			Join
 		</a>
 		{% elif partner.bbb|is_bbb_mod:request.user %}
-		<a class="btn btn-primary btn-lg w-100" href="/bbb/{{ partner.bbb.id }}" role="button">
+		<a class="btn btn-primary btn-lg w-100" href="{{ partner.bbb.link }}" role="button">
 			Start
 		</a>
 		{% else %}
