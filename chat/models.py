@@ -25,35 +25,16 @@ class Message(models.Model):
 
     def save(self, *args, **kwargs):
         models.Model.save(self, *args, **kwargs)
-    
-    def send(self):
-        if self._state.adding:
-            channel_layer = channels.layers.get_channel_layer()
-            if(self.type=="WPR"):
-                async_to_sync(channel_layer.group_send)('chat_%s' % self.room,
-                    {
-                        'type': str(next(obj for obj in messagetypes if obj[0]==self.type)[1]),
-                        'message': self.chatmsg()
-                    })
-                if Connection.objects.filter(room=self.room, user=self.receiver).count() == 0:
-                    error_message = Message()
-                    error_message.type = "SYS"
-                    error_message.room = self.room
-                    error_message.receiver = self.sender
-                    error_message.content = "Couldn't find user \"%s\" / Der Nutzer \"%s\" konnte nicht gefunden werden" % (self.receiver, self.receiver)
-                    error_message.send()
-            else:
-                async_to_sync(channel_layer.group_send)('chat_%s' % self.room,
-                    {
-                        'type': str(next(obj for obj in messagetypes if obj[0]==self.type)[1]),
-                        'message': self.chatmsg()
-                    })
         
     def chatmsg(self):
         return {'date': timezone.localtime(self.date).strftime('%H:%M:%S'),
                 'sender': self.sender,
                 'content': self.content,
                 'receiver': self.receiver}
+    
+    @staticmethod
+    def name_for_messagetype(messagetype: str):
+        return str(next(obj for obj in messagetypes if obj[0]==messagetype)[1])
 
 class Bans(models.Model):
     # @TODO Fix magix number for maximum username length

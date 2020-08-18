@@ -1,13 +1,17 @@
 import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
-from .models import Message, Connection
+from .models import Message, Connection, Bans
+from .templatetags.is_chat_moderator import is_chat_moderator
+import channels.layers
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name
         self.user_name = self.get_name()
+        self.moderator = is_chat_moderator(self.scope['user'])
+
         # Join room group
         async_to_sync(self.channel_layer.group_add)(
             self.room_group_name,
@@ -29,31 +33,93 @@ class ChatConsumer(WebsocketConsumer):
         text_data_json = json.loads(text_data)
 
         type = text_data_json['type']
-        message = text_data_json['message']
-
-        if not message or not type or message.isspace():
+        if not type:
             return
-        
-        msg = Message()
-        msg.sender = self.user_name
-        if not msg.sender:
-            return # wat?
-        
-        msg.content = message[:200]
-        msg.room = self.room_name
 
-        if type == "chat_message":
-            msg.type = "MSG"
-            
-            msg.send()
-            msg.save()
+        if type == 'chat_message' or type == 'whisper_message':
+            message = Message()
 
-        elif type == "whisper_message":
-            msg.type = "WPR"
-            msg.receiver = text_data_json['target']
-            if not msg.receiver:
+            content = text_data_json['content']
+            if not content or content.isspace():
+                self.invalid_message()
                 return
-            msg.send()
+            
+            message.sender = self.user_name
+            if not message.sender:
+                return # wat?
+            
+            message.content = content[:200]
+            message.room = self.room_name
+
+            if type == 'whisper_message':
+                # @TODO: fix magic values
+                message.type = "WPR"
+                receiver = text_data_json['receiver']
+                if not receiver or receiver.isspace():
+                    self.invalid_message()
+                    return
+                message.receiver = receiver
+                self.send_message(message)
+
+                if Connection.objects.filter(room=self.room_name, user=receiver).count() == 0:
+                    self.system_reply("Couldn't find user \"%s\"." % receiver)
+            elif type == 'chat_message':
+                message.type = "MSG"
+                self.send_message(message)
+                message.save()
+
+        elif self.moderator:
+            if type == 'system_message':
+                message = Message()
+                content = text_data_json['content']
+                if not content or content.isspace():
+                    self.invalid_message()
+                    return
+                message.type = "SYS"
+                message.content = content[:200]
+                message.room = self.room_name
+                self.send_message(message)
+                message.save()
+            elif type == 'ban' or type == 'pardon':
+                receiver = text_data_json['receiver']
+                if not receiver or receiver.isspace():
+                    self.invalid_message()
+                    return
+                if type == 'ban':
+                    if Bans.objects.filter(receiver=self.get_name()).count() == 0:
+                        Bans.objects.get_or_create(receiver=self.get_name())
+                        self.system_reply('Successfully banned "%s".' % receiver)
+                    else:
+                        self.system_reply('Couldn\'t ban "%s" because they are already banned.' % receiver)
+                elif type == 'pardon':
+                    if Bans.objects.filter(receiver=self.get_name()).count() == 0:
+                        self.system_reply('Couldn\'t pardon "%s" because they are not banned.' % receiver)
+                    else:
+                        Bans.objects.filter(receiver=self.get_name()).delete()
+                        self.system_reply('Successfully pardoned "%s".' % receiver)
+
+        else:
+            self.invalid_message()
+    
+    def send_message(self, message: Message):
+        if message._state.adding:
+            channel_layer = channels.layers.get_channel_layer()
+            async_to_sync(channel_layer.group_send)('chat_%s' % self.room_name,
+                {
+                    'type': Message.name_for_messagetype(message.type),
+                    'message': message.chatmsg()
+                })
+    
+    def invalid_message(self):
+        self.system_reply("Invalid message.")
+    
+    def system_reply(self, content):
+        message = Message()
+        message.type = 'SYS'
+        message.room = self.room_name
+        message.receiver = self.user_name
+        message.content = content
+        self.send_message(message)
     
     def get_name(self):
         if self.scope['user'].is_authenticated:
@@ -62,6 +128,7 @@ class ChatConsumer(WebsocketConsumer):
             return "guest-%s" % self.scope['session']['name']
         else:
             return 
+
 
     # Receive message from room group
     def chat_message(self, event):
