@@ -5,19 +5,24 @@
 
 {% block content %}
 <main class="container">
-	<h1>Stream Control: {{ room.title }}</h1>
+	<h1>Stream Control</h1>
 	<div class="row">
 		<div class="col">
-			<form action="" method="post">
-				{% csrf_token %}
-				<input type="hidden" name="live" value="1"/>
-				<input type="submit" value="LIVE" />
-			</form>
+			{% if room.live %}
+			Stream is currently <span style="color:green;">enabled</span>!
 			<form action="" method="post">
 				{% csrf_token %}
 				<input type="hidden" name="live" value="0"/>
-				<input type="submit" value="NOT LIVE" />
+				<input type="submit" value="DISABLE" />
 			</form>
+			{% else %}
+			Stream is currently <span style="color:red;">disabled</span>!
+			<form action="" method="post">
+				{% csrf_token %}
+				<input type="hidden" name="live" value="1"/>
+				<input type="submit" value="ENABLE" />
+			</form>
+			{% endif %}
 		</div>
 	</div>
 </main>
