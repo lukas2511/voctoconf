@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load is_bbb_mod %}
+{% load static %}
+
+{% block content %}
+<main class="container">
+	<h1>Stream Control: {{ room.title }}</h1>
+	<div class="row">
+		<div class="col">
+			<form action="" method="post">
+				{% csrf_token %}
+				<input type="hidden" name="live" value="1"/>
+				<input type="submit" value="LIVE" />
+			</form>
+			<form action="" method="post">
+				{% csrf_token %}
+				<input type="hidden" name="live" value="0"/>
+				<input type="submit" value="NOT LIVE" />
+			</form>
+		</div>
+	</div>
+</main>
+{% endblock %}

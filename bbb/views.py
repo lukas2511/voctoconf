@@ -47,7 +47,7 @@ def setliveview(request, roomid):
     if request.method == "POST" and room.is_moderator(request):
         room.live = (request.POST.get("live") == "1")
         room.save()
-        return HttpResponse("ok")
+        return redirect("%s/setlive?saved=1" % room.link())
     else:
-        return HttpResponse("notok")
+        return render(request, "bbb/streamcontrol.html", {'room': room, 'saved': request.GET.get('saved')})
 
