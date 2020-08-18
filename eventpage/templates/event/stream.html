@@ -44,8 +44,15 @@
 	<div class="row w-100">
 		{% if room.bbb %}
 		<div class="col-sm-6 col-12 p-1">
-			<a class="btn btn-primary btn-lg w-100" href="/bbb/{{ room.bbb.id }}" role="button">
+			<a class="btn btn-primary btn-lg w-100" href="{{ room.bbb.link }}" role="button">
 				{% if LANGUAGE_CODE == "de" %}Videokonferenz{% else %}Video conference{% endif %}
+			</a>
+		</div>
+		{% endif %}
+		{% if room.bbb|is_bbb_mod:request.user %}
+		<div class="col-sm-6 col-12 p-1">
+			<a class="btn btn-primary btn-lg w-100" href="{{ room.bbb.link }}/setlive" role="button">
+				Stream Control
 			</a>
 		</div>
 		{% endif %}
