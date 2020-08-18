@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load is_bbb_mod %}
+{% load staticpage %}
+
+{% block content %}
+<main class="container">
+	<h1 class="pt-3">{% if LANGUAGE_CODE == "de" %}Datenschutzhinweis{% else %}Data privacy statement{% endif %}</h1>
+	<h5>{{ room.name }}</h5>
+	<div class="row">
+		<div class="col">
+			{{ 'recordaccept'|staticpage:LANGUAGE_CODE|safe }}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col py-3">
+			<a class="btn btn-primary btn-lg w-100" href="{{ room.link }}?acceptrecording=1" role="button">
+				{% if LANGUAGE_CODE == "de" %}Ich akzeptiere diese Bedingungen{% else %}I accept these conditions{% endif %}
+			</a>
+		</div>
+	</div>
+</main>
+{% endblock %}

@@ -21,6 +21,9 @@ def roomview(request, roomid):
     if request.GET.get("ended"):
         return render(request, "bbb/roomended.html")
 
+    if room.record and not request.GET.get("acceptrecording") and not request.user.username == "stream":
+        return render(request, "bbb/acceptrecording.html", {'room': room})
+
     meeting = room.join(request, name=request.username)
 
     if meeting:
