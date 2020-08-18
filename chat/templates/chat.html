@@ -19,7 +19,11 @@
       <table id="chat-log" class="w-100 table table-striped table-sm">
         <tbody class="w-100">
           {% for message in backlog %}
+          {% if message.type == "chat_message" %}
           {% usemacro chat_message message.date message.sender message.content is_chat_moderator %}
+          {% elif message.type == "system_message" %}
+          {% usemacro system_message message.date message.sender message.content is_chat_moderator %}
+          {% endif %}
           {% endfor %}
         </tbody>
       </table>

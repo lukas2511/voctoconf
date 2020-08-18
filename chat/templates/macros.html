@@ -45,7 +45,7 @@
 {% macro system_message date sender content  moderator %}
 <tr class="chat-message chat-message-system">
   <td data-chat-date>{{ date }}</td>
-  <td data-chat-name="{{ sender }}">{% if sender %}{{ sender }}{% else %}*SYSTEM*{% endif %}</td>
+  <td data-chat-name="{{ sender }}">{% if sender %}{{ sender }}{% else %}*system*{% endif %}</td>
   <td colspan="2" data-chat-content>{{ content }}</td>
 </tr>
 {% endmacro %}

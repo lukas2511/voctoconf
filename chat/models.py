@@ -30,7 +30,8 @@ class Message(models.Model):
         return {'date': timezone.localtime(self.date).strftime('%H:%M:%S'),
                 'sender': self.sender,
                 'content': self.content,
-                'receiver': self.receiver}
+                'receiver': self.receiver,
+                'type': Message.name_for_messagetype(self.type)}
     
     @staticmethod
     def name_for_messagetype(messagetype: str):
