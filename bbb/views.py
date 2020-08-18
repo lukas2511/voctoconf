@@ -41,3 +41,13 @@ def livestatsview(request, roomid):
     stats["running"] = room.is_running()
     stats["live"] = room.live
     return HttpResponse(json.dumps(stats))
+
+def setliveview(request, roomid):
+    room = get_room(roomid)
+    if request.method == "POST" and room.is_moderator(request):
+        room.live = (request.POST.get("live") == "1")
+        room.save()
+        return HttpResponse("ok")
+    else:
+        return HttpResponse("notok")
+
