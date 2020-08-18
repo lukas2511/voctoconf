@@ -44,7 +44,7 @@ def livestatsview(request, roomid):
 
 def setliveview(request, roomid):
     room = get_room(roomid)
-    if request.method == "POST" and room.is_moderator(request):
+    if request.method == "POST" and room.is_moderator(request.user):
         room.live = (request.POST.get("live") == "1")
         room.save()
         return redirect("%s/setlive?saved=1" % room.link())
