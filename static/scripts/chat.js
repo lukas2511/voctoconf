@@ -3,33 +3,57 @@ const whisper_message_received_template = document.querySelector('#whisper_messa
 const whisper_message_sent_template = document.querySelector('#whisper_message_sent');
 const system_message_template = document.querySelector('#system_message');
 
-function scrollChatDown() {
-    document.querySelector('#chat-scroll-container').scrollTo(0, document.querySelector('#chat-scroll-container').scrollHeight)
-}
+class Chat{
+    connected = false;
+    socket = null;
+    roomName = null;
+    
+    container = null;
+    scrollContainer = null;
+    log = null;
+    input = null;
+    submitButton = null;
 
-var chatConnected = false;
-var chatSocket;
-function connect() {
-    const roomName = JSON.parse(document.getElementById('room-name').textContent);
+    constructor(container, roomName){
+        this.container = container;
+        this.roomName = roomName;
 
-    if (window.location.protocol == 'https:' ) {
-        chatSocket = new WebSocket('wss://' + window.location.host + '/ws/chat/' + roomName + '/');
-    } else {
-        chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/' + roomName + '/');
+        this.input = this.container.querySelector('[data-chat-input]');
+        this.scrollContainer = this.container.querySelector('[data-chat-scroll-container]');
+        this.log = this.scrollContainer.querySelector('[data-chat-log]');
+        this.submitButton = this.container.querySelector('[data-chat-submit]');
+
+        this.scrollDown();
+        this.input.focus();
+        this.container.addEventListener('click',this.onActionClicked.bind(this));
+
+        this.submitButton.addEventListener('click', this.submit.bind(this));
+        this.input.addEventListener('keyup', (e) => {
+            if (e.keyCode === 13)
+                this.submitButton.click();
+        });
     }
-    chatSocket.onopen = function() {
-        console.debug('Connected to chat.');
-        chatConnected = true;
-    };
 
-    chatSocket.onmessage = function(e) {
+    connect(){
+        if (window.location.protocol == 'https:' ) {
+            this.socket = new WebSocket('wss://' + window.location.host + '/ws/chat/' + this.roomName + '/');
+        } else {
+            this.socket = new WebSocket('ws://' + window.location.host + '/ws/chat/' + this.roomName + '/');
+        }
+        this.socket.onmessage = this.onMessage.bind(this);
+        this.socket.onopen = this.onOpen.bind(this);
+        this.socket.onclose = this.onClose.bind(this);
+        this.socket.onerror = this.onError.bind(this);
+    }
+
+
+    onMessage(e) {
         console.debug('Chat message received:', e.data);
         const data = JSON.parse(e.data);
         const type = data.type;
         const message = data.message;
         let name = message.sender;
-
-        const chat = document.querySelector('#chat-log > tbody');
+        
         let template;
         if(type=='chat_message'){
             template = chat_message_template;
@@ -51,112 +75,122 @@ function connect() {
         if(name)
             clone.querySelector('[data-chat-name]').textContent = name;
         clone.querySelector('[data-chat-content]').textContent = message.content;
-        chat.appendChild(clone);
+        this.log.appendChild(clone);
 
         // remove old messages
-        if(chat.childNodes.length>150)
-        chat.removeChild(chat.childNodes[0]);
-        scrollChatDown();
-    };
+        if(this.log.childNodes.length>150)
+            this.log.removeChild(this.log.childNodes[0]);
+        
+        this.scrollDown();
+    }
 
-    chatSocket.onclose = function(e) {
+    submit(){
+        if(!this.connected)
+            return;
+        const content = this.input.value;
+        if( content.startsWith("/w ") ||
+            content.startsWith("/msg ") ||
+            content.startsWith("/whisper ") ){
+            const components = content.split(" ");
+            if(components[1]){
+                this.socket.send(JSON.stringify({
+                    'type': 'whisper_message',
+                    'content': components.slice(2).join(" "),
+                    'receiver': components[1]
+                }));
+            }
+        } else if( content.startsWith("/ban ") ){
+            const components = content.split(" ");
+            if(components[1]){
+                this.socket.send(JSON.stringify({
+                    'type': 'ban',
+                    'content': components.slice(2).join(" "),
+                    'receiver': components[1]
+                }));
+            }
+        } else if( content.startsWith("/pardon ") ){
+            const components = content.split(" ");
+            if(components[1]){
+                this.socket.send(JSON.stringify({
+                    'type': 'pardon',
+                    'receiver': components[1]
+                }));
+            }
+        } else if( content.startsWith("/users") ){
+            if(components[1]){
+                this.socket.send(JSON.stringify({
+                    'type': 'userlist'
+                }));
+            }
+        } else if( content.startsWith("/system ") ){
+            const components = content.split(" ");
+            this.socket.send(JSON.stringify({
+                'type': 'system_message',
+                'content': components.slice(1).join(" ")
+            }));
+        } else if( content == "/userlist" ){
+            this.socket.send(JSON.stringify({
+                'type': 'userlist'
+            }));
+        } else {
+            if (content.trim()){
+                this.socket.send(JSON.stringify({
+                    'type': 'chat_message',
+                    'content': content
+                }));
+            }
+        }
+
+        this.input.value = '';
+        this.scrollDown();
+    }
+
+    onActionClicked(event){
+        const target = event.target.closest('[data-chat-action=whisper][data-chat-name],[data-chat-action=ban][data-chat-name]');
+        if (!target)
+            return;
+        
+        event.preventDefault();
+        
+        const action = target.getAttribute('data-chat-action');
+        if (action == 'whisper' || action == 'ban'){
+            const message = this.input.value;
+            let prefix;
+            if (action == 'whisper'){
+                prefix = `/w ${target.getAttribute('data-chat-name')} `
+            } else if (action == 'ban') {
+                prefix = `/ban ${target.getAttribute('data-chat-name')} `
+            }
+    
+            if(!message.startsWith(prefix))
+                this.input.value = prefix + message;
+                this.input.focus();
+        }
+    }
+
+    onOpen(){
+        console.debug('Connected to chat.');
+        this.connected = true;
+    }
+    
+    onClose(e){
         console.warn('Chat connection lost. Reconnect will be attempted in 1 second.', e.reason);
-        chatConnected = false;
-        setTimeout(function() {
-            connect();
-        }, 1000);
+        this.connected = false;
+        setTimeout(()=>this.connect(), 1000);
     };
 
-    chatSocket.onerror = function(err) {
-        console.error('Chat encountered error: ', err.message, 'Closing socket');
-        chatSocket.close();
-    };
+    onError(e){
+        console.error('Chat encountered error: ', e.message, 'Closing socket');
+        this.socket.close();
+    }
+
+    scrollDown(){
+        this.scrollContainer.scrollTo(0, this.scrollContainer.scrollHeight)
+    }
 }
 
-connect();
+new Chat(
+    document.querySelector('#chat'),
+    JSON.parse(document.getElementById('room-name').textContent)
+).connect();
 
-document.body.addEventListener("click",function(event){
-    const target = event.target.closest('[data-chat-action=whisper][data-chat-name],[data-chat-action=ban][data-chat-name]');
-    if (!target)
-        return;
-    
-    event.preventDefault();
-    
-    const action = target.getAttribute('data-chat-action');
-    if (action == 'whisper' || action == 'ban'){
-        const messageInputDom = document.querySelector('#chat-message-input');
-        const message = messageInputDom.value;
-        let prefix;
-        if (action == 'whisper'){
-            prefix = `/w ${target.getAttribute('data-chat-name')} `
-        } else if (action == 'ban') {
-            prefix = `/ban ${target.getAttribute('data-chat-name')} `
-        }
-
-        if(!message.startsWith(prefix))
-            messageInputDom.value = prefix + message;
-        messageInputDom.focus();
-    }
-        
-})
-
-document.querySelector('#chat-message-input').focus();
-document.querySelector('#chat-message-input').onkeyup = function(e) {
-    if (e.keyCode === 13) {  // enter, return
-        document.querySelector('#chat-message-submit').click();
-    }
-};
-    
-document.querySelector('#chat-message-submit').onclick = function(e) {
-    if(!chatConnected)
-        return;
-    const messageInputDom = document.querySelector('#chat-message-input');
-    const content = messageInputDom.value;
-    if( content.startsWith("/w ") ||
-        content.startsWith("/msg ") ||
-        content.startsWith("/whisper ") ){
-        const components = content.split(" ");
-        if(components[1]){
-            chatSocket.send(JSON.stringify({
-                'type': 'whisper_message',
-                'content': components.slice(2).join(" "),
-                'receiver': components[1]
-            }));
-        }
-    } else if( content.startsWith("/ban ") ){
-        const components = content.split(" ");
-        if(components[1]){
-            chatSocket.send(JSON.stringify({
-                'type': 'ban',
-                'content': components.slice(2).join(" "),
-                'receiver': components[1]
-            }));
-        }
-    } else if( content.startsWith("/pardon ") ){
-        const components = content.split(" ");
-        if(components[1]){
-            chatSocket.send(JSON.stringify({
-                'type': 'pardon',
-                'receiver': components[1]
-            }));
-        }
-    } else if( content.startsWith("/system ") ){
-        const components = message.split(" ");
-        chatSocket.send(JSON.stringify({
-            'type': 'system_message',
-            'content': components.slice(1).join(" ")
-        }));
-    } else {
-        if (content.trim()){
-            chatSocket.send(JSON.stringify({
-                'type': 'chat_message',
-                'content': content
-            }));
-        }
-    }
-    
-    messageInputDom.value = '';
-    scrollChatDown();
-};
-
-scrollChatDown();

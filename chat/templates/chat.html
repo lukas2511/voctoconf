@@ -11,13 +11,13 @@
 
 {% block content %}
 <main class="container full-height-content">
-  <div class="d-flex flex-column h-100">
+  <div id="chat" class="d-flex flex-column h-100">
     <div>
 	    <h1>Chat</h1>
     </div>
-    <div id="chat-scroll-container" class="flex-grow-1" style="overflow-y: scroll">
-      <table id="chat-log" class="w-100 table table-striped table-sm">
-        <tbody class="w-100">
+    <div class="flex-grow-1" style="overflow-y: scroll" data-chat-scroll-container>
+      <table class="w-100 table table-striped table-sm chat-log">
+        <tbody class="w-100" data-chat-log>
           {% for message in backlog %}
           {% if message.type == "chat_message" %}
           {% usemacro chat_message message.date message.sender message.content is_chat_moderator %}
@@ -27,42 +27,45 @@
           {% endfor %}
         </tbody>
       </table>
-      <template id="chat_message">{% usemacro chat_message "" "" "" is_chat_moderator %}</template>
-      <template id="whisper_message_sent">{% usemacro whisper_message_sent "" "" "" is_chat_moderator %}</template>
-      <template id="whisper_message_received">{% usemacro whisper_message_received "" "" "" is_chat_moderator %}</template>
-      <template id="system_message">{% usemacro system_message "" "" "" is_chat_moderator %}</template>
-      <style>
-        #chat-log { overflow-wrap: anywhere; }
-        .chat-message-system { color: #6c757d; }
-        #chat-log td:nth-child(1) {
-          min-width: 5.5em;
-        }
-        #chat-log td:nth-child(2) {
-          white-space: nowrap;
-          min-width: 10em;
-        }
-        #chat-log td:nth-child(3) {
-          width: 100;
-        }
-        #chat-log td:nth-child(4) {
-          white-space: nowrap;
-          text-align: right;
-        }
-        .chat-message-whisper {
-          background-color: red;
-        }
-      </style>
     </div>
     <div class="row">
       <div class="col-10">
-        <input id="chat-message-input" type="text" class="form-control" placeholder="Message..." maxlength="200" />
+        <input id="chat-message-input" type="text" class="form-control" placeholder="Message..." maxlength="200" data-chat-input />
       </div>
       <div class="col-2">
-        <input id="chat-message-submit" type="button" class="form-control" value="Send" />
+        <input id="chat-message-submit" type="button" class="form-control" value="Send" data-chat-submit />
       </div>
       {{ room_name|json_script:"room-name" }}
     </div>
   </div>
 </main>
 
+<template id="chat_message">{% usemacro chat_message "" "" "" is_chat_moderator %}</template>
+<template id="whisper_message_sent">{% usemacro whisper_message_sent "" "" "" is_chat_moderator %}</template>
+<template id="whisper_message_received">{% usemacro whisper_message_received "" "" "" is_chat_moderator %}</template>
+<template id="system_message">{% usemacro system_message "" "" "" is_chat_moderator %}</template>
+<style>
+  .chat-log { overflow-wrap: anywhere; }
+  .chat-log .chat-message-system { color: #6c757d; }
+  .chat-log td:nth-child(1) {
+    min-width: 5.5em;
+  }
+  .chat-log td:nth-child(2) {
+    white-space: nowrap;
+    min-width: 10em;
+  }
+  .chat-log td:nth-child(3) {
+    width: 100;
+  }
+  .chat-log td:nth-child(4) {
+    white-space: nowrap;
+    text-align: right;
+  }
+  .chat-message-whisper-received td {
+    background-color: rgba(255,0,0,.2);
+  }
+  .chat-message-whisper-sent td {
+    background-color: rgba(0,0,255,.125);
+  }
+</style>
 {% endblock %}
