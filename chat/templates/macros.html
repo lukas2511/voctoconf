@@ -13,7 +13,7 @@
 {% endmacro %}
 
 {% macro whisper_message_received date sender content  moderator %}
-<tr class="chat-message chat-message-whisper">
+<tr class="chat-message chat-message-whisper chat-message-whisper-received">
   <td data-chat-date>{{ date }}</td>
   <td>
     <span data-chat-name="{{ sender }}">{{ sender }}</span>
@@ -28,7 +28,7 @@
 {% endmacro %}
 
 {% macro whisper_message_sent date receiver content moderator %}
-<tr class="chat-message chat-message-whisper">
+<tr class="chat-message chat-message-whisper chat-message-whisper-sent">
   <td data-chat-date>{{ date }}</td>
   <td>
     <span data-chat-name="{{ sender }}">{{ receiver }}</span>
