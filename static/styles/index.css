@@ -65,11 +65,11 @@ header, header > .jumbotron {
   color: white;
   text-shadow: 0 1px 1px rgba(0,0,0,0.3);
 }
-header .jumbotron .btn {
+header .jumbotron .btn:not(.disabled) {
   background-color: #258bb5;
   border-color: #2285af;
 }
-header .jumbotron .btn:hover {
+header .jumbotron .btn:not(.disabled):hover {
   background-color: #237da2;
   border-color: #207394;
 }
@@ -101,6 +101,9 @@ header .jumbotron .logo {
 .venue-partners .partner-logo img {
   max-height: 105px;
   max-width: 240px;
+}
+.partner-online img {
+  animation: pulse 1s infinite alternate;
 }
 
 /* Footer */
@@ -162,10 +165,6 @@ footer.slim-footer .footer .footer-logo {
 }
 
 .landing-page-explaination a[href], .landing-page-main a[href]:hover { color: inherit; text-decoration: underline; }
-
-.partneronline img {
-  animation: pulse 1s infinite alternate;
-}
 
 @keyframes pulse {
   from {

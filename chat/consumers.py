@@ -102,7 +102,7 @@ class ChatConsumer(WebsocketConsumer):
                         self.system_reply('Successfully pardoned "%s".' % receiver)
             elif type == 'userlist':
                 usernames = ", ".join(connection.user for connection in Connection.objects.filter(room=self.room_name))
-                self.system_reply('Connected users: %s' % (usernames or '<none>')) 
+                self.system_reply('Connected users: %s' % (usernames or '<none>'))
 
         else:
             self.invalid_message()

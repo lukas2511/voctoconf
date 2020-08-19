@@ -169,13 +169,22 @@
 			</a>
 		</div>
 	</div>
-	<div class="row align-items-center align-content-around text-center mb-10 w-100" style='padding-top:16px;'>
+	<div class="row align-items-center align-content-around text-center mb-10 w-100 pt-1">
 		{% for partner in partners %}
-		<figure class="col partner-logo">
-			<a href="{{ partner.link }}" class="{% if partner.bbb.get_stats.running %}partneronline{% else %}partneroffline{% endif %}" title="{{ partner.name }}">
-				<img src="{{ partner.logo.url }}" alt="{{ partner.name }}">
-			</a>
-		</figure>
+		<div class="col d-flex flex-column align-self-stretch">
+			<figure class="flex-grow-1 d-flex align-items-center align-self-center partner-logo">
+				<a href="{{ partner.link }}" {% if partner.bbb.get_stats.running %}class="partner-online{% endif %}"  title="{{ partner.name }}">
+					<img src="{{ partner.logo.url }}" alt="{{ partner.name }}">
+				</a>
+			</figure>
+			<div>
+				{% if partner.bbb.get_stats.running %}
+				<a class="btn btn-primary btn-small w-100" href="{{ partner.bbb.link }}">Join</a>
+				{% else %}
+				<a class="btn btn-primary btn-small disabled w-100" href disabled>Offline</a>
+				{% endif %}
+			</div>
+		</div>
 		{% endfor %}
 	</div>
 	{% endif %}
