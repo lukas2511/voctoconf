@@ -5,6 +5,8 @@
 {% loadmacros "macros.html" %}
 
 {% block scripts %}
+  {{ room_name|json_script:"room-name" }}
+  {{ user_name|json_script:"user-name" }}
   <script src="{% static "scripts/chat.js" %}"></script>
 {% endblock %}
 {% block page_class %}page h-100{% endblock  %}
@@ -20,9 +22,9 @@
         <tbody class="w-100" data-chat-log>
           {% for message in backlog %}
           {% if message.type == "chat_message" %}
-          {% usemacro chat_message message.date message.sender message.content is_chat_moderator %}
+          {% usemacro chat_message message.date message.sender message.receiver message.content is_chat_moderator %}
           {% elif message.type == "system_message" %}
-          {% usemacro system_message message.date message.sender message.content is_chat_moderator %}
+          {% usemacro system_message message.date message.sender message.receiver message.content is_chat_moderator %}
           {% endif %}
           {% endfor %}
         </tbody>
@@ -35,15 +37,14 @@
       <div class="col-2">
         <input id="chat-message-submit" type="button" class="form-control" value="Send" data-chat-submit />
       </div>
-      {{ room_name|json_script:"room-name" }}
     </div>
   </div>
 </main>
 
-<template id="chat_message">{% usemacro chat_message "" "" "" is_chat_moderator %}</template>
-<template id="whisper_message_sent">{% usemacro whisper_message_sent "" "" "" is_chat_moderator %}</template>
-<template id="whisper_message_received">{% usemacro whisper_message_received "" "" "" is_chat_moderator %}</template>
-<template id="system_message">{% usemacro system_message "" "" "" is_chat_moderator %}</template>
+<template id="chat_message">{% usemacro chat_message "" "" "" "" is_chat_moderator %}</template>
+<template id="whisper_message_sent">{% usemacro whisper_message_sent "" "" "" "" is_chat_moderator %}</template>
+<template id="whisper_message_received">{% usemacro whisper_message_received "" "" "" "" is_chat_moderator %}</template>
+<template id="system_message">{% usemacro system_message "" "" "" "" is_chat_moderator %}</template>
 <style>
   .chat-log { overflow-wrap: anywhere; }
   .chat-log .chat-message-system { color: #6c757d; }

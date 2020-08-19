@@ -70,10 +70,12 @@ class Chat{
     
         // Clone the new row and insert it into the table
         const clone = template.content.cloneNode(true);
+        if (message.sender)
+            clone.querySelectorAll('[data-chat-sender]').forEach((e)=>e.textContent = message.sender);
+        if (message.receiver)
+            clone.querySelectorAll('[data-chat-receiver]').forEach((e)=>e.textContent = message.receiver);
         clone.querySelectorAll('[data-chat-name]').forEach((e)=>e.setAttribute('data-chat-name', name));
         clone.querySelector('[data-chat-date]').textContent = message.date;
-        if(name)
-            clone.querySelector('[data-chat-name]').textContent = name;
         clone.querySelector('[data-chat-content]').textContent = message.content;
         this.log.appendChild(clone);
 
