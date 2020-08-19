@@ -19,6 +19,7 @@ class Message(models.Model):
     room = models.CharField(max_length=30)
     # @TODO Fix magix number for maximum username length
     sender = models.CharField(max_length=30)
+    # @TODO Fix magix number for maximum message length
     content = models.CharField(max_length=200)
     # @TODO Fix magix number for maximum username length
     receiver = models.CharField(max_length=30, null=True)
@@ -37,9 +38,10 @@ class Message(models.Model):
     def name_for_messagetype(messagetype: str):
         return str(next(obj for obj in messagetypes if obj[0]==messagetype)[1])
 
-class Bans(models.Model):
+class Ban(models.Model):
     # @TODO Fix magix number for maximum username length
     user = models.CharField(max_length=30)
+    reason = models.CharField(max_length=200, null = True, blank = True)
 
 class Connection(models.Model):
     # @TODO Fix magix number for chat room name length

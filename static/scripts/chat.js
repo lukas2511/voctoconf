@@ -7,6 +7,7 @@ function scrollChatDown() {
     document.querySelector('#chat-scroll-container').scrollTo(0, document.querySelector('#chat-scroll-container').scrollHeight)
 }
 
+var chatConnected = false;
 var chatSocket;
 function connect() {
     const roomName = JSON.parse(document.getElementById('room-name').textContent);
@@ -17,11 +18,12 @@ function connect() {
         chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/' + roomName + '/');
     }
     chatSocket.onopen = function() {
-        console.log('WS connected')
+        console.debug('Connected to chat.');
+        chatConnected = true;
     };
 
     chatSocket.onmessage = function(e) {
-        console.debug('WS message:', e.data);
+        console.debug('Chat message received:', e.data);
         const data = JSON.parse(e.data);
         const type = data.type;
         const message = data.message;
@@ -58,14 +60,15 @@ function connect() {
     };
 
     chatSocket.onclose = function(e) {
-        console.log('WS is closed. Reconnect will be attempted in 1 second.', e.reason);
+        console.warn('Chat connection lost. Reconnect will be attempted in 1 second.', e.reason);
+        chatConnected = false;
         setTimeout(function() {
-        connect();
+            connect();
         }, 1000);
     };
 
     chatSocket.onerror = function(err) {
-        console.error('WS encountered error: ', err.message, 'Closing socket');
+        console.error('Chat encountered error: ', err.message, 'Closing socket');
         chatSocket.close();
     };
 }
@@ -73,19 +76,25 @@ function connect() {
 connect();
 
 document.body.addEventListener("click",function(event){
-    const target = event.target.closest('[data-chat-action=whisper][data-chat-name]');
+    const target = event.target.closest('[data-chat-action=whisper][data-chat-name],[data-chat-action=ban][data-chat-name]');
     if (!target)
         return;
     
     event.preventDefault();
     
     const action = target.getAttribute('data-chat-action');
-    if (action == 'whisper'){
+    if (action == 'whisper' || action == 'ban'){
         const messageInputDom = document.querySelector('#chat-message-input');
         const message = messageInputDom.value;
-        const whisper_prefix = `/w ${target.getAttribute('data-chat-name')} `
-        if(!message.startsWith(whisper_prefix))
-            messageInputDom.value = whisper_prefix + message;
+        let prefix;
+        if (action == 'whisper'){
+            prefix = `/w ${target.getAttribute('data-chat-name')} `
+        } else if (action == 'ban') {
+            prefix = `/ban ${target.getAttribute('data-chat-name')} `
+        }
+
+        if(!message.startsWith(prefix))
+            messageInputDom.value = prefix + message;
         messageInputDom.focus();
     }
         
@@ -99,12 +108,14 @@ document.querySelector('#chat-message-input').onkeyup = function(e) {
 };
     
 document.querySelector('#chat-message-submit').onclick = function(e) {
+    if(!chatConnected)
+        return;
     const messageInputDom = document.querySelector('#chat-message-input');
-    const message = messageInputDom.value;
-    if( message.startsWith("/w ") ||
-        message.startsWith("/msg ") ||
-        message.startsWith("/whisper ")){
-        const components = message.split(" ");
+    const content = messageInputDom.value;
+    if( content.startsWith("/w ") ||
+        content.startsWith("/msg ") ||
+        content.startsWith("/whisper ") ){
+        const components = content.split(" ");
         if(components[1]){
             chatSocket.send(JSON.stringify({
                 'type': 'whisper_message',
@@ -112,17 +123,36 @@ document.querySelector('#chat-message-submit').onclick = function(e) {
                 'receiver': components[1]
             }));
         }
-    } else if( message.startsWith("/system ") ){
+    } else if( content.startsWith("/ban ") ){
+        const components = content.split(" ");
+        if(components[1]){
+            chatSocket.send(JSON.stringify({
+                'type': 'ban',
+                'content': components.slice(2).join(" "),
+                'receiver': components[1]
+            }));
+        }
+    } else if( content.startsWith("/pardon ") ){
+        const components = content.split(" ");
+        if(components[1]){
+            chatSocket.send(JSON.stringify({
+                'type': 'pardon',
+                'receiver': components[1]
+            }));
+        }
+    } else if( content.startsWith("/system ") ){
         const components = message.split(" ");
         chatSocket.send(JSON.stringify({
             'type': 'system_message',
             'content': components.slice(1).join(" ")
         }));
     } else {
-        chatSocket.send(JSON.stringify({
-            'type': 'chat_message',
-            'content': message
-        }));
+        if (content.trim()){
+            chatSocket.send(JSON.stringify({
+                'type': 'chat_message',
+                'content': content
+            }));
+        }
     }
     
     messageInputDom.value = '';
