@@ -6,7 +6,14 @@
 
 {% block content %}
 <main class="container pt-2">
-	<h1>{{ person.name }}</h1>
+	<h1>
+		{% if person.name == "Boernd" or person.name == "ScottyTM" %}
+		<i class="fa fa-user-astronaut"></i>
+		{% else %}
+		<i class="fa fa-user-tie"></i>
+		{% endif %}
+		{{ person.name }}
+	</h1>
 	<div class="row">
 		<div class="col">
 			{% if person.image %}
