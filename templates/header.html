@@ -1,7 +1,10 @@
 {% load static %}
 <header>
     <div class="header container">
-        <div class="header-logo">
+        <div class="header-logo d-none d-sm-block">
+            <a href="/event"><img class="title-logo" src="{% static "images/title_logo.png" %}" alt="FrOSCon 2020 - Cloud Edition" /></a>
+        </div>
+        <div class="header-logo d-block d-sm-none small">
             <a href="/event"><img class="title-logo" src="{% static "images/title_logo.png" %}" alt="FrOSCon 2020 - Cloud Edition" /></a>
         </div>
         <div class="header-controls">
