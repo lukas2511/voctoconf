@@ -111,7 +111,7 @@
 			<a class="btn btn-primary btn-lg w-100" href="{{ workshop.bbb.link }}" role="button">
 				<div class="d-flex w-100">
 					<div class="mx-auto">
-						Join
+						Start
 					</div>
 					<div>
 						| <i class="fa fa-sm fa-user"></i> 0
@@ -207,8 +207,10 @@
 			<div>
 				{% if partner.bbb.get_stats.running %}
 				<a class="btn btn-primary btn-small w-100" href="{{ partner.bbb.link }}">Join</a>
+				{% elif partner.bbb|is_bbb_mod:request.user %}
+				<a class="btn btn-primary btn-small w-100" href="{{ partner.bbb.link }}">Start</a>
 				{% else %}
-				<a class="btn btn-primary btn-small disabled w-100" href disabled>Offline</a>
+				<a class="btn btn-secondary btn-small disabled w-100" href disabled>Offline</a>
 				{% endif %}
 			</div>
 		</div>
