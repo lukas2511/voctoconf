@@ -103,7 +103,7 @@
 						Join
 					</div>
 					<div>
-						| <i class="fa fa-user"></i> {{ stats.participants }}
+						| <i class="fa fa-sm fa-user"></i> {{ stats.participants }}
 					</div>
 				</div>
 			</a>
@@ -114,7 +114,7 @@
 						Join
 					</div>
 					<div>
-						| <i class="fa fa-user-slash"></i> 0
+						| <i class="fa fa-sm fa-user"></i> 0
 					</div>
 				</div>
 			</a>
@@ -125,7 +125,7 @@
 						Join
 					</div>
 					<div>
-						| <i class="fa fa-user-slash"></i> {{ stats.participants }}
+						| <i class="fa fa-sm fa-user"></i> 0
 					</div>
 				</div>
 			</a>
@@ -145,27 +145,38 @@
 			{% with hangout.get_stats as stats %}
 			{% if stats.running %}
 			<a class="btn btn-primary btn-lg w-100" href="{{ hangout.link }}" role="button">
-				{{ hangout.name }}
+				<div class="d-flex w-100">
+					<div class="mx-auto">
+						{{ hangout.name }}
+					</div>
+					<div>
+						| <i class="fa fa-sm fa-user"></i> {{ stats.participants }}
+					</div>
+				</div>
 			</a>
 			{% elif hangout|is_bbb_mod:request.user or hangout.start_as_guest %}
 			<a class="btn btn-secondary btn-lg w-100" href="{{ hangout.link }}" role="button">
-				{{ hangout.name }}
+				<div class="d-flex w-100">
+					<div class="mx-auto">
+						{{ hangout.name }}
+					</div>
+					<div>
+						| <i class="fa fa-sm fa-user"></i> 0
+					</div>
+				</div>
 			</a>
 			{% else %}
-			<div class="btn btn-secondary btn-lg w-100 disabled">
-				{{ hangout.name }}
+			<a class="btn btn-secondary btn-lg w-100 disabled" href role="button">
+				<div class="d-flex w-100">
+					<div class="mx-auto">
+						{{ hangout.name }}
+					</div>
+					<div>
+						| <i class="fa fa-sm fa-user"></i> 0
+					</div>
+				</div>
 			</div>
 			{% endif %}
-			<br/>
-			<center>
-				<span style='font-size:12px'>
-					{% if stats.running %}
-						<i class="fa fa-user"></i> {{ stats.participants }}
-					{% else %}
-						{% if LANGUAGE_CODE == "de" %}Dieser Raum ist leer{% else %}This room is empty{% endif %}
-					{% endif %}
-				</span>
-			</center>
 			{% endwith %}
 		</div>
 		{% endfor %}
