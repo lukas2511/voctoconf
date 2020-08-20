@@ -40,11 +40,11 @@
 			<p>Unfortunately we don't have any introductionary text for this partner, but you can simply
 			visit their web page.</p>
 			{% endif %}
-			<p><i class="fa fa-link"></i> <a href="{{ partner.url }}">{{ partner.url }}</a></p>
+			<p><i class="fa fa-link"></i> <a htarget="_blank" ref="{{ partner.url }}">{{ partner.url }}</a></p>
 		</div>
 		<div class="col-sm-3 col-12 py-1">
 			<p>
-				<a href="{{ partner.url }}">
+				<a target="_blank" href="{{ partner.url }}">
 					<img src="{{ partner.logo.url }}" alt="{{ partner.name }}" style="max-width:100%;" /><br/>
 				</a>
 			</p>

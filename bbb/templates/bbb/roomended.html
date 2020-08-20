@@ -13,3 +13,12 @@
 <button class="button" onclick="window.location.href='?noframe=1';"><span class="label">{% if LANGUAGE_CODE == "de" %}Erneut verbinden{% else %}Reconnect{% endif %}</span></button>
 
 {% endblock %}
+
+
+{% block scripts %}
+<script type="text/javascript">
+    window.setTimeout(()=>{
+        window.top.location.href = window.location.origin + '/event'
+    }, 2000)
+</script>
+{% endblock %}
