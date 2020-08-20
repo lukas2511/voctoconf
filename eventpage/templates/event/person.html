@@ -12,7 +12,7 @@
 			{% if person.image %}
 			<figure class="float-right ml-3 my-2">
 				<img src="{{ person.image }}" class="img-thumbnail" style="max-width:180;max-height:256px;" />
-				<figcaption class="small font-italic">{{ person.name }}</figcaption>
+				<figcaption class="small text-center text-muted">{{ person.name }}</figcaption>
 			</figure>
 			{% endif %}
 			<i>{{ person.abstract|linebreaks }}</i>
