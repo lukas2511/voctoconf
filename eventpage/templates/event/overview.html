@@ -40,12 +40,27 @@
 				<div class="small w-100">
 					<div>{{ event.title }}</div>
 					<div class="d-flex w-100">
-						<div>{{ event.persons_html|safe }}</div>
+						<div>{{ event.persons_str }}</div>
 						<div class="ml-auto">{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }}</div>
 					</div>
 				</div>
 				{% endif %}
 			</a>
+
+			<div class="d-flex w-100 small">
+				<a href="{{ event.link }}">
+					<i class="fa fa-calendar-alt"></i> {% if LANGUAGE_CODE == "de" %}Fahrplan-Eintrag{% else %}Schedule Entry{% endif %}
+				</a>
+
+				{% if room.bbb %}
+				{% with room.bbb.get_stats as stats %}
+
+				<div>
+					<i class="fa fa-user"></i> {{ stats.participants }}
+				</div>
+				{% endwith %}
+				{% endif %}
+			</div>
 
 			{% endwith %}
 
@@ -54,20 +69,8 @@
 			<div class="small">
 				<i class="fa fa-fast-forward"></i> <a href="{{ event.link }}">{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }} {{ event.title }}</a></div>
 			{% endif %}
-
-			{% if room.bbb %}
-			{% with room.bbb.get_stats as stats %}
-			<div class="small">
-				{% if stats.running %}
-					<i class="fa fa-user"></i> {{ stats.participants }}
-				{% elif not room.current_event %}
-					<i class="fa fa-user-slash"></i> {{ stats.participants }}
-				{% endif %}
-			</div>
 			{% endwith %}
-			{% endif %}
 		</div>
-		{% endwith %}
 		{% endif %}
 		{% endfor %}
 	</div>
