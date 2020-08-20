@@ -1,0 +1,201 @@
+{% load static %}
+<h1>During the event</h1>
+<p>
+	Please arrive ~20 minutes before your talk in the
+	<a href="https://live.froscon.de/bbb/speakers-lounge">speakers lounge</a>
+	for last minute arrangements.
+</p>
+
+<p>
+	You'll be invited to the videoconference for your talk where you'll be introduced
+	by one of our moderators, afterwards your talk begins.
+</p>
+
+<p>
+	If you want to hold your talk directly in the videoconference that's great,
+	then there's basically nothing more to do other than uploading your slides to
+	the conference (ideally do that in the preparation time :P) and start talking ;)
+</p>
+
+<p>
+	If you prerecorded your talk we'll switch the stream to the recording and afterwards
+	back to the videoconference where you can do a little Q&A (if you want to).
+</p>
+
+<p>
+	If you are livestreaming basically the same thing happens.
+	You should still join the videoconference at least listen-only to hear the moderator
+	announce you, so you know when to begin.<br/>
+	Please enable <b>local recording</b> so we'll have a backup copy if anything goes wrong
+	with the stream.
+</p>
+
+<p>
+	In any case the conference will be locked during your talk so
+	guests can only use the chat.
+	During Q&A we might allow others to activate their microphones,
+	but we'll need to see how well that goes.
+</p>
+
+<p>
+	Optionally the stream can end after the recording and the Q&A will not be recorded.
+</p>
+
+<h1>OBS Configuration</h1>
+
+If you want a high quality livestream of your talk you'll need to set up OBS.
+Here are some guidlines on how to configure it if you don't already have a working setup.
+
+<h4>Settings</h4>
+<b>General</b>
+<p>
+	Enable <code>Automatically record when streaming</code> and <code>Keep recording when stream stops</code>,
+	just to make sure you don't forget to enable your local recording.
+</p>
+
+<b>Stream</b>
+<p>
+	Set service to <code>Custom...</code>
+	<ul>
+		<li>Server: <code>rtmp://ingest.c3voc.de/relay</code></li>
+		<li>Key: {% if key %}<code>{{ key }}</code>{% else %}will be given to you by mail{% endif %}
+	</ul>
+</p>
+
+<b>Output</b>
+<p>Output Mode: Simple</p>
+
+<b>Output: Streaming</b>
+<p>
+	<ul>
+		<li>Video Bitrate: 2500 Kbps (or higher, e.g. 4500 Kbps, if your bandwith and cpu ressources allow for that)</li>
+		<li>Encoder: Select Hardware encoder if possible (if you have the choice select Intel hardware acceleration)</li>
+		<li>Audio Bitrate: 192</li>
+	</ul>
+</p>
+
+<b>Output: Streaming</b>
+<p>
+	<ul>
+		<li>
+			Recording Path: select a path you'd like your local backup recording to be stored in
+			(since you are recording in h264 it doesn't take up much space, 5GB should be way more than enough free disk space)
+		</li>
+		<li>Recording Quality: aim for a value as high as your system allows without running into performance issues</li>
+		<li>Recording Format: ts</li>
+		<li>Encoder: Select Hardware encoder if possible (if you have the choice select Intel hardware acceleration)</li>
+	</ul>
+</p>
+
+<b>Output: Audio</b>
+<p>
+	<ul>
+		<li>Sample Rate: 44.1kHz</li>
+		<li>Channels: Stereo</li>
+		<li>Desktop audio: if you don't need to record desktop audio (e.g. for showing a video) disable this completely</li>
+		<li>Mic: Select your microphone input</li>
+	</ul>
+</p>
+
+<b>Video</b>
+<p>
+	<ul>
+		<li>Base Resolution: 1920x1080</li>
+		<li>Output Resolution: 1920x1080</li>
+		<li>Downscale Filter: Bicubic</li>
+		<li>Common FPS Values: 25 (or if that's not available: 30)</li>
+	</ul>
+</p>
+
+<h4>Scenes</h4>
+<p>
+	Create 3 scenes:
+	<ul>
+		<li>Fullscreen Camera</li>
+		<li>Fullscreen Desktop</li>
+		<li>Picture in Picture</li>
+	</ul>
+</p>
+
+<b>Scene: Fullscreen Camera</b>
+<p>Add a source, select <code>Video Capture Device</code>, name it e.g. <code>Camera</code></p>
+<p>Select the correct input device, e.g. <code>Cam Link 4K</code>. Set Resolution to 1920x1080 if possible.</p>
+<p>You can try to mess around with the other settings to get a better picture, but the default values usually are good enough.</p>
+<p>If nessary resize to canvas size: Right click -&gt; Transform -&gt; Fit to screen</p>
+
+<b>Scene Fullscreen Desktop</b>
+<p>
+	Add a source, select either <code>Screen Capture</code> or <code>Window Capture</code>.
+	Screen Capture has the benefit that it 	basically just shows everything on your screen,
+	and if you open your slides they'll be visible as well, but it has the drawback that you
+	can't have the slides fill the screen and still see your controls or the chat if you only
+	have one screen connected
+</p>
+
+<p>
+	If you have a second screen this makes everything a lot easier, otherwise experiment till
+	you get a good input for your slides.
+</p>
+
+<p>If nessary resize to canvas size: Right click -&gt; Transform -&gt; Fit to screen</p>
+
+<b>Picture in Picture</b>
+
+<p>Add a source, select <code>Scene</code>, select <code>Fullscreen Desktop</code></p>
+
+<p>Add a source, select <code>Scene</code>, select <code>Fullscreen Camera</code></p>
+
+<p>
+	Resize the added camera to a small corner, either do this by feel
+	or rightclick -&gt; transform -&gt; edit transform.
+	For size use something like 512x288.
+</p>
+
+<p>Depending on your slides feel free to move it to any corner you like, but bottom right is usually the best.</p>
+
+<a href="{% static "images/stream-example-sidebyside.png" %}"><img src="{% static "images/stream-example-sidebyside.png" %}" style="max-width:20%;float:left;margin-right:10px;margin-bottom:10px;" /></a>
+<p>
+	If you feel fancy you can also reduce the size of your slides, orient them slightly offset, and add a background
+	image: <a href="{% static "images/stream-background.png" %}">stream-background.png</a>
+</p>
+<p>
+	This could then look something like this example, that's the with the slides scaled to 1584x891 and positioned at 16x16
+	and with the camera beging scaled to 624x351 and positioned at 1280x713
+</p>
+
+<h4 style="clear:both">Audio</h4>
+
+<p>
+	Make sure your microphone is listed in the Audio Mixer section, otherwise go back to the settings and make sure it's selected there.
+</p>
+
+<p>
+	It should peak in the yellow region if you get a bit louder, but never go into red.
+	Try to get your audio as clear as possible without going over that limit.
+	You can select the advanced audio properties next to the volume graph and enable local preview so you can hear what you sound like
+	without having to record and playback all the time. Don't forget that your systems audio settings might also need to be changed.
+</p>
+
+<h4>Test recording</h4>
+<p>
+	Do a test recording. Check that everything looks and sounds like you want it to.
+</p>
+
+<h5>Test stream</h5>
+
+<p>
+	Use VLC, mpv, ffplay, or any other player that supports rtmp and open
+	<code>rtmp://ingest.c3voc.de/relay/{% if key %}{{ key }}{% else %}your-stream-key-here{% endif %}</code>
+</p>
+
+<p>
+	Click <code>Start Streaming</code> in OBS, after a few seconds image and sound should be played back.
+</p>
+
+<h5>If you need further help...</h5>
+<p>
+	Please contact us on friday and give us a way to quickly contact you.
+	We will probably not have time to set up or debug anything during the conference as we barely have enough
+	people to actually run it without hickups.
+</p>
+
