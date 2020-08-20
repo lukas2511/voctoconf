@@ -13,19 +13,21 @@
 </div>
 <div class="row align-items-center align-content-around text-center mb-10 w-100">
     {% for partner in partners %}
-    <div class="d-flex mx-auto flex-column align-self-stretch pt-3 px-2">
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mx-auto d-flex flex-column align-self-stretch pt-3 px-2">
         <figure class="flex-grow-1 d-flex align-items-center align-self-center partner-logo">
             <a href="{{ partner.link }}" {% if partner.bbb.get_stats.running %}class="partner-online{% endif %}"  title="{{ partner.name }}">
                 <img src="{{ partner.logo.url }}" alt="{{ partner.name }}">
             </a>
         </figure>
         <div>
+            {% if partner.bbb %}
             {% if partner.bbb.get_stats.running %}
             <a class="btn btn-primary btn-small w-100" href="{{ partner.bbb.link }}">Join</a>
             {% elif partner.bbb|is_bbb_mod:request.user %}
             <a class="btn btn-primary btn-small w-100" href="{{ partner.bbb.link }}">Start</a>
             {% else %}
             <a class="btn btn-secondary btn-small disabled w-100" href disabled>Offline</a>
+            {% endif %}
             {% endif %}
         </div>
     </div>

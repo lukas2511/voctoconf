@@ -154,6 +154,15 @@ footer.slim-footer .footer .footer-logo {
   }
 }
 
+.btn-primary {
+  background-color: #12a1db;
+  border-color: #12a1db;
+}
+.btn-primary:hover {
+  background-color: #109ed8;
+  background-color: #0b95d0;
+}
+
 .person img {
   max-height: 100px;
   min-width: 80px;
