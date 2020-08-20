@@ -126,17 +126,7 @@ footer {
   margin-bottom: 0;
 }
 .footer .footer-logo {
-  height: 48px;
-}
-@media(max-width: 575px){
-  .footer .footer-logo {
-    height: 30px;
-  }
-}
-@media(min-width:576px) and (max-width: 767px){
-  .footer .footer-logo {
-    height: 36px;
-  }
+  height: 3em;
 }
 
 .footer a[href]:not(.btn){ color: #999; }
@@ -156,6 +146,12 @@ footer.slim-footer .footer .footer-logo {
 
 .aspect-ration-16-9 {
   padding-top:56.25%;
+}
+
+@media (min-width: 768px) {
+  .w-sm-unset {
+    width: unset !important;
+  }
 }
 
 .person img {
