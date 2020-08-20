@@ -26,19 +26,15 @@
 
 			{% with room.current_event as event %}
 
-			{% if not room.bbb or room.bbb.get_stats.running %}
-			<a class="btn btn-primary btn-lg w-100 flex-grow-1" href="{{ room.link }}" role="button">
-			{% elif room.bbb and room.bbb|is_bbb_mod:request.user %}
-			<a class="btn btn-secondary btn-lg w-100 flex-grow-1" href="{{ room.link }}" role="button">
-			{% else %}
-			<a class="btn btn-secondary btn-lg w-100 flex-grow-1 disabled" href role="button">
-			{% endif %}
 
-				{{ room.name }}
-				{% if event %}
+				<h2>{{ room.name }}</h2>
 				<hr />
+				{% if event %}
 				<div class="small w-100" style="white-space: normal;">
-					<div>{{ event.title }}</div>
+					<div>
+						<i class="fa fa-play"></i>
+						{{ event.title }}
+					</div>
 					<div class="d-flex w-100 small">
 						<div>{{ event.persons_str }}</div>
 						<div class="ml-auto">{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }}</div>
@@ -46,8 +42,8 @@
 				</div>
 				{% else %}
 				<div class="small w-100" style="white-space: normal;">
-					<hr />
 					<div>
+						<i class="fa fa-play"></i>
 						{% if LANGUAGE_CODE == "de" %}
 						Zurzeit läuft kein Vortrag in diesem Saal.
 						{% else %}
@@ -56,6 +52,20 @@
 					</div>
 				</div>
 				{% endif %}
+
+				{% if not room.bbb or room.bbb.get_stats.running %}
+				<a class="btn btn-primary btn-lg w-100" href="{{ room.link }}" role="button">
+				{% elif room.bbb and room.bbb|is_bbb_mod:request.user %}
+				<a class="btn btn-secondary btn-lg w-100" href="{{ room.link }}" role="button">
+				{% else %}
+				<a class="btn btn-secondary btn-lg w-100 disabled" href role="button">
+				{% endif %}
+					{% if LANGUAGE_CODE == "de" %}
+					Ansehen
+					{% else %}
+					Watch
+					{% endif %}
+				</a>
 			</a>
 
 			<div class="d-flex w-100 small">
