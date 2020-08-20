@@ -23,14 +23,14 @@
 				<a class="btn btn-primary btn-lg w-100" href="/event" role="button">Zur Veranstaltung</a>
 			</div>
 			<div class="col-sm-6 col-12 py-1">
-				<a class="btn btn-primary btn-lg w-100" href="https://programm.froscon.de/2020/" role="button">Fahrplan</a>
+				<a class="btn btn-primary btn-lg w-100" target="_blank" href="https://programm.froscon.de/2020/" role="button">Fahrplan</a>
 			</div>
 			{% else %}
 			<div class="col-sm-6 col-12 py-1">
 				<a class="btn btn-primary btn-lg w-100" href="/event" role="button">To the Event</a>
 			</div>
 			<div class="col-sm-6 col-12 py-1">
-				<a class="btn btn-primary btn-lg w-100" href="https://programm.froscon.de/2020/" role="button">Schedule</a>
+				<a class="btn btn-primary btn-lg w-100" target="_blank" href="https://programm.froscon.de/2020/" role="button">Schedule</a>
 			</div>
 			{% endif %}
 			{% else %}
@@ -67,7 +67,7 @@
 	<div class="row align-items-center align-content-around text-center mb-4 w-100 venue-partners">
 		{% for partner in venue_partners %}
 		<figure class="col partner-logo">
-			{% if page_live %}<a target="_blank" href="{{ partner.link }}" title="{{ partner.name }}">{% endif %}
+			{% if page_live %}<a href="{{ partner.link }}" title="{{ partner.name }}">{% endif %}
 				<img src="{{ partner.logo.url }}" alt="{{ partner.name }}" />
 			{% if page_live %}</a>{% endif %}
 		</figure>
@@ -78,7 +78,7 @@
 	<div class="row align-items-center align-content-around text-center w-100">
 		{% for partner in venueless_partners %}
 		<figure class="col partner-logo">
-			{% if page_live %}<a target="_blank" href="/partner/{{ partner.id }}" title="{{ partner.name }}">{% endif %}
+			{% if page_live %}<a href="{{ partner.link }}" title="{{ partner.name }}">{% endif %}
 				<img src="{{ partner.logo.url }}" alt="{{ partner.name }}" />
 			{% if page_live %}</a>{% endif %}
 		</figure>

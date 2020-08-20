@@ -9,11 +9,11 @@
 
         {% with room.current_event as event %}
 
-        <h2 class="text-center">{{ room.name }}</h2>
+        <h3 class="mb-0">{{ room.name }} :</h2>
 
-        <div class="w-100 px-2">
+        <div class="w-100">
             {% if event %}
-            <div class="w-100 text-center">
+            <div class="w-100">
                 {{ event.title }}
             </div>
             <div class="small w-100">
