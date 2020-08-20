@@ -26,80 +26,85 @@
 
 			{% with room.current_event as event %}
 
+			<h2 class="text-center">{{ room.name }}</h2>
 
-				<h2>{{ room.name }}</h2>
-				<hr />
+			<hr class="my-0 w-100" />
+
+			<div class="w-100 px-2">
 				{% if event %}
-				<div class="small w-100" style="white-space: normal;">
-					<div>
-						<i class="fa fa-play"></i>
-						{{ event.title }}
-					</div>
-					<div class="d-flex w-100 small">
-						<div>{{ event.persons_str }}</div>
-						<div class="ml-auto">{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }}</div>
+				<div class="w-100 text-center">
+					{{ event.title }}
+				</div>
+				<div class="small w-100">
+					<div class="d-flex w-100">
+						<div>
+							<i class="fa fa-user-ninja"></i>
+							{{ event.persons_str }}
+						</div>
+						<div class="ml-auto">
+							<i class="fa fa-clock"></i>
+							{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }}
+						</div>
 					</div>
 				</div>
 				{% else %}
-				<div class="small w-100" style="white-space: normal;">
-					<div>
-						<i class="fa fa-play"></i>
-						{% if LANGUAGE_CODE == "de" %}
-						Zurzeit läuft kein Vortrag in diesem Saal.
-						{% else %}
-						Currently there is no lecture in this room.
-						{% endif %}
-					</div>
-				</div>
-				{% endif %}
-
-				{% if not room.bbb or room.bbb.get_stats.running %}
-				<a class="btn btn-primary btn-lg w-100" href="{{ room.link }}" role="button">
-				{% elif room.bbb and room.bbb|is_bbb_mod:request.user %}
-				<a class="btn btn-secondary btn-lg w-100" href="{{ room.link }}" role="button">
-				{% else %}
-				<a class="btn btn-secondary btn-lg w-100 disabled" href role="button">
-				{% endif %}
+				<div class="w-100 text-center text-muted">
 					{% if LANGUAGE_CODE == "de" %}
-					Ansehen
+					Zurzeit läuft kein Vortrag in diesem Saal.
 					{% else %}
-					Watch
+					Currently there is no lecture in this room.
 					{% endif %}
-				</a>
-			</a>
-
-			<div class="d-flex w-100 small">
-				{% if event %}
-				<div>
-					<i class="fa fa-calendar-alt"></i> 
-					<a href="{{ event.link }}">
-						{% if LANGUAGE_CODE == "de" %}Fahrplan-Eintrag{% else %}Schedule Entry{% endif %}
-					</a>
-				</div>
-				{% else %}
-				<div>
-					<i class="fa fa-calendar-alt"></i> -
 				</div>
 				{% endif %}
 
-				{% if room.bbb %}
-				{% with room.bbb.get_stats as stats %}
+				<div class="d-flex w-100 small">
+					{% if event %}
+					<div>
+						<i class="fa fa-calendar-alt"></i> 
+						<a href="{{ event.link }}">
+							{% if LANGUAGE_CODE == "de" %}Fahrplan-Eintrag{% else %}Schedule Entry{% endif %}
+						</a>
+					</div>
+					{% else %}
+					<div>
+						<i class="fa fa-calendar-alt"></i> -
+					</div>
+					{% endif %}
 
-				<div class="ml-auto">
-					<i class="fa fa-user"></i> {{ stats.participants }}
+					{% if room.bbb %}
+					{% with room.bbb.get_stats as stats %}
+
+					<div class="ml-auto">
+						<i class="fa fa-user"></i> {{ stats.participants }}
+					</div>
+					{% endwith %}
+					{% endif %}
 				</div>
+
 				{% endwith %}
+
+				{% with room.next_event as event %}
+				{% if event %}
+				<div class="small">
+					<i class="fa fa-fast-forward"></i> <a href="{{ event.link }}">{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }} {{ event.title }}</a></div>
 				{% endif %}
+				{% endwith %}
 			</div>
 
-			{% endwith %}
 
-			{% with room.next_event as event %}
-			{% if event %}
-			<div class="small">
-				<i class="fa fa-fast-forward"></i> <a href="{{ event.link }}">{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }} {{ event.title }}</a></div>
+			{% if not room.bbb or room.bbb.get_stats.running %}
+			<a class="btn btn-primary btn-lg w-100 mt-auto" href="{{ room.link }}" role="button">
+			{% elif room.bbb and room.bbb|is_bbb_mod:request.user %}
+			<a class="btn btn-secondary btn-lg w-100 mt-auto" href="{{ room.link }}" role="button">
+			{% else %}
+			<a class="btn btn-secondary btn-lg w-100 mt-auto disabled" href role="button">
 			{% endif %}
-			{% endwith %}
+				{% if LANGUAGE_CODE == "de" %}
+				Ansehen
+				{% else %}
+				Watch
+				{% endif %}
+			</a>
 		</div>
 		{% endif %}
 		{% endfor %}
