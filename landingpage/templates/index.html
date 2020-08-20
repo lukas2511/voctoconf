@@ -49,23 +49,25 @@
 	<div class="d-flex w-100">
 		<div>
 			{% if LANGUAGE_CODE == "de" %}
-			<h2>Partner</h2>
+			<h2>Standpartner</h2>
 			{% else %}
-			<h2>Partners</h2>
+			<h2>Venue Partners</h2>
 			{% endif %}
 		</div>
 		<div class="ml-auto">
-			<a class="btn btn-secondary ml-auto" href="https://www.froscon.de/partner/jobwall/">
+		<!--
+			<a class="btn btn-secondary ml-auto" target="_blank" href="https://www.froscon.de/partner/jobwall/">
 				Job Wall
 				<i class="fa fa-angle-double-right"></i>
 			</a>
+		-->
 		</div>
 	</div>
 	{% if venue_partners %}
 	<div class="row align-items-center align-content-around text-center mb-4 w-100 venue-partners">
 		{% for partner in venue_partners %}
 		<figure class="col partner-logo">
-			{% if page_live %}<a href="{{ partner.link }}" title="{{ partner.name }}">{% endif %}
+			{% if page_live %}<a target="_blank" href="{{ partner.link }}" title="{{ partner.name }}">{% endif %}
 				<img src="{{ partner.logo.url }}" alt="{{ partner.name }}" />
 			{% if page_live %}</a>{% endif %}
 		</figure>
@@ -76,7 +78,7 @@
 	<div class="row align-items-center align-content-around text-center w-100">
 		{% for partner in venueless_partners %}
 		<figure class="col partner-logo">
-			{% if page_live %}<a href="/partner/{{ partner.id }}" title="{{ partner.name }}">{% endif %}
+			{% if page_live %}<a target="_blank" href="/partner/{{ partner.id }}" title="{{ partner.name }}">{% endif %}
 				<img src="{{ partner.logo.url }}" alt="{{ partner.name }}" />
 			{% if page_live %}</a>{% endif %}
 		</figure>
