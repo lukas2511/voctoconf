@@ -53,11 +53,7 @@
 			<br/>
 			<span style='font-size:12px'>
 				{% if stats.running %}
-					{% if LANGUAGE_CODE == "de" %}
-					{{ stats.participants }} Teilnehmer in Videokonferenz</span>
-					{% else %}
-					{{ stats.participants }} participants in video conference</span>
-					{% endif %}
+					<i class="fa fa-user"></i> {{ stats.participants }}
 				{% elif not room.current_event %}
 					{% if LANGUAGE_CODE == "de" %}
 					Dieser Raum ist (noch) nicht aktiv
@@ -114,7 +110,14 @@
 				Join
 			</div>
 			{% endif %}
-			{% if workshop.bbb.get_stats.running %}<br/><center><span style='font-size:12px'>{{ workshop.bbb.get_stats.participants }} Teilnehmer</span></center>{% endif %}
+			{% if workshop.bbb.get_stats.running %}
+			<br/>
+			<center>
+				<span style='font-size:12px'>
+					<i class="fa fa-user"></i> {{ stats.participants }}
+				</span>
+			</center>
+			{% endif %}
 			{% if workshop.bbb and not workshop.bbb.get_stats.running %}<br/><center><span style='font-size:12px'>{% if LANGUAGE_CODE == "de" %}Dieser Raum ist (noch) nicht aktiv{% else %}This room is not (yet) active{% endif %}</span></center>{% endif %}
 		</div>
 	</div>
@@ -142,9 +145,11 @@
 				{{ hangout.name }}
 			</div>
 			{% endif %}
-			<br/><center><span style='font-size:12px'>
+			<br/>
+			<center>
+				<span style='font-size:12px'>
 					{% if stats.running %}
-						{{ stats.participants }} Teilnehmer
+						<i class="fa fa-user"></i> {{ stats.participants }}
 					{% else %}
 						{% if LANGUAGE_CODE == "de" %}Dieser Raum ist leer{% else %}This room is empty{% endif %}
 					{% endif %}
