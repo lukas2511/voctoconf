@@ -48,8 +48,7 @@
 			{% with room.next_event as event %}
 			{% if event %}
 			<div class="small">
-				<i class="fa fa-fast-forward"></i>
-				<a href="{{ event.link }}">{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }} {{ event.title }}</a></div>
+				<i class="fa fa-fast-forward"></i> <a href="{{ event.link }}">{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }} {{ event.title }}</a></div>
 			{% endif %}
 			{% endwith %}
 
@@ -74,12 +73,12 @@
 	<div class="row">
 		<div class="col-sm-6 col-12 py-1">
 			<a class="btn btn-primary btn-lg w-100" href="/chat/lobby" role="button">
-				Chat
+				<i class="fa fa-comment-alt"></i> Chat
 			</a>
 		</div>
 		<div class="col-sm-6 col-12 py-1">
 			<a class="btn btn-primary btn-lg w-100" href="https://programm.froscon.de" role="button">
-				{% if LANGUAGE_CODE == "de" %}Fahrplan{% else %}Schedule{% endif %}
+				<i class="fa fa-calendar-alt"></i> {% if LANGUAGE_CODE == "de" %}Fahrplan{% else %}Schedule{% endif %}
 			</a>
 		</div>
 	</div>
@@ -99,26 +98,36 @@
 		<div class="col-sm-4 col-12 py-1">
 			{% if workshop.bbb.get_stats.running %}
 			<a class="btn btn-primary btn-lg w-100" href="{{ workshop.bbb.link }}" role="button">
-				Join
+				<div class="d-flex w-100">
+					<div>
+						Join
+					</div>
+					<div class="mr-auto">
+						| <i class="fa fa-user"></i> {{ stats.participants }}
+					</div>
+				</div>
 			</a>
 			{% elif workshop.bbb|is_bbb_mod:request.user %}
 			<a class="btn btn-primary btn-lg w-100" href="{{ workshop.bbb.link }}" role="button">
-				Start
+				<div class="d-flex w-100">
+					<div>
+						Start
+					</div>
+					<div class="mr-auto">
+						| <i class="fa fa-user-slash"></i> 0
+					</div>
+				</div>
 			</a>
 			{% else %}
 			<div class="btn btn-secondary btn-lg w-100 disabled" role="button">
-				Join
+				<div>
+					Join
+				</div>
+				<div class="mr-auto">
+					| <i class="fa fa-user-slash"></i> {{ stats.participants }}
+				</div>
 			</div>
 			{% endif %}
-			{% if workshop.bbb.get_stats.running %}
-			<br/>
-			<center>
-				<span style='font-size:12px'>
-					<i class="fa fa-user"></i> {{ stats.participants }}
-				</span>
-			</center>
-			{% endif %}
-			{% if workshop.bbb and not workshop.bbb.get_stats.running %}<br/><center><span style='font-size:12px'>{% if LANGUAGE_CODE == "de" %}Dieser Raum ist (noch) nicht aktiv{% else %}This room is not (yet) active{% endif %}</span></center>{% endif %}
 		</div>
 	</div>
 	<div class="border-top my-3"></div>
