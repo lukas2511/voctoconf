@@ -8,6 +8,7 @@ urlpatterns = [
     path('stream/<str:roomid>', views.stream_view, name='stream'),
     path('event/<str:eventid>', views.event_view, name='event'),
     path('person/<int:pid>', views.person_view, name='person'),
+    path('instructions', views.instructionsview, name='instructions'),
 ]
 
 
