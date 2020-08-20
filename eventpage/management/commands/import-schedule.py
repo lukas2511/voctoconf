@@ -20,20 +20,34 @@ class Command(BaseCommand):
         else:
             obj = Person()
             obj.id = person['id']
+            print("Adding new person %d" % obj.id)
 
         if not obj.name_modified:
-            obj.name = person['public_name']
+            newname = person['public_name']
+            if obj.name != newname:
+                print("Person %d name changed: %s -> %s" % (obj.id, obj.name, newname))
+                obj.name = newname
 
         if not obj.image_modified:
-            obj.image = person['image']
-            if obj.image:
-                obj.image = "https://programm.froscon.de/2020" + obj.image.replace("/original/", "/large/")
+            newimage = person['image']
+            if newimage:
+                newimage = "https://programm.froscon.de/2020" + newimage.replace("/original/", "/large/")
+
+            if obj.image != newimage:
+                print("Person %d image changed: %s -> %s" % (obj.id, obj.image, newimage))
+                obj.image = newimage
 
         if not obj.abstract_modified:
-            obj.abstract = person['abstract']
+            newabstract = person['abstract']
+            if obj.abstract != newabstract:
+                print("Person %d abstract changed: %s -> %s" % (obj.id, obj.abstract, newabstract))
+                obj.abstract = newabstract
 
         if not obj.description_modified:
-            obj.description = person['description']
+            newdescription = person['description']
+            if obj.description != newdescription:
+                print("Person %d description changed: %s -> %s" % (obj.id, obj.description, newdescription))
+                obj.description = newdescription
 
         obj.save()
         return obj.id
@@ -46,30 +60,51 @@ class Command(BaseCommand):
         else:
             obj = Event()
             obj.id = event['id']
+            print("Adding new event %d" % obj.id)
 
         if not obj.start_modified:
-            obj.start = dateutil.parser.parse(event['date'])
+            newstart = dateutil.parser.parse(event['date'])
+            if obj.start != newstart:
+                print("Event %d start changed: %r -> %r" % (obj.id, obj.start, newstart))
+                obj.start = newstart
 
         if not obj.end_modified:
             hoursstr, minutesstr = event['duration'].split(':')
-            obj.end = obj.start + datetime.timedelta(hours=int(hoursstr), minutes=int(minutesstr))
+            newend = obj.start + datetime.timedelta(hours=int(hoursstr), minutes=int(minutesstr))
+            if obj.end != newend:
+                print("Event %d end changed: %r -> %r" % (obj.id, obj.end, newend))
 
         if not obj.abstract_modified:
-            obj.abstract = event['abstract']
+            newabstract = event['abstract']
+            if obj.abstract != newabstract:
+                print("Event %d abstract changed: %s -> %s" % (obj.id, obj.abstract, newabstract))
+                obj.abstract = newabstract
 
         if not obj.description_modified:
-            obj.description = event['description']
+            newdescription = event['description']
+            if obj.description != newdescription:
+                print("Event %d description changed: %s -> %s" % (obj.id, obj.description, newdescription))
+                obj.description = newdescription
 
         if not obj.logo_modified:
-            obj.logo = event['logo']
-            if obj.logo:
-                obj.logo = "https://programm.froscon.de/2020" + obj.logo
+            newlogo = event['logo']
+            if newlogo:
+                newlogo = "https://programm.froscon.de/2020" + newlogo
+            if obj.logo != newlogo:
+                print("Event %d logo changed: %s -> %s" % (obj.id, obj.logo, newlogo))
+                obj.logo = newlogo
 
         if not obj.title_modified:
-            obj.title = event['title']
+            newtitle = event['title']
+            if obj.title != newtitle:
+                print("Event %d title changed: %s -> %s" % (obj.id, obj.title, newtitle))
+                obj.title = newtitle
 
         if not obj.evtype_modified:
-            obj.evtype = event['type'] if event['type'] else 'undefined'
+            newevtype = event['type'] if event['type'] else 'undefined'
+            if obj.evtype != newevtype:
+                print("Event %d type changed: %s -> %s" % (obj.id, obj.evtype, newevtype))
+                obj.type = newevtype
 
         if not obj.room_modified:
             if Room.objects.filter(name=event["room"]).exists():
@@ -79,7 +114,9 @@ class Command(BaseCommand):
                 room.name = event["room"]
                 room.save()
 
-            obj.room = room
+            if room != obj.room:
+                print("Event %d room changed: %s -> %s" % (obj.id, obj.room, room))
+                obj.room = room
 
         if not obj.track_modified:
             if not event["track"]:
@@ -91,25 +128,20 @@ class Command(BaseCommand):
                 track.name = event["track"]
                 track.save()
 
-            obj.track = track
+            if track != obj.track:
+                print("Event %d track changed: %s -> %s" % (obj.id, obj.track, track))
+                obj.track = track
 
         if not obj.persons_modified:
             holding = []
             for person in event['persons']:
                 if Person.objects.filter(id=person['id']).exists():
                     pobj = Person.objects.get(id=person['id'])
+                    if pobj not in obj.persons.all():
+                        obj.persons.add(pobj)
+                    holding.append(pobj)
                 else:
-                    pobj = Person()
-                    pobj.id = person['id']
-
-                if not pobj.name_modified:
-                    pobj.name = person['public_name']
-                    pobj.save()
-
-                if pobj not in obj.persons.all():
-                    obj.persons.add(pobj)
-
-                holding.append(pobj)
+                    print("Person %d (%s) for event %d (%s) not found, please re-import persons table" % (person['id'], person['public_name'], obj.id, obj.title))
 
             for pobj in obj.persons.all():
                 if pobj not in holding:
@@ -119,6 +151,17 @@ class Command(BaseCommand):
         return obj.id
 
     def handle(self, *args, **options):
+        if options["persons"]:
+            actual_persons = []
+            persons = json.loads(requests.get(options["persons"]).text)
+            for person in persons["schedule_speakers"]["speakers"]:
+                actual_persons.append(self.parse_person(person))
+
+            for person in Person.objects.all():
+                if person.id not in actual_persons and not person.custom:
+                    print("Removing person %d (not found in schedule): %s" % (person.id, person.name))
+                    person.delete()
+
         if options["schedule"]:
             actual_events = []
             schedule = json.loads(requests.get(options["schedule"]).text)
@@ -129,15 +172,6 @@ class Command(BaseCommand):
 
             for event in Event.objects.all():
                 if event.id not in actual_events and not event.custom:
-                    print("Event %d not found in schedule: %s" % (event.id, event.title))
-
-        if options["persons"]:
-            actual_persons = []
-            persons = json.loads(requests.get(options["persons"]).text)
-            for person in persons["schedule_speakers"]["speakers"]:
-                actual_persons.append(self.parse_person(person))
-
-            for person in Person.objects.all():
-                if person.id not in actual_persons and not person.custom:
-                    print("Person %d not found in schedule: %s" % (person.id, person.name))
+                    print("Removing event %d (not found in schedule): %s" % (event.id, event.title))
+                    event.delete()
 
