@@ -22,16 +22,16 @@
 	<div class="row">
 		{% for room in event_rooms %}
 		{% if room.bbb or room.stream %}
-		<div class="col-sm-{{ room.view_size }} col-12 py-1 align-self-lg-stretch">
+		<div class="col-sm-{{ room.view_size }} col-12 py-1 align-self-lg-stretch d-flex flex-column">
 
 			{% with room.current_event as event %}
 
 			{% if not room.bbb or room.bbb.get_stats.running %}
-			<a class="btn btn-primary btn-lg w-100" href="{{ room.link }}" role="button">
+			<a class="btn btn-primary btn-lg w-100 flex-grow-1" href="{{ room.link }}" role="button">
 			{% elif room.bbb and room.bbb|is_bbb_mod:request.user %}
-			<a class="btn btn-secondary btn-lg w-100" href="{{ room.link }}" role="button">
+			<a class="btn btn-secondary btn-lg w-100 flex-grow-1" href="{{ room.link }}" role="button">
 			{% else %}
-			<a class="btn btn-secondary btn-lg w-100 disabled" href role="button">
+			<a class="btn btn-secondary btn-lg w-100 flex-grow-1 disabled" href role="button">
 			{% endif %}
 
 				{{ room.name }}
@@ -39,18 +39,31 @@
 				<hr />
 				<div class="small w-100">
 					<div>{{ event.title }}</div>
-					<div class="d-flex w-100">
+					<div class="d-flex w-100 small">
 						<div>{{ event.persons_str }}</div>
 						<div class="ml-auto">{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }}</div>
+					</div>
+				</div>
+				{% else %}
+				<div class="small w-100">
+					<div>
+						{% if LANGUAGE_CODE == "de" %}
+						Zurzeit läuft kein Vortrag in diesem Saal.
+						{% else %}
+						Currently there is no lecture in this room.
+						{% endif %}
 					</div>
 				</div>
 				{% endif %}
 			</a>
 
 			<div class="d-flex w-100 small">
-				<a href="{{ event.link }}">
-					<i class="fa fa-calendar-alt"></i> {% if LANGUAGE_CODE == "de" %}Fahrplan-Eintrag{% else %}Schedule Entry{% endif %}
-				</a>
+				<div>
+					<i class="fa fa-calendar-alt"></i> 
+					<a href="{{ event.link }}">
+						{% if LANGUAGE_CODE == "de" %}Fahrplan-Eintrag{% else %}Schedule Entry{% endif %}
+					</a>
+				</div>
 
 				{% if room.bbb %}
 				{% with room.bbb.get_stats as stats %}
