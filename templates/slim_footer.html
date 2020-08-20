@@ -3,16 +3,16 @@
 
 <footer class="slim-footer">
 	<div class="footer container">
-		<div>
-			<a href="https://froscon.de{% if LANGUAGE_CODE == "en" %}/en/{% endif %}">
+		<div class="d-none d-sm-block small">
+			<a href="https://froscon.de{% if LANGUAGE_CODE == "en" %}/en/{% endif %}" class="small">
 				<img class="footer-logo" src="{% static "images/froscon_logo_small.png" %}" />
 			</a>
 		</div>
-		<div class="row ml-auto">
-			<div class="col">
-				<ul>
+		<div class="ml-auto d-flex flex-row w-100 w-sm-unset">
+			<div class="pr-3 pr-md-4">
+				<ul style="white-space: normal">
 					{% if LANGUAGE_CODE == "de" %}
-					<li><a href="https://www.froscon.de/datenschutzerklaerung/">Datenschutzerklärung</a></li>
+					<li><a href="https://www.froscon.de/datenschutzerklaerung/">Datenschutz&shy;erklärung</a></li>
 					<li><a href="https://www.froscon.de/impressum/">Impressum</a>
 					{% else %}
 					<li><a href="https://www.froscon.de/en/imprint/">Imprint</a></li>
@@ -20,8 +20,8 @@
 					{% endif %}
 				</ul>
 			</div>
-			<div class="col">
-				<a class="btn btn-secondary p-2" href="https://presale.froscon.de/FrOSCon/froscon2020/">
+			<div class="ml-auto">
+				<a class="btn btn-secondary p-2 pr-sm-3 p-md-4" href="https://presale.froscon.de/FrOSCon/froscon2020/">
 					<i class="fa fa-heart"></i>
 					{% if LANGUAGE_CODE == "de" %}Spenden{% else %}Donate{% endif %}
 				</a>
