@@ -15,6 +15,8 @@ class Command(BaseCommand):
     def parse_person(self, person):
         if Person.objects.filter(id=person['id']).exists():
             obj = Person.objects.get(id=person['id'])
+            if obj.custom:
+                return obj.id
         else:
             obj = Person()
             obj.id = person['id']
@@ -34,10 +36,13 @@ class Command(BaseCommand):
             obj.description = person['description']
 
         obj.save()
+        return obj.id
 
     def parse_event(self, event):
         if Event.objects.filter(id=event['id']).exists():
             obj = Event.objects.get(id=event['id'])
+            if obj.custom:
+                return obj.id
         else:
             obj = Event()
             obj.id = event['id']
@@ -111,16 +116,28 @@ class Command(BaseCommand):
                     obj.persons.remove(pobj)
 
         obj.save()
+        return obj.id
 
     def handle(self, *args, **options):
         if options["schedule"]:
+            actual_events = []
             schedule = json.loads(requests.get(options["schedule"]).text)
             for day in schedule["schedule"]["conference"]["days"]:
                 for _, events in day["rooms"].items():
                     for event in events:
-                        self.parse_event(event)
+                        actual_events.append(self.parse_event(event))
+
+            for event in Event.objects.all():
+                if event.id not in actual_events and not event.custom:
+                    print("Event %d not found in schedule: %s" % (event.id, event.title))
 
         if options["persons"]:
+            actual_persons = []
             persons = json.loads(requests.get(options["persons"]).text)
             for person in persons["schedule_speakers"]["speakers"]:
-                self.parse_person(person)
+                actual_persons.append(self.parse_person(person))
+
+            for person in Person.objects.all():
+                if person.id not in actual_persons and not person.custom:
+                    print("Person %d not found in schedule: %s" % (person.id, person.name))
+

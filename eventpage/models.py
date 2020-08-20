@@ -57,6 +57,8 @@ class Room(models.Model):
 
 class Person(models.Model):
     id = models.IntegerField(primary_key=True)
+    custom = models.BooleanField("Ignore any overrides from schedule", default=False)
+
     name = models.CharField(max_length=100)
     name_modified = models.BooleanField(default=False)
 
@@ -76,6 +78,8 @@ class Person(models.Model):
 
 class Event(models.Model):
     id = models.IntegerField(primary_key=True)
+
+    custom = models.BooleanField("Ignore any overrides from schedule", default=False)
 
     slug = models.SlugField(max_length=35, blank=True, null=True)
     slug_modified = models.BooleanField(default=False)
