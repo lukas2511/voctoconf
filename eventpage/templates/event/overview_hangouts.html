@@ -1,0 +1,43 @@
+<h1><i class="fa fa-comments"></i> Community</h1>
+<div class="row">
+    {% for hangout in hangouts %}
+    <div class="col-sm-6 col-12 pb-1">
+        {% with hangout.get_stats as stats %}
+        {% if stats.running %}
+        <a class="btn btn-primary btn-lg w-100" href="{{ hangout.link }}" role="button">
+            <div class="d-flex w-100">
+                <div class="mx-auto">
+                    {{ hangout.name }}
+                </div>
+                <div>
+                    | <i class="fa fa-sm fa-user"></i> {{ stats.participants }}
+                </div>
+            </div>
+        </a>
+        {% elif hangout|is_bbb_mod:request.user or hangout.start_as_guest %}
+        <a class="btn btn-secondary btn-lg w-100" href="{{ hangout.link }}" role="button">
+            <div class="d-flex w-100">
+                <div class="mx-auto">
+                    {{ hangout.name }}
+                </div>
+                <div>
+                    | <i class="fa fa-sm fa-user"></i> 0
+                </div>
+            </div>
+        </a>
+        {% else %}
+        <a class="btn btn-secondary btn-lg w-100 disabled" href role="button">
+            <div class="d-flex w-100">
+                <div class="mx-auto">
+                    {{ hangout.name }}
+                </div>
+                <div>
+                    | <i class="fa fa-sm fa-user"></i> 0
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+    {% endfor %}
+</div>
