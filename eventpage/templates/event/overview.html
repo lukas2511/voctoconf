@@ -58,14 +58,19 @@
 				{% endif %}
 			</a>
 
-			{% if event %}
 			<div class="d-flex w-100 small">
+				{% if event %}
 				<div>
 					<i class="fa fa-calendar-alt"></i> 
 					<a href="{{ event.link }}">
 						{% if LANGUAGE_CODE == "de" %}Fahrplan-Eintrag{% else %}Schedule Entry{% endif %}
 					</a>
 				</div>
+				{% else %}
+				<div>
+					<i class="fa fa-calendar-alt"></i> -
+				</div>
+				{% endif %}
 
 				{% if room.bbb %}
 				{% with room.bbb.get_stats as stats %}
@@ -76,7 +81,6 @@
 				{% endwith %}
 				{% endif %}
 			</div>
-			{% endif %}
 
 			{% endwith %}
 
