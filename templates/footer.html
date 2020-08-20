@@ -4,36 +4,36 @@
 <footer>
 	<div class="footer container">
 		<div class="d-none d-sm-block d-md-none small">
-			<a href="https://froscon.de{% if LANGUAGE_CODE == "en" %}/en/{% endif %}" class="small">
+			<a target="_blank" href="https://froscon.de{% if LANGUAGE_CODE == "en" %}/en/{% endif %}" class="small">
 				<img class="footer-logo" src="{% static "images/froscon_logo_small.png" %}" />
 			</a>
 		</div>
 		<div class="d-none d-md-block">
-			<a href="https://froscon.de{% if LANGUAGE_CODE == "en" %}/en/{% endif %}">
+			<a target="_blank" href="https://froscon.de{% if LANGUAGE_CODE == "en" %}/en/{% endif %}">
 				<img class="footer-logo" src="{% static "images/froscon_logo_small.png" %}" />
 			</a>
 		</div>
 		<div class="ml-auto d-flex flex-row w-100 w-sm-unset">
 			<div class="pr-3 pr-md-4 d-none d-sm-block">
 				<ul>
-					<li><a href="https://twitter.com/froscon"><i class="fab fa-twitter"></i> Twitter</a></li>
-					<li><a href="https://bonn.social/@froscon"><i class="fab fa-mastodon"></i> Mastodon</a></li>
-					<li><a href="https://www.instagram.com/froscon/"><i class="fab fa-instagram"></i> Instagram</a></li>
+					<li><a target="_blank" href="https://twitter.com/froscon"><i class="fab fa-twitter"></i> Twitter</a></li>
+					<li><a target="_blank" href="https://bonn.social/@froscon"><i class="fab fa-mastodon"></i> Mastodon</a></li>
+					<li><a target="_blank" href="https://www.instagram.com/froscon/"><i class="fab fa-instagram"></i> Instagram</a></li>
 				</ul>
 			</div>
 			<div class="pr-3 pr-md-4">
 				<ul style="white-space: normal">
 					{% if LANGUAGE_CODE == "de" %}
-					<li><a href="https://www.froscon.de/datenschutzerklaerung/">Datenschutz&shy;erklärung</a></li>
-					<li><a href="https://www.froscon.de/impressum/">Impressum</a>
+					<li><a target="_blank" href="https://www.froscon.de/datenschutzerklaerung/">Datenschutz&shy;erklärung</a></li>
+					<li><a target="_blank" href="https://www.froscon.de/impressum/">Impressum</a>
 					{% else %}
-					<li><a href="https://www.froscon.de/en/imprint/">Imprint</a></li>
-					<li><a href="https://www.froscon.de/en/privacy-policy/">Privacy Policy</a></li>
+					<li><a target="_blank" href="https://www.froscon.de/en/imprint/">Imprint</a></li>
+					<li><a target="_blank" href="https://www.froscon.de/en/privacy-policy/">Privacy Policy</a></li>
 					{% endif %}
 				</ul>
 			</div>
 			<div class="ml-auto">
-				<a class="btn btn-secondary p-2 pr-sm-3 p-md-4" href="https://presale.froscon.de/FrOSCon/froscon2020/">
+				<a class="btn btn-secondary p-2 pr-sm-3 p-md-4" target="_blank" href="https://presale.froscon.de/FrOSCon/froscon2020/">
 					<i class="fa fa-heart"></i>
 					{% if LANGUAGE_CODE == "de" %}Spenden{% else %}Donate{% endif %}
 				</a>
