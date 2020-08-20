@@ -5,113 +5,11 @@
 {% block content %}
 <main class="container py-4">
 	{% if announcements %}
-	<h1><i class="fa fa-bullhorn"></i> {% if LANGUAGE_CODE == "de" %}Ankündigungen{% else %}Announcements{% endif %}</h1>
-	{% for announcement in announcements %}
-	<div class="row">
-		<div class="col py-1">
-			{{ announcement.html|safe }}
-		</div>
-	</div>
-
-	<hr />
-	{% endfor %}
+	{% include "event/overview_announcements.html" %}
 	{% endif %}
 
-	<h1><i class="fa fa-tv"></i> {% if LANGUAGE_CODE == "de" %}Vorträge{% else %}Lectures{% endif %}</h1>
-
-	<div class="row">
-		{% for room in event_rooms %}
-		{% if room.bbb or room.stream %}
-		<div class="col-sm-{{ room.view_size }} col-12 py-1 align-self-lg-stretch d-flex flex-column">
-
-			{% with room.current_event as event %}
-
-			<h2 class="text-center">{{ room.name }}</h2>
-
-			<hr class="my-0 w-100" />
-
-			<div class="w-100 px-2">
-				{% if event %}
-				<div class="w-100 text-center">
-					{{ event.title }}
-				</div>
-				<div class="small w-100">
-					<div class="d-flex w-100">
-						<div>
-							<i class="fa fa-user-ninja"></i>
-							{{ event.persons_str }}
-						</div>
-						<div class="ml-auto">
-							<i class="fa fa-clock"></i>
-							{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }}
-						</div>
-					</div>
-				</div>
-				{% else %}
-				<div class="w-100 text-center text-muted">
-					{% if LANGUAGE_CODE == "de" %}
-					Zurzeit läuft kein Vortrag in diesem Saal.
-					{% else %}
-					Currently there is no lecture in this room.
-					{% endif %}
-				</div>
-				{% endif %}
-
-				<div class="d-flex w-100 small">
-					{% if event %}
-					<div>
-						<i class="fa fa-calendar-alt"></i> 
-						<a href="{{ event.link }}">
-							{% if LANGUAGE_CODE == "de" %}Fahrplan-Eintrag{% else %}Schedule Entry{% endif %}
-						</a>
-					</div>
-					{% else %}
-					<div>
-						<i class="fa fa-calendar-alt"></i> -
-					</div>
-					{% endif %}
-
-					{% if room.bbb %}
-					{% with room.bbb.get_stats as stats %}
-
-					<div class="ml-auto">
-						<i class="fa fa-user"></i> {{ stats.participants }}
-					</div>
-					{% endwith %}
-					{% endif %}
-				</div>
-
-				{% endwith %}
-
-				{% with room.next_event as event %}
-				{% if event %}
-				<div class="small">
-					<i class="fa fa-fast-forward"></i> <a href="{{ event.link }}">{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }} {{ event.title }}</a></div>
-				{% endif %}
-				{% endwith %}
-			</div>
-
-
-			{% if not room.bbb or room.bbb.get_stats.running %}
-			<a class="btn btn-primary btn-lg w-100 mt-auto" href="{{ room.link }}" role="button">
-			{% elif room.bbb and room.bbb|is_bbb_mod:request.user %}
-			<a class="btn btn-secondary btn-lg w-100 mt-auto" href="{{ room.link }}" role="button">
-			{% else %}
-			<a class="btn btn-secondary btn-lg w-100 mt-auto disabled" href role="button">
-			{% endif %}
-				{% if LANGUAGE_CODE == "de" %}
-				Ansehen
-				{% else %}
-				Watch
-				{% endif %}
-			</a>
-		</div>
-		{% endif %}
-		{% endfor %}
-	</div>
-	
+	{% include "event/overview_events.html" %}
 	<hr />
-
 	<div class="row">
 		<div class="col-sm-6 col-12 py-1">
 			<a class="btn btn-primary btn-lg w-100" href="/chat/lobby" role="button">
@@ -124,140 +22,17 @@
 			</a>
 		</div>
 	</div>
-
 	<hr />
-
 	{% if workshops %}
-	<h1><i class="fa fa-wrench"></i> Workshops</h1>
-	{% for workshop in workshops %}
-	{% if workshop.bbb %}
-	<div class="row">
-		<div class="col-sm-8 col-12 py-1">
-			<span style='font-size:12px'>{{ workshop.start|date:'H:i' }} - {{ workshop.end|date:'H:i' }}</span><br/>
-			{% if workshop.nextup %}Next Up: {% endif %}{{ workshop.title }}<br/>
-			<span style='font-size:12px'>{{ workshop.persons_html|safe }}</span>
-		</div>
-		<div class="col-sm-4 col-12 py-1">
-			{% if workshop.bbb.get_stats.running %}
-			<a class="btn btn-primary btn-lg w-100" href="{{ workshop.bbb.link }}" role="button">
-				<div class="d-flex w-100">
-					<div class="mx-auto">
-						Join
-					</div>
-					<div>
-						| <i class="fa fa-sm fa-user"></i> {{ stats.participants }}
-					</div>
-				</div>
-			</a>
-			{% elif workshop.bbb|is_bbb_mod:request.user %}
-			<a class="btn btn-primary btn-lg w-100" href="{{ workshop.bbb.link }}" role="button">
-				<div class="d-flex w-100">
-					<div class="mx-auto">
-						Start
-					</div>
-					<div>
-						| <i class="fa fa-sm fa-user"></i> 0
-					</div>
-				</div>
-			</a>
-			{% else %}
-			<a class="btn btn-secondary btn-lg w-100 disabled" href role="button">
-				<div class="d-flex w-100">
-					<div class="mx-auto">
-						Join
-					</div>
-					<div>
-						| <i class="fa fa-sm fa-user"></i> 0
-					</div>
-				</div>
-			</a>
-			{% endif %}
-		</div>
-	</div>
-	<div class="border-top my-3"></div>
+	{% include "event/overview_workshops.html" %}
 	{% endif %}
-	{% endfor %}
-	{% endif %}
-
 	{% if hangouts %}
-	<h1><i class="fa fa-comments"></i> Community</h1>
-	<div class="row">
-		{% for hangout in hangouts %}
-		<div class="col-sm-6 col-12 pb-1">
-			{% with hangout.get_stats as stats %}
-			{% if stats.running %}
-			<a class="btn btn-primary btn-lg w-100" href="{{ hangout.link }}" role="button">
-				<div class="d-flex w-100">
-					<div class="mx-auto">
-						{{ hangout.name }}
-					</div>
-					<div>
-						| <i class="fa fa-sm fa-user"></i> {{ stats.participants }}
-					</div>
-				</div>
-			</a>
-			{% elif hangout|is_bbb_mod:request.user or hangout.start_as_guest %}
-			<a class="btn btn-secondary btn-lg w-100" href="{{ hangout.link }}" role="button">
-				<div class="d-flex w-100">
-					<div class="mx-auto">
-						{{ hangout.name }}
-					</div>
-					<div>
-						| <i class="fa fa-sm fa-user"></i> 0
-					</div>
-				</div>
-			</a>
-			{% else %}
-			<a class="btn btn-secondary btn-lg w-100 disabled" href role="button">
-				<div class="d-flex w-100">
-					<div class="mx-auto">
-						{{ hangout.name }}
-					</div>
-					<div>
-						| <i class="fa fa-sm fa-user"></i> 0
-					</div>
-				</div>
-			</div>
-			{% endif %}
-			{% endwith %}
-		</div>
-		{% endfor %}
-	</div>
-	<div class="border-top my-3"></div>
+	{% include "event/overview_hangouts.html" %}
+	<hr />
 	{% endif %}
 
 	{% if partners %}
-	<div class="d-flex w-100">
-		<div>
-			<h1><i class="fa fa-user-friends"></i> {% if LANGUAGE_CODE == "de" %}Standpartner{% else %}Venue Partners{% endif %}</h1>
-		</div>
-		<div class="ml-auto">
-			<a class="btn btn-secondary ml-auto" href="https://www.froscon.de/partner/jobwall/">
-				Job Wall
-				<i class="fa fa-angle-double-right"></i>
-			</a>
-		</div>
-	</div>
-	<div class="row align-items-center align-content-around text-center mb-10 w-100">
-		{% for partner in partners %}
-		<div class="d-flex mx-auto flex-column align-self-stretch pt-3 px-2">
-			<figure class="flex-grow-1 d-flex align-items-center align-self-center partner-logo">
-				<a href="{{ partner.link }}" {% if partner.bbb.get_stats.running %}class="partner-online{% endif %}"  title="{{ partner.name }}">
-					<img src="{{ partner.logo.url }}" alt="{{ partner.name }}">
-				</a>
-			</figure>
-			<div>
-				{% if partner.bbb.get_stats.running %}
-				<a class="btn btn-primary btn-small w-100" href="{{ partner.bbb.link }}">Join</a>
-				{% elif partner.bbb|is_bbb_mod:request.user %}
-				<a class="btn btn-primary btn-small w-100" href="{{ partner.bbb.link }}">Start</a>
-				{% else %}
-				<a class="btn btn-secondary btn-small disabled w-100" href disabled>Offline</a>
-				{% endif %}
-			</div>
-		</div>
-		{% endfor %}
-	</div>
+	{% include "event/overview_partners.html" %}
 	{% endif %}
 
 </main>

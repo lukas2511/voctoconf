@@ -1,0 +1,49 @@
+<h1><i class="fa fa-wrench"></i> Workshops</h1>
+{% for workshop in workshops %}
+{% if workshop.bbb %}
+<div class="row">
+    <div class="col-sm-8 col-12 py-1">
+        <span style='font-size:12px'>{{ workshop.start|date:'H:i' }} - {{ workshop.end|date:'H:i' }}</span><br/>
+        {% if workshop.nextup %}Next Up: {% endif %}{{ workshop.title }}<br/>
+        <span style='font-size:12px'>{{ workshop.persons_html|safe }}</span>
+    </div>
+    <div class="col-sm-4 col-12 py-1">
+        {% if workshop.bbb.get_stats.running %}
+        <a class="btn btn-primary btn-lg w-100" href="{{ workshop.bbb.link }}" role="button">
+            <div class="d-flex w-100">
+                <div class="mx-auto">
+                    Join
+                </div>
+                <div>
+                    | <i class="fa fa-sm fa-user"></i> {{ stats.participants }}
+                </div>
+            </div>
+        </a>
+        {% elif workshop.bbb|is_bbb_mod:request.user %}
+        <a class="btn btn-primary btn-lg w-100" href="{{ workshop.bbb.link }}" role="button">
+            <div class="d-flex w-100">
+                <div class="mx-auto">
+                    Start
+                </div>
+                <div>
+                    | <i class="fa fa-sm fa-user"></i> 0
+                </div>
+            </div>
+        </a>
+        {% else %}
+        <a class="btn btn-secondary btn-lg w-100 disabled" href role="button">
+            <div class="d-flex w-100">
+                <div class="mx-auto">
+                    Join
+                </div>
+                <div>
+                    | <i class="fa fa-sm fa-user"></i> 0
+                </div>
+            </div>
+        </a>
+        {% endif %}
+    </div>
+</div>
+<hr />
+{% endif %}
+{% endfor %}
