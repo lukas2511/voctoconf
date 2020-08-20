@@ -99,10 +99,10 @@
 			{% if workshop.bbb.get_stats.running %}
 			<a class="btn btn-primary btn-lg w-100" href="{{ workshop.bbb.link }}" role="button">
 				<div class="d-flex w-100">
-					<div>
+					<div class="mx-auto">
 						Join
 					</div>
-					<div class="mr-auto">
+					<div>
 						| <i class="fa fa-user"></i> {{ stats.participants }}
 					</div>
 				</div>
@@ -110,23 +110,25 @@
 			{% elif workshop.bbb|is_bbb_mod:request.user %}
 			<a class="btn btn-primary btn-lg w-100" href="{{ workshop.bbb.link }}" role="button">
 				<div class="d-flex w-100">
-					<div>
-						Start
+					<div class="mx-auto">
+						Join
 					</div>
-					<div class="mr-auto">
+					<div>
 						| <i class="fa fa-user-slash"></i> 0
 					</div>
 				</div>
 			</a>
 			{% else %}
-			<div class="btn btn-secondary btn-lg w-100 disabled" role="button">
-				<div>
-					Join
+			<a class="btn btn-secondary btn-lg w-100 disabled" href role="button">
+				<div class="d-flex w-100">
+					<div class="mx-auto">
+						Join
+					</div>
+					<div>
+						| <i class="fa fa-user-slash"></i> {{ stats.participants }}
+					</div>
 				</div>
-				<div class="mr-auto">
-					| <i class="fa fa-user-slash"></i> {{ stats.participants }}
-				</div>
-			</div>
+			</a>
 			{% endif %}
 		</div>
 	</div>
