@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ person.name }} - {% endblock %}
+
+{% block content %}
+<main class="container">
+	{% comment %}{% if LANGUAGE_CODE == "de" %}
+	{% include "event/instructions_de.html" %}
+	{% else %}{% endcomment %}
+	{% include "event/instructions_en.html" %}
+	{% comment %}{% endif %}{% endcomment %}
+</main>
+{% endblock %}
