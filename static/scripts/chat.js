@@ -4,17 +4,11 @@ const whisper_message_sent_template = document.querySelector('#whisper_message_s
 const system_message_template = document.querySelector('#system_message');
 
 class Chat{
-    connected = false;
-    socket = null;
-    roomName = null;
-    
-    container = null;
-    scrollContainer = null;
-    log = null;
-    input = null;
-    submitButton = null;
 
     constructor(container, roomName){
+        this.connected = false;
+        this.socket = null;
+        
         this.container = container;
         this.roomName = roomName;
 
