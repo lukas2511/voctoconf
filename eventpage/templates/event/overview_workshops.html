@@ -5,9 +5,18 @@
 {% if workshop.bbb %}
 <div class="row">
     <div class="col-sm-8 col-12 py-1">
-        <span style='font-size:12px'>{{ workshop.start|date:'H:i' }} - {{ workshop.end|date:'H:i' }}</span><br/>
-        {% if workshop.nextup %}Next Up: {% endif %}{{ workshop.title }}<br/>
-        <span style='font-size:12px'>{{ workshop.persons_html|safe }}</span>
+        <div class="small">
+            <i class="fa fa-sm fa-clock"></i>
+            {{ workshop.start|date:'H:i' }} - {{ workshop.end|date:'H:i' }}
+        </div>
+        <div>
+            {% if workshop.nextup %}Next Up: {% endif %}
+            {{ workshop.title }}
+        </div>
+        <div class="small">
+            <i class="fa fa-sm fa-chalkboard-teacher"></i>
+            {{ workshop.persons_html|safe }}
+        </div>
     </div>
     <div class="col-sm-4 col-12 py-1">
         {% if workshop.bbb.get_stats.running %}
