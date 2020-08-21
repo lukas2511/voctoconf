@@ -12,11 +12,25 @@
         <h3 class="mb-0">{{ room.name }} :</h2>
 
         <div class="w-100">
+
+            {% if event %}
+            <h5>
+                <a href="{{ event.link }}" class="text-reset">
+                    {{ event.title }} <i class="fa fa-link"></i>
+                </a>
+            </h5>
+            {% else %}
+            <h5>
+                {% if LANGUAGE_CODE == "de" %}
+                Zurzeit läuft kein Vortrag in diesem Saal.
+                {% else %}
+                Currently there is no lecture in this room.
+                {% endif %}
+            </h5>
+            {% endif %}
+
             {% if event %}
             <div class="w-100">
-                {{ event.title }}
-            </div>
-            <div class="small w-100">
                 <div class="d-flex w-100">
                     <div>
                         <i class="fa fa-chalkboard-teacher"></i>
@@ -28,17 +42,9 @@
                     </div>
                 </div>
             </div>
-            {% else %}
-            <div class="w-100 text-center text-muted">
-                {% if LANGUAGE_CODE == "de" %}
-                Zurzeit läuft kein Vortrag in diesem Saal.
-                {% else %}
-                Currently there is no lecture in this room.
-                {% endif %}
-            </div>
             {% endif %}
 
-            <div class="d-flex w-100 small">
+            <div class="d-flex w-100">
                 {% if event %}
                 <div>
                     <i class="fa fa-calendar-alt"></i> 
