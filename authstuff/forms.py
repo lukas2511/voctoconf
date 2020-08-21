@@ -2,6 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
 from django.conf import settings
+from django.utils.translation import get_language
 import re
 
 # TODO: translation
@@ -13,6 +14,9 @@ class LoginForm(forms.Form):
 class RegisterForm(forms.Form):
     username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    privacy_policy = forms.BooleanField(
+        label='Ich habe die Datenschutzerklärung gelesen und akzeptiert.' if get_language() == 'de' else 'I\'ve read and agree to the privacy policy',
+        widget=forms.CheckboxInput())
 
     def clean(self):
         cleaned_data = super().clean()
@@ -27,11 +31,16 @@ class RegisterForm(forms.Form):
             raise ValidationError("Username can only consist of lowercase letters and numbers, dashes and underscores :)")
         elif get_user_model().objects.filter(username=username):
             raise ValidationError("User with that username already exists.")
+        elif not self.privacy_policy:
+            raise ValidationError("You need to accept the privacy policy.")
 
         return cleaned_data
 
 class NameForm(forms.Form):
     name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    privacy_policy = forms.BooleanField(
+        label='Ich habe die Datenschutzerklärung gelesen und akzeptiert.' if get_language() == 'de' else 'I\'ve read and agree to the privacy policy',
+        widget=forms.CheckboxInput())
 
     def clean(self):
         cleaned_data = super().clean()
@@ -42,5 +51,7 @@ class NameForm(forms.Form):
             raise ValidationError("rly?!")
         elif not re.match(r"^[a-z0-9-_]+$", username):
             raise ValidationError("Names can only consist of lowercase letters and numbers, dashes and underscores :)")
+        elif not self.privacy_policy:
+            raise ValidationError("You need to accept the privacy policy.")
 
         return cleaned_data
