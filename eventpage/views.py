@@ -48,10 +48,6 @@ def person_view(request, pid):
     person = get_object_or_404(Person, id=pid)
     return render(request, "event/person.html", {'person': person})
 
-def instructionsview(request):
-    key = request.GET.get("key")
-    return render(request, "event/instructions.html", {'key': key})
-
 def stream_view(request, roomid):
     if re.match(r'^[0-9]+$', roomid):
         room = get_object_or_404(EventRoom, id=int(roomid))

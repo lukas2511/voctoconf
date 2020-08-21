@@ -4,11 +4,11 @@
 {% block title %}{{ person.name }} - {% endblock %}
 
 {% block content %}
-<main class="container">
+<main class="container pt-2">
 	{% comment %}{% if LANGUAGE_CODE == "de" %}
 	{% include "event/instructions_de.html" %}
 	{% else %}{% endcomment %}
-	{% include "event/instructions_en.html" %}
+	{% include "instructions_en.html" %}
 	{% comment %}{% endif %}{% endcomment %}
 </main>
 {% endblock %}
