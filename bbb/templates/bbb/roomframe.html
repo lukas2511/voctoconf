@@ -7,7 +7,7 @@
 
 {% block content %}
 <main class="full-height-content m-0" style="overflow-y:hidden">
-	<iframe id="#frame" src="{{ meeting }}" allow="camera; autoplay; microphone; fullscreen; display-capture"
+	<iframe id="frame" src="{{ meeting }}" allow="camera; autoplay; microphone; fullscreen; display-capture"
 		allowfullscreen allowusermedia 
 		sandbox="allow-downloads-without-user-activation allow-downloads allow-pointer-lock allow-presentation allow-same-origin allow-storage-access-by-user-activation allow-forms allow-scripts allow-top-navigation allow-top-navigation-by-user-activation"
 		class="full-size"></iframe>
@@ -45,7 +45,7 @@ document.body.addEventListener('click',(event)=>{
 			});
 	document.querySelectorAll(`[data-toggle=frame-compress]`)
 			.forEach((e) => {
-				e.style.display = (void 0);
+				e.style.display = null;
 			});
 });
 
@@ -59,13 +59,13 @@ document.body.addEventListener('click',(event)=>{
 	const selector = target.hasAttribute('data-target') ? target.getAttribute('data-target') : target.getAttribute('href');
 	document.querySelectorAll(selector)
 			.forEach((e) => {
-				e.style.position = (void 0);
-				e.style.top = (void 0);
-				e.style.bottom = (void 0);
+				e.style.position = null;
+				e.style.top = null;
+				e.style.bottom = null;
 			});
 	document.querySelectorAll(`[data-toggle=frame-expand]`)
 			.forEach((e) => {
-				e.style.display = (void 0);
+				e.style.display = null;
 			});
 	document.querySelectorAll(`[data-toggle=frame-compress]`)
 			.forEach((e) => {
