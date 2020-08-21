@@ -11,14 +11,19 @@
 	{% include "event/overview_events.html" %}
 	<hr />
 	<div class="row">
-		<div class="col-sm-6 col-12 py-1">
+		<div class="col-12 col-sm-6 col-md-4 py-1">
 			<a class="btn btn-primary btn-lg w-100" href="/chat/lobby" role="button">
 				<i class="fa fa-comment-alt"></i> Chat
 			</a>
 		</div>
-		<div class="col-sm-6 col-12 py-1">
+		<div class="col-12 col-sm-6 col-md-4 py-1">
 			<a class="btn btn-primary btn-lg w-100" target="_blank" href="https://programm.froscon.de" role="button">
 				<i class="fa fa-calendar-alt"></i> {% if LANGUAGE_CODE == "de" %}Fahrplan{% else %}Schedule{% endif %}
+			</a>
+		</div>
+		<div class="col-12 col-sm-6 col-md-4 py-1 mx-auto">
+			<a class="btn btn-primary btn-lg w-100 mx-auto" target="_blank" href="https://programm.froscon.de" role="button">
+				<i class="fa fa-phone-alt"></i> {% if LANGUAGE_CODE == "de" %}POC-Tisch{% else %}PoC Tisch{% endif %}
 			</a>
 		</div>
 	</div>
