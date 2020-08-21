@@ -31,7 +31,7 @@ class RegisterForm(forms.Form):
             raise ValidationError("Username can only consist of lowercase letters and numbers, dashes and underscores :)")
         elif get_user_model().objects.filter(username=username):
             raise ValidationError("User with that username already exists.")
-        elif not self.privacy_policy:
+        elif not cleaned_data['privacy_policy']:
             raise ValidationError("You need to accept the privacy policy.")
 
         return cleaned_data
@@ -51,7 +51,7 @@ class NameForm(forms.Form):
             raise ValidationError("rly?!")
         elif not re.match(r"^[a-z0-9-_]+$", username):
             raise ValidationError("Names can only consist of lowercase letters and numbers, dashes and underscores :)")
-        elif not self.privacy_policy:
+        elif not cleaned_data['privacy_policy']:
             raise ValidationError("You need to accept the privacy policy.")
 
         return cleaned_data
