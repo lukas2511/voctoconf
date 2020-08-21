@@ -16,6 +16,8 @@ def event_overview(request):
     context['announcements'] = Announcement.objects.filter(hide=False).order_by('-id')
     context['hangouts'] = bbb.models.Room.objects.filter(hangout_room=True)
 
+    context['poctisch'] = bbb.models.Room.objects.get(slug="poctischdummyforstats")
+
     context['workshops'] = []
     now = datetime.datetime.utcnow().replace(tzinfo=utc)
     another15minutes = datetime.timedelta(minutes=15)

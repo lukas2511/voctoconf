@@ -49,7 +49,7 @@
                     <i class="fa fa-phone-alt"></i> {% if LANGUAGE_CODE == "de" %}POC-Tisch{% else %}PoC Tisch{% endif %}
                 </div>
                 <div>
-                    | <i class="fa fa-sm fa-user"></i> ?
+                    | <i class="fa fa-sm fa-user"></i> {{ poctisch.get_stats.participants }}
                 </div>
             </div>
         </a>

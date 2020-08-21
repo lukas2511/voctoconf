@@ -10,6 +10,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         for room in Room.objects.all():
+            if room.name == "poctischdummyforstats":
+                continue
             try:
                 meetinginfo = room.api_meetinginfo()
                 stats = RoomStats()
