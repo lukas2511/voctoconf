@@ -28,7 +28,7 @@ class Message(models.Model):
         models.Model.save(self, *args, **kwargs)
         
     def chatmsg(self):
-        return {'date': timezone.localtime(self.date).strftime('%H:%M:%S'),
+        return {'date': timezone.localtime(self.date).strftime('%H:%M'),
                 'sender': self.sender,
                 'content': self.content,
                 'receiver': self.receiver,

@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<main class="container">
+<main class="container pt-2">
   <h2>{% if LANGUAGE_CODE == "de" %}Event Registrierung{% else %}Event Registration{% endif %}</h2>
 
   {% if LANGUAGE_CODE == "de" %}
@@ -41,7 +41,7 @@
     </div>
     {% endfor %}
     <div class="form-group">
-      <input class="form-control" type="submit" name="login" value="{% if LANGUAGE_CODE == "de" %}Registrieren{% else %}Register{% endif %}" />
+      <input class="form-control btn btn-primary" type="submit" name="login" value="{% if LANGUAGE_CODE == "de" %}Registrieren{% else %}Register{% endif %}" />
     </div>
   </form>
 </main>

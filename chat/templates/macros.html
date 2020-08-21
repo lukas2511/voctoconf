@@ -1,51 +1,67 @@
 {% load macros %}
 
+{% macro user_actions target moderator %}
+    <a href="#" class="fa fa-comment-alt small" data-chat-action="whisper" data-chat-name="{{ sender }}"></a>
+    {% if moderator %}<a href="#" class="fa fa-ban small" data-chat-action="ban" data-chat-name="{{ sender }}"></a>{% endif %}
+{% endmacro %}
+
+{% macro date_display date %}
+  <span class="d-none d-sm-inline small text-muted" data-chat-date>{{ date }}</span>
+{% endmacro %}
+
 {% macro chat_message date sender receiver content moderator %}
-<tr class="chat-message">
-  <td data-chat-date>{{ date }}</td>
-  <td data-chat-sender>{{ sender }}</td>
-  <td data-chat-content>{{ content }}</td>
-  <td>
-    <a href="#" class="fa fa-comment-alt" data-chat-action="whisper" data-chat-name="{{ sender }}"></a>
-    {% if moderator %}<a href="#" class="fa fa-ban" data-chat-action="ban" data-chat-name="{{ sender }}"></a>{% endif %}
-  </td>
-</tr>
+<div class="chat-message w-100">
+<div class="chat-message-inner w-100">
+  {% usemacro date_display date %}
+  <span>
+    <span data-chat-sender>{{ sender }}</span>
+    {% usemacro user_actions sender moderator %}
+    : 
+  </span>
+  <span data-chat-content>{{ content }}</span>
+</div>
+</div>
 {% endmacro %}
 
 {% macro whisper_message_received date sender receiver content  moderator %}
-<tr class="chat-message chat-message-whisper chat-message-whisper-received">
-  <td data-chat-date>{{ date }}</td>
-  <td>
+<div class="chat-message chat-message-whisper chat-message-whisper-received w-100">
+<div class="chat-message-inner w-100">
+  {% usemacro date_display date %}
+  <span>
     <span data-chat-sender>{{ sender }}</span>
+    {% usemacro user_actions sender moderator %}
     <i class="ml-auto fa fa-caret-right"></i>
-  </td>
-  <td data-chat-content>{{ content }}</td>
-  <td>
-    <a href="#" class="fa fa-comment-alt" data-chat-action="whisper" data-chat-name="{{ sender }}"></a>
-    {% if moderator %}<a href="#" class="fa fa-ban" data-chat-action="ban" data-chat-name="{{ sender }}"></a>{% endif %}
-  </td>
-</tr>
+    : 
+  </span>
+  <span data-chat-content>{{ content }}</span>
+</div>
+</div>
 {% endmacro %}
 
 {% macro whisper_message_sent date sender receiver content moderator %}
-<tr class="chat-message chat-message-whisper chat-message-whisper-sent">
-  <td data-chat-date>{{ date }}</td>
-  <td>
+<div class="chat-message chat-message-whisper chat-message-whisper-sent w-100">
+<div class="chat-message-inner w-100">
+  {% usemacro date_display date %}
+  <span>
     <span data-chat-receiver>{{ receiver }}</span>
+    {% usemacro user_actions receiver moderator %}
     <i class="ml-auto fa fa-caret-left"></i>
-  </td>
-  <td data-chat-content>{{ content }}</td>
-  <td>
-    <a href="#" class="fa fa-comment-alt" data-chat-action="whisper" data-chat-name="{{ receiver }}"></a>
-    {% if moderator %}<a href="#" class="fa fa-ban" data-chat-action="ban" data-chat-name="{{ receiver }}"></a>{% endif %}
-  </td>
-</tr>
+    : 
+  </span>
+  <span data-chat-content>{{ content }}</span>
+</div>
+</div>
 {% endmacro %}
 
 {% macro system_message date sender receiver content moderator %}
-<tr class="chat-message chat-message-system">
-  <td data-chat-date>{{ date }}</td>
-  <td data-chat-sender>{% if sender %}{{ sender }}{% else %}*system*{% endif %}</td>
-  <td colspan="2" data-chat-content>{{ content }}</td>
-</tr>
+<div class="chat-message chat-message-system">
+<div class="chat-message-inner w-100">
+  {% usemacro date_display date %}
+  <span>
+    <span data-chat-sender>{% if sender %}{{ sender }}{% else %}*system*{% endif %}</span>
+    : 
+  </span>
+  <span data-chat-content>{{ content }}</span>
+</div>
+</div>
 {% endmacro %}
