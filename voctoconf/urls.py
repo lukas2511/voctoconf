@@ -10,6 +10,7 @@ import bbb.urls
 import authstuff.urls
 import eventpage.urls
 import partners.urls
+import staticpages.urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,3 +27,4 @@ urlpatterns += bbb.urls.urlpatterns
 urlpatterns += authstuff.urls.urlpatterns
 urlpatterns += eventpage.urls.urlpatterns
 urlpatterns += partners.urls.urlpatterns
+urlpatterns += staticpages.urls.urlpatterns

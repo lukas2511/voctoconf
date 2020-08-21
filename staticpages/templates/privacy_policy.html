@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ person.name }} - {% endblock %}
+
+{% block content %}
+<main class="container pt-2">
+<h1>Datenschutzerklärung</h1>
+<h2>Informationen über uns als Verantwortlichen und die Ansprechpartner:</h2>
+<pre>Verantwortlich für diese Seiten und die Free and Open Source Software Conference ist der FrOSCon e.V., Vorsitzender Andreas Kupfer, 
+c/o Hochschule Bonn-Rhein-Sieg
+Grantham-Allee 20
+53757 Sankt Augustin
+vorstand@froscon.de</pre>
+<pre>Datenschutzbeauftragter des FrOSCon e.V.
+Prof. Dr. Sayeed Klewitz-Hommelsen
+Hochschule Bonn-Rhein-Sieg
+Grantham-Allee 20
+53757 Sankt Augustin
+Sayeed.Klewitz-Hommelsen@h-brs.de</pre>
+
+<h2>Zu welchem Zweck sollen meine Daten verarbeitet werden?</h2>
+<p>Es werden die Daten verarbeitet, die notwendig sind für den Betrieb des Internetangebotes der FrOSCon e.V. und für die Durchführung der fachlichen und wissenschaftlichen Free and Open Source Software Conference.</p>
+<h2>Auf welcher Rechtsgrundlage erfolgt die Verarbeitung?</h2>
+<p>Sofern eine Verarbeitung statt findet ist die Rechtsgrundlage dafür Ihre Einwilligung.</p>
+<h2>Welche Daten werden verarbeitet?</h2>
+<p>Im Rahmen des Besuchs der Webseiten werden nur Daten erhoben, die für die Funktion der Seite notwendig sind (IP-Adressen, Cookies). Diese werden unverzüglich, spätestens 7 Tage nach ihrer Erhebung wieder gelöscht.</p>
+<p>Bei der Teilnahme an der Konferenz kommt die Software BigBlueButton zum Einsatz. Dabei werden folgende Daten erhoben:</p>
+<ul>
+	<li>Browser / user agent</li>
+	<li>IP-Adresse des Teilnehmers</li>
+	<li>Datum und Uhrzeit einer Aktivität</li>
+	<li>Die aufgerufenen Seiten</li>
+	<li>Gewählter Nickname (Pseudonym) bei nicht registrierten Nutzern</li>
+	<li>Namen und Rechte eines Nutzers sowie der Raumname</li>
+	<li>Rolle des Nutzers (Moderator ja/nein)</li>
+	<li>Alle von Ihnen eingebrachten Inhalte, geschriebener Text in Chats, Präsentationen, freigegebene Bildschirme, Ihre Audio und ggf. Videodarten sowie deren Dauer.</li>
+</ul>
+<p>Diese Daten werden alle am Montag nach der Konferenz wieder gelöscht. Zugriff auf den Nicknamen, Chat und Redebeiträge haben die anderen Teilnehmer der Konferenz. Die Konferenz ist allerdings für jeden Teilnehmer*in aus dem Internet zugänglich. Auf die anderen Daten haben nur die Admininistratoren des FrOSCon e.V. Zugriff.</p>
+<ul>
+	<li>Alle Vorträge werden aufgezeichnet.</li>
+	<li>Ausnahmsweise können Chatbeiträge und Chatnamen in Bildschirmfreigaben festgehalten werden.</li>
+	<li>Wortmeldungen in Vortägen werden aufgezeichnet und später im Rahmen der Vorträge im Internet abrufbar sein.</li>
+</ul>
+<p>Die Aufzeichnung dieser Daten erfolgt mit dem Ziel die Beiträge der Autor*innen langfristig im Internet zur Information anzubieten. Hierzu besteht Zungang für jede Person.</p>
+<h2>An wen werden Daten übermittelt?</h2>
+<p>Die Seiten des FrOSCon e.V. und der Konferenz werden im Rahmen einer Auftragsdatenverarbeitung beim Dienstleister Hetzner Online GmbH (Industriestr. 25, 91710 Gunzenhausen) gehostet. Alle Verbingungen zu diesem Servern sind verschlüsselt. Ansonsten finden keine Datenübermittlungen statt, mit Ausnahme der für diesen Zweck erstellten Vortragsaufzeichnungen. Diese werden an Videoplattformen zum Zwecke der weiteren Veröffentlichung und Verbreitung weiter gegeben (z.B. media.ccc.de)</p>
+<h2>Welche Rechte haben Sie als Betroffene?</h2>
+<p>Sie haben das Recht Ihre Einwilligung für die Zukunft zu widerrufen. Sie können Auskunft über die zu Ihrer Person gespeicherten Informationen verlangen. Sie können die Berichtigung oder Löschung oder die Einschränkung der Verarbeitung dieser Daten verlangen. Sie können der Verarbeitung oder Übertragung auf Dritte Ihrer Daten widersprechen. Sie können eine Beschwerde bei der zuständigen Aufsichtsbehörde einlegen – hier der Landesbeauftragte für Datenschutz und Informationsfreiheit Nordrhein-Westfalen (Kavalleriestr. 2-4, 40213 Düsseldorf, www.ldi.nrw.de). Sie haben als Betroffene das Recht, die zu Ihrer Person gespeicherten Daten in einem strukturierten, gängigen und maschinenlesbaren Format zu erhalten.</p>
+</main>
+{% endblock %}

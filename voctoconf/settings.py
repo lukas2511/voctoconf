@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'eventpage',
     'helpers',
     'authstuff',
+    'staticpages'
 ]
 
 MIDDLEWARE = [
