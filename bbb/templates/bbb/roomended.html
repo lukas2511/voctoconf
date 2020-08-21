@@ -4,13 +4,21 @@
 {% block content %}
 {% if LANGUAGE_CODE == "de" %}
 <h1 class="title">Sitzung geschlossen</h1>
-<div class="text">Du hast die Sitzung verlassen.</div>
+<div class="text">
+    <p>Du hast die Sitzung verlassen.</p>
+    <p>Du wirst automatisch auf die Übersicht zurückgeleitet. Sollte das nicht passieren klicke einfach unten auf den Knopf.</p>
+</div>
 {% else %}
 <h1 class="title">Session closed</h1>
-<div class="text">You have left the session</div>
+<div class="text">
+    <p>You have left the session.</p>
+    <p>You will automatically be redirected back to the overview page. If this doesn't happen you can just click on the button below..</p>
+</div>
 {% endif %}
 
-<button class="button" onclick="window.location.href='?noframe=1';"><span class="label">{% if LANGUAGE_CODE == "de" %}Erneut verbinden{% else %}Reconnect{% endif %}</span></button>
+<a class="button" href="/event" target="_top">
+    <span class="label">{% if LANGUAGE_CODE == "de" %}Zurück{% else %}Return{% endif %}</span>
+</a>
 
 {% endblock %}
 
@@ -19,6 +27,6 @@
 <script type="text/javascript">
     window.setTimeout(()=>{
         window.top.location.href = window.location.origin + '/event'
-    }, 2000)
+    }, 1000)
 </script>
 {% endblock %}

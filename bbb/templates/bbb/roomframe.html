@@ -7,23 +7,21 @@
 
 {% block content %}
 <main class="full-height-content m-0" style="overflow-y:hidden">
-	<!--@TODO: Look into sandbox attribute-->
 	<iframe id="#frame" src="{{ meeting }}" allow="camera; autoplay; microphone; fullscreen; display-capture"
 		allowfullscreen allowusermedia 
 		sandbox="allow-downloads-without-user-activation allow-downloads allow-pointer-lock allow-presentation allow-same-origin allow-storage-access-by-user-activation allow-forms allow-scripts allow-top-navigation allow-top-navigation-by-user-activation"
 		class="full-size"></iframe>
-	<a  class="p-1" style="position:absolute; bottom:3.5rem; right:0px;" data-toggle="frame-expand" data-toggle="#frame" href="#">
+	<a  class="p-1" style="position:absolute; bottom:3.5rem; right:0px;" data-toggle="frame-expand" data-target="#frame" href="#">
 		<i class="fa fa-expand-arrows-alt"></i>
 	</a>
-	<a  class="p-1" style="position:absolute; bottom:3.5rem; right:0px; display:none;" data-toggle="frame-compress" data-toggle="#frame" href="#">
+	<a  class="p-1" style="position:absolute; bottom:0px; right:0px; display:none;" data-toggle="frame-compress" data-target="#frame" href="#">
 		<i class="fa fa-compress-arrows-alt"></i>
 	</a>
 </main>
 {% endblock %}
 
 {% block footer %}
-	{% include
-	 "slim_footer.html" %}
+	{% include "slim_footer.html" %}
 {% endblock %}
 {% block scripts %}
 <script type="text/javascript">

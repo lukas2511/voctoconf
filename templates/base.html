@@ -32,13 +32,6 @@
 			{% csrf_token %}
 			<input name="next" type="hidden" value="" />
 			<input name="language" type="hidden" value="{% if LANGUAGE_CODE == "de" %}en{% else %}de{% endif %}" />
-		<!--	<a class="lang-select" href="#" onclick="document.getElementById('langform').submit();">
-				{% if LANGUAGE_CODE == "de" %}
-				<img src="{% static "images/us.png" %}" alt="en"> English
-				{% else  %}
-				<img src="{% static "images/de.png" %}" alt="en"> Deutsch
-				{% endif %}
-		</a>-->
 		</form>
 
 		<div class="{% block page_class %}page{% endblock %}">
