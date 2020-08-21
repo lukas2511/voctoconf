@@ -71,6 +71,16 @@ class ChatConsumer(WebsocketConsumer):
                 if not silent:
                     message.save()
 
+        elif type == 'userlist':
+            usernames = ", ".join(connection.user for connection in Connection.objects.filter(room=self.room_name))
+            self.system_reply('Connected users: %s' % (usernames or '<none>'))
+
+        elif type == 'help':
+            self.system_reply('Available Commands:')
+            self.system_reply('/w <user_name> <text> - private message')
+            self.system_reply('/userlist - list of currently connected users')
+            self.system_reply('/help - this help')
+
         elif self.moderator:
             if type == 'system_message':
                 message = Message()
@@ -100,12 +110,8 @@ class ChatConsumer(WebsocketConsumer):
                     else:
                         Ban.objects.filter(user=receiver).delete()
                         self.system_reply('Successfully pardoned "%s".' % receiver)
-            elif type == 'userlist':
-                usernames = ", ".join(connection.user for connection in Connection.objects.filter(room=self.room_name))
-                self.system_reply('Connected users: %s' % (usernames or '<none>'))
-
         else:
-            self.invalid_message()
+            self.system_reply("Invalid command.")
     
     def send_message(self, message: Message, silent: bool = False):
         if message._state.adding:
@@ -126,7 +132,10 @@ class ChatConsumer(WebsocketConsumer):
         message.room = self.room_name
         message.receiver = self.user_name
         message.content = content
-        self.send_message(message)
+        self.system_message({
+                    'type': Message.name_for_messagetype(message.type),
+                    'message': message.chatmsg()
+                })
     
     def get_name(self):
         if self.scope['user'].is_authenticated:

@@ -101,7 +101,7 @@ class Chat{
                     'receiver': components[1]
                 }));
             }
-        } else if( content.startsWith("/ban ") ){
+        } else if( content.startsWith('/ban ') ){
             const components = content.split(" ");
             if(components[1]){
                 this.socket.send(JSON.stringify({
@@ -110,7 +110,7 @@ class Chat{
                     'receiver': components[1]
                 }));
             }
-        } else if( content.startsWith("/pardon ") ){
+        } else if( content.startsWith('/pardon ') ){
             const components = content.split(" ");
             if(components[1]){
                 this.socket.send(JSON.stringify({
@@ -118,21 +118,16 @@ class Chat{
                     'receiver': components[1]
                 }));
             }
-        } else if( content.startsWith("/users") ){
-            if(components[1]){
-                this.socket.send(JSON.stringify({
-                    'type': 'userlist'
-                }));
-            }
-        } else if( content.startsWith("/system ") ){
+        } else if( content.startsWith('/system ') ){
             const components = content.split(" ");
             this.socket.send(JSON.stringify({
                 'type': 'system_message',
                 'content': components.slice(1).join(" ")
             }));
-        } else if( content == "/userlist" ){
+        } else if( content.startsWith('/') ){
+            const components = content.split(" ");
             this.socket.send(JSON.stringify({
-                'type': 'userlist'
+                'type': components[0].substring(1)
             }));
         } else {
             if (content.trim()){
