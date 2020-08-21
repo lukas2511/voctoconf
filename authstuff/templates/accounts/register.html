@@ -40,6 +40,7 @@
       {{ field }}
     </div>
     {% endfor %}
+    <a href="https://www.froscon.de/datenschutzerklaerung/" target="_blank"><i class="fa fa-sm fa-link"></i> {% if LANGUAGE_CODE == "de" %}Datenschutzerklärung{% else %}Privacy Policy{% endif %}</a>
     <div class="form-group">
       <input class="form-control btn btn-primary" type="submit" name="login" value="{% if LANGUAGE_CODE == "de" %}Registrieren{% else %}Register{% endif %}" />
     </div>
