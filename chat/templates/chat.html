@@ -20,29 +20,27 @@
 	</div>
 
 	<div id="chat" class="w-100" style="height:70vh">
-		<div class="p-absolute w-100 h-100" style="position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px;" >
-      <div id="chat" class="d-flex flex-column h-100 w-100">
-        <div class="flex-grow-1" style="overflow-y: scroll" data-chat-scroll-container>
-          <div class="w-100 chat-log" data-chat-log>
-              {% for message in backlog %}
-              {% if message.type == "chat_message" %}
-              {% usemacro chat_message message.date message.sender message.receiver message.content is_chat_moderator %}
-              {% elif message.type == "system_message" %}
-              {% usemacro system_message message.date message.sender message.receiver message.content is_chat_moderator %}
-              {% endif %}
-              {% endfor %}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-8 col-sm-9 col-md-10">
-            <input id="chat-message-input" type="text" class="form-control" placeholder="Message..." maxlength="200" data-chat-input />
-          </div>
-          <div class="col-4 col-sm-3 col-md-2">
-            <input id="chat-message-submit" type="button" class="form-control" value="Send" data-chat-submit />
-          </div>
+    <div id="chat" class="d-flex flex-column h-100 w-100">
+      <div class="flex-grow-1" style="overflow-y: scroll" data-chat-scroll-container>
+        <div class="w-100 chat-log" data-chat-log>
+            {% for message in backlog %}
+            {% if message.type == "chat_message" %}
+            {% usemacro chat_message message.date message.sender message.receiver message.content is_chat_moderator %}
+            {% elif message.type == "system_message" %}
+            {% usemacro system_message message.date message.sender message.receiver message.content is_chat_moderator %}
+            {% endif %}
+            {% endfor %}
         </div>
       </div>
-		</div>
+      <div class="row">
+        <div class="col-8 col-sm-9 col-md-10">
+          <input id="chat-message-input" type="text" class="form-control" placeholder="Message..." maxlength="200" data-chat-input />
+        </div>
+        <div class="col-4 col-sm-3 col-md-2">
+          <input id="chat-message-submit" type="button" class="form-control" value="Send" data-chat-submit />
+        </div>
+      </div>
+    </div>
 	</div>
 </main>
 
