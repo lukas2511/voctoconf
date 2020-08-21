@@ -28,5 +28,5 @@ class Command(BaseCommand):
         stats = RoomStats()
         stats.room = room
         stats.running = True
-        stats.participantCount = int(meeting['participantCount'])
+        stats.participants = int(meeting['participantCount'])
         stats.save()
