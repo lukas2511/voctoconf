@@ -8,7 +8,10 @@
 {% block content %}
 <main class="full-height-content m-0" style="overflow-y:hidden">
 	<!--@TODO: Look into sandbox attribute-->
-	<iframe src="{{ meeting }}" allow="camera; autoplay; microphone; fullscreen; display-capture" allowfullscreen allowusermedia sandbox="allow-top-navigation" class="full-size"></iframe>
+	<iframe src="{{ meeting }}" allow="camera; autoplay; microphone; fullscreen; display-capture"
+		allowfullscreen allowusermedia 
+		sandbox="allow-downloads-without-user-activation allow-downloads allow-pointer-lock allow-presentation allow-same-origin allow-storage-access-by-user-activation allow-forms allow-scripts allow-top-navigation allow-top-navigation-by-user-activation"
+		class="full-size"></iframe>
 </main>
 {% endblock %}
 
