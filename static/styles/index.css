@@ -148,6 +148,10 @@ footer.slim-footer .footer .footer-logo {
   padding-top:56.25%;
 }
 
+.overflow-hidden {
+  overflow: hidden !important;
+}
+
 @media (min-width: 576px) {
   .w-sm-unset {
     width: unset !important;
