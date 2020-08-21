@@ -13,66 +13,55 @@
 
         <div class="w-100">
 
-            {% if event %}
-            <h5>
+            <h5 class="mb-1">
+                {% if event %}
                 <a href="{{ event.link }}">
-                    {{ event.title }} <i class="fa fa-sm fa-link"></i>
+                    {{ event.title }}
                 </a>
-            </h5>
-            {% else %}
-            <h5>
+                {% else %}
                 {% if LANGUAGE_CODE == "de" %}
                 Zurzeit läuft kein Vortrag in diesem Saal.
                 {% else %}
                 Currently there is no lecture in this room.
                 {% endif %}
+                {% endif %}
             </h5>
-            {% endif %}
 
             {% if event %}
             <div class="w-100">
                 <div class="d-flex w-100">
                     <div>
-                        <i class="fa fa-chalkboard-teacher"></i>
-                        {{ event.persons_html }}
+                        <i class="fa fa-sm fa-chalkboard-teacher"></i>
+                        {{ event.persons_html|safe }}
                     </div>
                     <div class="ml-auto">
-                        <i class="fa fa-clock"></i>
+                        <i class="fa fa-sm fa-clock"></i>
                         {{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }}
                     </div>
                 </div>
             </div>
             {% endif %}
 
-            <div class="d-flex w-100">
-                {% if event %}
-                <div>
-                    <i class="fa fa-calendar-alt"></i> 
-                    <a href="{{ event.link }}">
-                        {% if LANGUAGE_CODE == "de" %}Fahrplan-Eintrag{% else %}Schedule Entry{% endif %}
-                    </a>
-                </div>
+            {% if room.bbb %}
+            {% with room.bbb.get_stats as stats %}
+            <div>
+                <i class="fa fa-sm fa-user"></i>
+                {{ stats.participants }}
+                {% if LANGUAGE_CODE == "de" %}
+                Teilnehmer
                 {% else %}
-                <div>
-                    <i class="fa fa-calendar-alt"></i> -
-                </div>
-                {% endif %}
-
-                {% if room.bbb %}
-                {% with room.bbb.get_stats as stats %}
-                <div class="ml-auto">
-                    <i class="fa fa-user"></i> {{ stats.participants }}
-                </div>
-                {% endwith %}
+                Participants
                 {% endif %}
             </div>
+            {% endwith %}
+            {% endif %}
 
             {% endwith %}
 
             {% with room.next_event as event %}
             {% if event %}
             <div>
-                <i class="fa fa-fast-forward"></i> <a href="{{ event.link }}">{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }} : {{ event.title }}</a></div>
+                <i class="fa fa-sm fa-fast-forward"></i> <a href="{{ event.link }}">{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }} : {{ event.title }}</a></div>
             {% endif %}
             {% endwith %}
         </div>

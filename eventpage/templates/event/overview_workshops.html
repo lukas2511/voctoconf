@@ -6,13 +6,12 @@
 <div class="row">
     <div class="col-sm-8 col-12 py-1">
         <div class="small">
-            <i class="fa fa-sm fa-clock"></i>
             {{ workshop.start|date:'H:i' }} - {{ workshop.end|date:'H:i' }}
         </div>
-        <div>
+        <h5 class="mb-0">
             {% if workshop.nextup %}Next Up: {% endif %}
             {{ workshop.title }}
-        </div>
+        </h5>
         <div class="small">
             <i class="fa fa-sm fa-chalkboard-teacher"></i>
             {{ workshop.persons_html|safe }}
