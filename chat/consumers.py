@@ -80,6 +80,11 @@ class ChatConsumer(WebsocketConsumer):
             self.system_reply('/w <user_name> <text> - private message')
             self.system_reply('/userlist - list of currently connected users')
             self.system_reply('/help - this help')
+            if self.moderator:
+                self.system_reply('Moderator Commands:')
+                self.system_reply('/system <text> - send a system message without sender')
+                self.system_reply('/ban <user_name> [reason] - ban a user, their messages will no longe be visible to others')
+                self.system_reply('/pardon <user_name> - revoke a user\'s ban so they can write in chat again')
 
         elif self.moderator:
             if type == 'system_message':
@@ -111,7 +116,7 @@ class ChatConsumer(WebsocketConsumer):
                         Ban.objects.filter(user=receiver).delete()
                         self.system_reply('Successfully pardoned "%s".' % receiver)
         else:
-            self.system_reply("Invalid command.")
+            self.system_reply("Invalid command \"%s\"." % type)
     
     def send_message(self, message: Message, silent: bool = False):
         if message._state.adding:
