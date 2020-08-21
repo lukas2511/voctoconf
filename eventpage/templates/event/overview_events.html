@@ -15,8 +15,8 @@
 
             {% if event %}
             <h5>
-                <a href="{{ event.link }}" class="text-reset">
-                    {{ event.title }} <i class="fa fa-link"></i>
+                <a href="{{ event.link }}">
+                    {{ event.title }} <i class="fa fa-sm fa-link"></i>
                 </a>
             </h5>
             {% else %}
@@ -34,7 +34,7 @@
                 <div class="d-flex w-100">
                     <div>
                         <i class="fa fa-chalkboard-teacher"></i>
-                        {{ event.persons_str }}
+                        {{ event.persons_html }}
                     </div>
                     <div class="ml-auto">
                         <i class="fa fa-clock"></i>
@@ -60,7 +60,6 @@
 
                 {% if room.bbb %}
                 {% with room.bbb.get_stats as stats %}
-
                 <div class="ml-auto">
                     <i class="fa fa-user"></i> {{ stats.participants }}
                 </div>
@@ -72,8 +71,8 @@
 
             {% with room.next_event as event %}
             {% if event %}
-            <div class="small">
-                <i class="fa fa-fast-forward"></i> <a href="{{ event.link }}">{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }} {{ event.title }}</a></div>
+            <div>
+                <i class="fa fa-fast-forward"></i> <a href="{{ event.link }}">{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }} : {{ event.title }}</a></div>
             {% endif %}
             {% endwith %}
         </div>
