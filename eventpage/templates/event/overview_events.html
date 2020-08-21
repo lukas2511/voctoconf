@@ -5,11 +5,11 @@
 <div class="row">
     {% for room in event_rooms %}
     {% if room.bbb or room.stream %}
-    <div class="col-sm-{{ room.view_size }} col-12 py-1 align-self-lg-stretch d-flex flex-column">
+    <div class="col-sm-{{ room.view_size }} col-12 py-3 d-flex flex-column">
 
         {% with room.current_event as event %}
 
-        <h3 class="mb-0">{{ room.name }} :</h2>
+        <h3 class="mb-0">{{ room.name }}:</h2>
 
         <div class="w-100">
 
@@ -48,7 +48,7 @@
                 <i class="fa fa-sm fa-user"></i>
                 {{ stats.participants }}
                 {% if LANGUAGE_CODE == "de" %}
-                Teilnehmer
+                Teilnehmende
                 {% else %}
                 Participants
                 {% endif %}
@@ -56,15 +56,15 @@
             {% endwith %}
             {% endif %}
 
-            {% endwith %}
-
-            {% with room.next_event as event %}
-            {% if event %}
+            {% with room.next_event as next %}
+            {% if next %}
             <div>
-                <i class="fa fa-sm fa-fast-forward"></i> <a href="{{ event.link }}">{{ event.start|date:'H:i' }} - {{ event.end|date:'H:i' }} : {{ event.title }}</a></div>
+                <i class="fa fa-sm fa-fast-forward"></i> <a href="{{ next.link }}">{{ next.start|date:'H:i' }} - {{ next.end|date:'H:i' }} : {{ next.title }}</a></div>
             {% endif %}
             {% endwith %}
         </div>
+
+        {% endwith %}
 
 
         {% if not room.bbb or room.bbb.get_stats.running %}
