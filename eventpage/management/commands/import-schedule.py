@@ -73,6 +73,7 @@ class Command(BaseCommand):
             newend = obj.start + datetime.timedelta(hours=int(hoursstr), minutes=int(minutesstr))
             if obj.end != newend:
                 print("Event %d end changed: %r -> %r" % (obj.id, obj.end, newend))
+                obj.end = newend
 
         if not obj.abstract_modified:
             newabstract = event['abstract']
@@ -104,7 +105,7 @@ class Command(BaseCommand):
             newevtype = event['type'] if event['type'] else 'undefined'
             if obj.evtype != newevtype:
                 print("Event %d type changed: %s -> %s" % (obj.id, obj.evtype, newevtype))
-                obj.type = newevtype
+                obj.evtype = newevtype
 
         if not obj.room_modified:
             if Room.objects.filter(name=event["room"]).exists():
@@ -131,6 +132,8 @@ class Command(BaseCommand):
             if track != obj.track:
                 print("Event %d track changed: %s -> %s" % (obj.id, obj.track, track))
                 obj.track = track
+
+        obj.save()
 
         if not obj.persons_modified:
             holding = []
