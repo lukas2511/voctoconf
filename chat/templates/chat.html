@@ -13,14 +13,14 @@
 {% endblock %}
 
 {% block content %}
-<main class="container pt-2">
+<main id="chat"  class="container pt-2">
 	<div>
-		<h1 class="d-md-block d-none">Chat</h1>
-		<h3 class="d-md-none d-block">Chat</h3>
+		<h1 class="d-md-flex d-none"><div>Chat</div><div class="ml-auto small"><i class="fa fa-sm fa-user"></i><span data-chat-usercount>{{ usercount }}</span></div></h1>
+		<h3 class="d-md-none d-flex"><div>Chat</div><div class="ml-auto small"><i class="fa fa-sm fa-user"></i><span data-chat-usercount>{{ usercount }}</span></div></h3>
 	</div>
 
-	<div id="chat" class="w-100" style="height:70vh">
-    <div id="chat" class="d-flex flex-column h-100 w-100">
+	<div class="w-100" style="height:70vh">
+    <div class="d-flex flex-column h-100 w-100">
       <div class="flex-grow-1" style="overflow-y: scroll" data-chat-scroll-container>
         <div class="w-100 chat-log" data-chat-log>
             {% for message in backlog %}

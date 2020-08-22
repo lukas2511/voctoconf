@@ -46,38 +46,43 @@ class Chat{
         const data = JSON.parse(e.data);
         const type = data.type;
         const message = data.message;
-        let name = message.sender;
-        
-        let template;
-        if(type=='chat_message'){
-            template = chat_message_template;
-        } else if(type=='whisper_message') {
-            if(data.sent){
-                template = whisper_message_sent_template
-                name = message.receiver
-            } else {
-                template = whisper_message_received_template
-            }
-        } else if(type=='system_message') {
-            template = system_message_template
-        }
-    
-        // Clone the new row and insert it into the table
-        const clone = template.content.cloneNode(true);
-        if (message.sender)
-            clone.querySelectorAll('[data-chat-sender]').forEach((e)=>e.textContent = message.sender);
-        if (message.receiver)
-            clone.querySelectorAll('[data-chat-receiver]').forEach((e)=>e.textContent = message.receiver);
-        clone.querySelectorAll('[data-chat-name]').forEach((e)=>e.setAttribute('data-chat-name', name));
-        clone.querySelector('[data-chat-date]').textContent = message.date;
-        clone.querySelector('[data-chat-content]').textContent = message.content;
-        this.log.appendChild(clone);
 
-        // remove old messages
-        if(this.log.childNodes.length>150)
-            this.log.removeChild(this.log.childNodes[0]);
+        if(type=='usercount'){
+            this.container.querySelectorAll('[data-chat-usercount]').forEach((e)=>e.textContent=''+message);
+        }else{
+            let name = message.sender;
+            
+            let template;
+            if(type=='chat_message'){
+                template = chat_message_template;
+            } else if(type=='whisper_message') {
+                if(data.sent){
+                    template = whisper_message_sent_template
+                    name = message.receiver
+                } else {
+                    template = whisper_message_received_template
+                }
+            } else if(type=='system_message') {
+                template = system_message_template
+            }
         
-        this.scrollDown();
+            // Clone the new row and insert it into the table
+            const clone = template.content.cloneNode(true);
+            if (message.sender)
+                clone.querySelectorAll('[data-chat-sender]').forEach((e)=>e.textContent = message.sender);
+            if (message.receiver)
+                clone.querySelectorAll('[data-chat-receiver]').forEach((e)=>e.textContent = message.receiver);
+            clone.querySelectorAll('[data-chat-name]').forEach((e)=>e.setAttribute('data-chat-name', name));
+            clone.querySelector('[data-chat-date]').textContent = message.date;
+            clone.querySelector('[data-chat-content]').textContent = message.content;
+            this.log.appendChild(clone);
+    
+            // remove old messages
+            if(this.log.childNodes.length>150)
+                this.log.removeChild(this.log.childNodes[0]);
+            
+            this.scrollDown();
+        }
     }
 
     submit(){
