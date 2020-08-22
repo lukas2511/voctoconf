@@ -4,6 +4,7 @@ from channels.generic.websocket import WebsocketConsumer
 from .models import Message, Connection, Ban
 from .templatetags.is_chat_moderator import is_chat_moderator
 import channels.layers
+from datetime import datetime, timedelta
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
@@ -85,6 +86,7 @@ class ChatConsumer(WebsocketConsumer):
                 self.system_reply('/system <text> - send a system message without sender')
                 self.system_reply('/ban <user_name> [reason] - ban a user, their messages will no longe be visible to others')
                 self.system_reply('/pardon <user_name> - revoke a user\'s ban so they can write in chat again')
+                self.system_reply('/decay - delete all saved chat messages older than 2 hours')
 
         elif self.moderator:
             if type == 'system_message':
@@ -115,6 +117,15 @@ class ChatConsumer(WebsocketConsumer):
                     else:
                         Ban.objects.filter(user=receiver).delete()
                         self.system_reply('Successfully pardoned "%s".' % receiver)
+            elif type == 'decay':
+                Message.objects.filter(date__lt=datetime.now() - timedelta(hours=2)).delete()
+                self.system_reply('Cleared all saved messages older than 2 hours.')
+            elif type == 'clearall':
+                Message.objects.all().delete()
+                self.system_reply('Cleared all saved messages.')
+            else:
+                self.system_reply("Invalid command \"%s\"." % type)
+
         else:
             self.system_reply("Invalid command \"%s\"." % type)
     
