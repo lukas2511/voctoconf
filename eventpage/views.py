@@ -22,7 +22,7 @@ def event_overview(request):
     now = datetime.datetime.utcnow().replace(tzinfo=utc)
     another15minutes = datetime.timedelta(minutes=15)
     for workshop in Event.objects.filter(evtype="workshop", hide=False).order_by('start'):
-        if (workshop.start + another15minutes) > now and (workshop.end - another15minutes) < now:
+        if (workshop.start - another15minutes) < now and (workshop.end + another15minutes) > now:
             context['workshops'].append(workshop)
             if workshop.start < now:
                 context['workshops'][-1].nextup = True
