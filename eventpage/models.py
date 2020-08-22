@@ -81,7 +81,7 @@ class Event(models.Model):
 
     custom = models.BooleanField("Ignore any overrides from schedule", default=False)
 
-    slug = models.SlugField(max_length=35, blank=True, null=True)
+    slug = models.SlugField(max_length=200, blank=True, null=True)
     slug_modified = models.BooleanField(default=False)
     
     hide = models.BooleanField(default=False)
