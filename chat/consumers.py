@@ -33,8 +33,12 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
 
+        if not 'type' in text_data_json:
+            self.invalid_message()
+            return
         type = text_data_json['type']
         if not type:
+            self.invalid_message()
             return
 
         if type == 'chat_message' or type == 'whisper_message':
@@ -42,11 +46,11 @@ class ChatConsumer(WebsocketConsumer):
 
             content = text_data_json['content']
             if not content or content.isspace():
-                self.invalid_message()
                 return
             
             message.sender = self.user_name
             if not message.sender:
+                self.invalid_message()
                 return # wat?
             
             message.content = content[:200]
@@ -75,17 +79,23 @@ class ChatConsumer(WebsocketConsumer):
         elif type == 'userlist':
             usernames = ", ".join(connection.user for connection in Connection.objects.filter(room=self.room_name))
             self.system_reply('Connected users: %s' % (usernames or '<none>'))
+        
+        elif type == 'purgeme':
+            Message.objects.filter(room=self.room_name, sender=self.user_name).delete()
+            self.system_reply('Deleted all saved messages sent by you.')
 
         elif type == 'help':
             self.system_reply('Available Commands:')
             self.system_reply('/w <user_name> <text> - private message')
             self.system_reply('/userlist - list of currently connected users')
+            self.system_reply('/purgeme - delete all of the saved messages sent by you')
             self.system_reply('/help - this help')
             if self.moderator:
                 self.system_reply('Moderator Commands:')
                 self.system_reply('/system <text> - send a system message without sender')
                 self.system_reply('/ban <user_name> [reason] - ban a user, their messages will no longe be visible to others')
                 self.system_reply('/pardon <user_name> - revoke a user\'s ban so they can write in chat again')
+                self.system_reply('/purge <user_name> - delete all of the saved messages sent by a user')
                 self.system_reply('/decay - delete all saved chat messages older than 2 hours')
 
         elif self.moderator:
@@ -100,7 +110,7 @@ class ChatConsumer(WebsocketConsumer):
                 message.room = self.room_name
                 self.send_message(message)
                 message.save()
-            elif type == 'ban' or type == 'pardon':
+            elif type == 'ban' or type == 'pardon' or type == 'purge':
                 receiver = text_data_json['receiver']
                 if not receiver or receiver.isspace():
                     self.invalid_message()
@@ -109,6 +119,7 @@ class ChatConsumer(WebsocketConsumer):
                     if Ban.objects.filter(user=receiver).count() == 0:
                         Ban.objects.get_or_create(user=receiver, reason=text_data_json['content'])
                         self.system_reply('Successfully banned "%s".' % receiver)
+                        self.system_reply('You may also want to delete their messages from the record using /purge <user_name>')
                     else:
                         self.system_reply('Couldn\'t ban "%s" because they are already banned.' % receiver)
                 elif type == 'pardon':
@@ -117,11 +128,14 @@ class ChatConsumer(WebsocketConsumer):
                     else:
                         Ban.objects.filter(user=receiver).delete()
                         self.system_reply('Successfully pardoned "%s".' % receiver)
+                elif type == 'purge':
+                    Message.objects.filter(sender=receiver).delete()
+                    self.system_reply('Deleted all saved messages sent by user "%s".' % receiver)
             elif type == 'decay':
-                Message.objects.filter(date__lt=datetime.now() - timedelta(hours=2)).delete()
+                Message.objects.filter(room=self.room_name, date__lt=datetime.now() - timedelta(hours=2)).delete()
                 self.system_reply('Cleared all saved messages older than 2 hours.')
             elif type == 'clearall':
-                Message.objects.all().delete()
+                Message.objects.all(room=self.room_name).delete()
                 self.system_reply('Cleared all saved messages.')
             else:
                 self.system_reply("Invalid command \"%s\"." % type)

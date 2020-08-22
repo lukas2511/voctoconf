@@ -112,6 +112,14 @@ class Chat{
                     'receiver': components[1]
                 }));
             }
+        } else if( content.startsWith('/purge ') ){
+            const components = content.split(" ");
+            if(components[1]){
+                this.socket.send(JSON.stringify({
+                    'type': 'purge',
+                    'receiver': components[1]
+                }));
+            }
         } else if( content.startsWith('/system ') ){
             const components = content.split(" ");
             this.socket.send(JSON.stringify({
