@@ -79,18 +79,25 @@ class ChatConsumer(WebsocketConsumer):
                     message.save()
 
         elif type == 'userlist':
-            usernames = ", ".join(connection.user for connection in Connection.objects.filter(room=self.room_name))
-            self.system_reply('Connected users: %s' % (usernames or '<none>'))
+            query_set = Connection.objects.filter(room=self.room_name)
+            usernames = ", ".join(connection.user for connection in query_set)
+            self.system_reply('Connected users (%d): %s' % (query_set.count(), usernames or '<none>'))
         
         elif type == 'purgeme':
             Message.objects.filter(room=self.room_name, sender=self.user_name).delete()
             self.system_reply('Deleted all saved messages sent by you.')
+        
+        elif type == 'dice':
+            self.system_reply('Rolled: 4')
+            self.system_reply('// chosen by fair dice roll.')
+            self.system_reply('// guaranteed to be random.')
 
         elif type == 'help':
             self.system_reply('Available Commands:')
             self.system_reply('/w <user_name> <text> - private message')
             self.system_reply('/userlist - list of currently connected users')
             self.system_reply('/purgeme - delete all of the saved messages sent by you')
+            self.system_reply('/dice - roll a dice')
             self.system_reply('/help - this help')
             if self.moderator:
                 self.system_reply('Moderator Commands:')
