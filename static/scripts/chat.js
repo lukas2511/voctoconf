@@ -3,6 +3,25 @@ const whisper_message_received_template = document.querySelector('#whisper_messa
 const whisper_message_sent_template = document.querySelector('#whisper_message_sent');
 const system_message_template = document.querySelector('#system_message');
 
+const HTTP_URL_REGEXP = /(?:\b(?:https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig
+
+function parseLinks(text){
+    const text_chunks = text.split(HTTP_URL_REGEXP);
+    const ret = [];
+    let match;
+    for (let text_chunk of text_chunks){
+        ret.push(document.createTextNode(text_chunk));
+        
+        if((match = HTTP_URL_REGEXP.exec(text)) !== null){
+            const anchor = document.createElement('a');
+            anchor.textContent=match;
+            anchor.href=match;
+            ret.push(anchor);
+        }
+    }
+    return ret;
+}
+
 class Chat{
 
     constructor(container, roomName){
@@ -74,7 +93,10 @@ class Chat{
                 clone.querySelectorAll('[data-chat-receiver]').forEach((e)=>e.textContent = message.receiver);
             clone.querySelectorAll('[data-chat-name]').forEach((e)=>e.setAttribute('data-chat-name', name));
             clone.querySelector('[data-chat-date]').textContent = message.date;
-            clone.querySelector('[data-chat-content]').textContent = message.content;
+            clone.querySelectorAll('[data-chat-content]').forEach((e)=>{
+                e.innerHTML = '';
+                e.append(...parseLinks(message.content));
+            });
             this.log.appendChild(clone);
     
             // remove old messages
