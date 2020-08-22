@@ -19,6 +19,7 @@ class ChatConsumer(WebsocketConsumer):
             self.channel_name
         )
         Connection.objects.get_or_create(room=self.room_name, user=self.get_name())
+        self.update_user_count()
         self.accept()
 
     def disconnect(self, close_code):
@@ -28,6 +29,7 @@ class ChatConsumer(WebsocketConsumer):
             self.channel_name
         )
         Connection.objects.filter(room=self.room_name, user=self.user_name).delete()
+        self.update_user_count()
 
     # Receive message from WebSocket
     def receive(self, text_data):
@@ -153,6 +155,14 @@ class ChatConsumer(WebsocketConsumer):
                     'silent': silent
                 })
     
+    def update_user_count(self):
+        channel_layer = channels.layers.get_channel_layer()
+        async_to_sync(channel_layer.group_send)('chat_%s' % self.room_name,
+            {
+                'type': 'usercount',
+                'message': Connection.objects.filter(room=self.room_name).count()
+            })
+    
     def invalid_message(self):
         self.system_reply("Invalid message.")
     
@@ -215,4 +225,10 @@ class ChatConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps({
             'type': event['type'],
             'message': event['message']
+        }))
+
+    def usercount(self, event):
+        self.send(text_data=json.dumps({
+            'type': event['type'],
+            'message': event["message"]
         }))
