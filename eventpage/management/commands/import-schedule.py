@@ -101,6 +101,12 @@ class Command(BaseCommand):
                 print("Event %d title changed: %s -> %s" % (obj.id, obj.title, newtitle))
                 obj.title = newtitle
 
+        if not obj.slug_modified:
+            newslug = event['slug']
+            if obj.slug != newslug:
+                print("Event %d slug changed: %s -> %s" % (obj.id, obj.slug, newslug))
+                obj.slug = newslug
+
         if not obj.evtype_modified:
             newevtype = event['type'] if event['type'] else 'undefined'
             if obj.evtype != newevtype:
