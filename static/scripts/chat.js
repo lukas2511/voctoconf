@@ -45,6 +45,8 @@ class Chat{
             if (e.keyCode === 13)
                 this.submitButton.click();
         });
+
+        this.parseExistingLinks();
     }
 
     connect(){
@@ -58,7 +60,6 @@ class Chat{
         this.socket.onclose = this.onClose.bind(this);
         this.socket.onerror = this.onError.bind(this);
     }
-
 
     onMessage(e) {
         console.debug('Chat message received:', e.data);
@@ -192,6 +193,14 @@ class Chat{
                 this.input.value = prefix + message;
                 this.input.focus();
         }
+    }
+
+    parseExistingLinks(){
+        this.log.querySelectorAll('[data-chat-content]').forEach((e)=>{
+            const text = e.textContent;
+            e.innerHTML = '';
+            e.append(...parseLinks(text));
+        })
     }
 
     onOpen(){
