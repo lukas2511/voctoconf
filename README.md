@@ -1,15 +1,16 @@
+# [Project Name]
+
+## About
+
 You have found the conference website we've written for FrOSCon 2020 (Cloud Edition) \o/
 
-This code is (at least in some parts) really hacky.
-It was written over the span of just a few days and last fixes were applied during the conference itself.
+This code is (at least in some parts) really hacky. It was written over the span of just a few days and last fixes were applied during the conference itself.
 
-Overall we were surprised how smoothly everything went, and we are glad to announce that we got an F(ull score :P) in some weird
-Mozilla privacy check, that's something we always wanted to have :)
+Overall we were surprised how smoothly everything went, and we are glad to announce that we got an F(ull score :P) in some weird Mozilla privacy check, that's something we always wanted to have :)
 
-Feel free to use the code for your own projects, but please don't come running back for support.
-At least for now everything here is just provided as is.
+Feel free to use the code for your own projects, but please don't come running back for support. At least for now everything here is just provided as is.
 
-Rough feature set:
+## Rough feature set
 
 - Landing page
     - Introduction to the event and links to the actual overview
@@ -53,3 +54,13 @@ Rough feature set:
     - Page for each partner with support for them to edit their own description
     - Own BBB room
     - Partner highlighted on event page if BBB room was active
+
+## Possible future features
+
+We might implement this stuff at some point, or we might not. PRs welecome ;)
+
+* Name for the project
+* Update current events, workshops, user count automatically
+* announcements using markdown
+* cleanup event overview lectures section to allow for none BBB lectures
+* ...
