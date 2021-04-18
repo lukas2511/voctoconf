@@ -108,6 +108,10 @@ class Chat{
         }
     }
 
+    send(data){
+        this.socket.send(JSON.stringify(data));
+    }
+
     submit(){
         if(!this.connected)
             return;
@@ -117,54 +121,54 @@ class Chat{
             content.startsWith("/whisper ") ){
             const components = content.split(" ");
             if(components[1]){
-                this.socket.send(JSON.stringify({
+                this.send({
                     'type': 'whisper_message',
                     'content': components.slice(2).join(" "),
                     'receiver': components[1]
-                }));
+                });
             }
         } else if( content.startsWith('/ban ') ){
             const components = content.split(" ");
             if(components[1]){
-                this.socket.send(JSON.stringify({
+                this.send({
                     'type': 'ban',
                     'content': components.slice(2).join(" "),
                     'receiver': components[1]
-                }));
+                });
             }
         } else if( content.startsWith('/pardon ') ){
             const components = content.split(" ");
             if(components[1]){
-                this.socket.send(JSON.stringify({
+                this.send({
                     'type': 'pardon',
                     'receiver': components[1]
-                }));
+                });
             }
         } else if( content.startsWith('/purge ') ){
             const components = content.split(" ");
             if(components[1]){
-                this.socket.send(JSON.stringify({
+                this.send({
                     'type': 'purge',
                     'receiver': components[1]
-                }));
+                });
             }
         } else if( content.startsWith('/system ') ){
             const components = content.split(" ");
-            this.socket.send(JSON.stringify({
+            this.send({
                 'type': 'system_message',
                 'content': components.slice(1).join(" ")
-            }));
+            });
         } else if( content.startsWith('/') ){
             const components = content.split(" ");
-            this.socket.send(JSON.stringify({
+            this.send({
                 'type': components[0].substring(1)
-            }));
+            });
         } else {
             if (content.trim()){
-                this.socket.send(JSON.stringify({
+                this.send({
                     'type': 'chat_message',
                     'content': content
-                }));
+                });
             }
         }
 

@@ -1,8 +1,12 @@
+bleach
+channels
+channels_redis
 django
 django-extensions
 django-templates-macros
-xmltodict
-psycopg2
 markdown
-channels
-channels_redis
+Pillow
+psycopg2
+requests
+websockets
+xmltodict
