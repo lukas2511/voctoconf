@@ -1,9 +1,7 @@
-from django.core.management.base import BaseCommand, CommandError
-from chat.models import Message
-import requests
 import json
-import dateutil.parser
-import traceback
+from chat.models import Message
+from django.core.management.base import BaseCommand, CommandError
+
 
 class Command(BaseCommand):
     help = 'Send chat message'

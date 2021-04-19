@@ -5,8 +5,10 @@ django
 django-extensions
 django-templates-macros
 markdown
+marshmallow
 Pillow
 psycopg2
+redis
 requests
 websockets
 xmltodict

@@ -44,7 +44,7 @@ class ChatConsumer(WebsocketConsumer):
             return
 
         if type == 'chat_message' or type == 'whisper_message':
-            message = Message()
+            message = Message(room_name=self.room_name)
 
             content = text_data_json['content']
             if not content or content.isspace():
@@ -56,13 +56,13 @@ class ChatConsumer(WebsocketConsumer):
                 return # wat?
             
             message.content = content[:200]
-            message.room = self.room_name
+            message.room_name = self.room_name
 
             silent = Ban.objects.filter(user=self.user_name).count() != 0
 
             if type == 'whisper_message':
                 # @TODO: fix magic values
-                message.type = "WPR"
+                message.type = "whisper_message"
                 receiver = text_data_json['receiver']
                 if not receiver or receiver.isspace():
                     self.invalid_message()
@@ -73,7 +73,7 @@ class ChatConsumer(WebsocketConsumer):
                 if Connection.objects.filter(room=self.room_name, user=receiver).count() == 0:
                     self.system_reply("Couldn't find user \"%s\"." % receiver)
             elif type == 'chat_message':
-                message.type = "MSG"
+                message.type = "chat_message"
                 self.send_message(message, silent=silent)
                 if not silent:
                     message.save()
@@ -153,14 +153,17 @@ class ChatConsumer(WebsocketConsumer):
             self.system_reply("Invalid command \"%s\"." % type)
     
     def send_message(self, message: Message, silent: bool = False):
-        if message._state.adding:
-            channel_layer = channels.layers.get_channel_layer()
-            async_to_sync(channel_layer.group_send)('chat_%s' % self.room_name,
-                {
-                    'type': Message.name_for_messagetype(message.type),
-                    'message': message.chatmsg(),
-                    'silent': silent
-                })
+        ChatConsumer.send_message_to_room(message,self.room_name,silent)
+    
+    @staticmethod
+    def send_message_to_room(message: Message, room_name: str, silent: bool = False):
+        channel_layer = channels.layers.get_channel_layer()
+        async_to_sync(channel_layer.group_send)('chat_%s' % room_name,
+            {
+                'type': message.type,
+                'message': message.to_json(),
+                'silent': silent
+            })
     
     def update_user_count(self):
         channel_layer = channels.layers.get_channel_layer()
@@ -175,13 +178,13 @@ class ChatConsumer(WebsocketConsumer):
     
     def system_reply(self, content):
         message = Message()
-        message.type = 'SYS'
+        message.type = 'system_message'
         message.room = self.room_name
         message.receiver = self.user_name
         message.content = content
         self.system_message({
-                    'type': Message.name_for_messagetype(message.type),
-                    'message': message.chatmsg()
+                    'type': message.type,
+                    'message': message.to_json()
                 })
     
     def get_name(self):
@@ -190,8 +193,12 @@ class ChatConsumer(WebsocketConsumer):
         elif 'name' in self.scope['session']:
             return "guest-%s" % self.scope['session']['name']
         else:
-            return 
+            return
 
+
+    ######
+    # Outbound messages
+    ######
 
     # Receive message from room group
     def chat_message(self, event):
