@@ -9,11 +9,12 @@ def chatview(request, room=None):
     if room is None:
         return redirect("/chat/lobby")
 
-    messages = Message.objects.filter(room=room).order_by('-date')
+    messages = Message.getMessages(room, 100)
     if messages:
-        backlog = [msg.chatmsg() for msg in messages[:100][::-1]]
+        backlog = [msg.to_json() for msg in messages]
     else:
         backlog = []
+    print(backlog)
 
     return render(request, "chat.html", {
         'room_name': room,

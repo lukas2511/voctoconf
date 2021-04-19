@@ -1,0 +1,11 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "database": "${workspaceFolder:voctoconf}/_db.sqlite3",
+            "name": "voctoconf dev"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
+}

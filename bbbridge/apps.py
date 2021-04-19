@@ -1,3 +1,4 @@
+import channels
 from django.apps import AppConfig
 from bbb.models import room_opened, Room
 from django.dispatch import receiver
