@@ -14,12 +14,11 @@ def chatview(request, room=None):
         backlog = [msg.to_json() for msg in messages]
     else:
         backlog = []
-    print(backlog)
 
-    return render(request, "chat.html", {
+    return render(request, "chat/chat.html", {
         'room_name': room,
         'user_name': request.user.username if request.user.is_authenticated else '', # @TODO: implement guest name
         'backlog': backlog,
         'is_chat_moderator': is_chat_moderator(request.user),
-        'usercount': Connection.objects.filter(room=room).count()
+        'usercount': Connection.count(room_name = room)
     })
