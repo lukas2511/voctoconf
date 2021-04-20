@@ -2,6 +2,7 @@ import json
 import math
 import time
 from datetime import datetime
+from typing import List
 from uuid import UUID, uuid4
 
 import redis
@@ -13,11 +14,11 @@ from marshmallow.decorators import post_load
 
 r = redis.Redis('localhost', 6379)
 backlog_length = 100
-connection_ttl = 15000
+connection_ttl = 5
 
 
 class Message:
-    def __init__(self, time=datetime.now(), sender=None, content=None, receiver=None, room_name=None, type=None):
+    def __init__(self, time=datetime.now(), sender=None, content=None, receiver=None, room_name=None, type='chat_message'):
         self.time = time
         self.sender = sender
         self.content = content
@@ -33,7 +34,11 @@ class Message:
             r.ltrim(f"chat/{self.room_name}/messages", -backlog_length, -1)
 
     @staticmethod
-    def getMessages(room_name: str, count: int = backlog_length):
+    def purge(room_name: str):
+        r.delete(f"chat/{room_name}/messages")
+
+    @staticmethod
+    def get_messages(room_name: str, count: int = backlog_length):
         return (message_schema.loads(m.decode('utf8')) for m in r.lrange(f"chat/{room_name}/messages", -count, -1))
 
     def to_json(self) -> dict:
@@ -69,22 +74,18 @@ class Ban(models.Model):
     reason = models.CharField(max_length=200, null=True, blank=True)
 
 
-class Connection():
-    def add(room_name: str, user_name: str, connection_id: UUID = uuid4()):
-        r.zadd(f"chat/{room_name}/connections",
-               json.dumps({user_name, connection_id}, sort_keys=True))
+class Connections:
+    def add(room_name: str, user_name: str):
         r.zremrangebyscore(
             f"chat/{room_name}/connections", -math.inf, time.time()-connection_ttl)
-        return connection_id
-
-    def remove(room_name: str, user_name: str, connection_id: UUID):
-        r.zrem(f"chat/{room_name}/connections",
-               json.dumps({user_name, connection_id}, sort_keys=True))
+        r.zadd(f"chat/{room_name}/connections",
+               {
+                   user_name: time.time()
+               })
 
     def count(room_name: str):
-        r.zcount(f"chat/{room_name}/connections",
-                 time.time()-connection_ttl, math.inf)
+        return r.zcount(f"chat/{room_name}/connections",
+                        time.time()-connection_ttl, math.inf) or 0
 
-    def get(room_name: str, user_name: str = None):
-        r.zcount(f"chat/{room_name}/connections",
-                 time.time()-connection_ttl, math.inf)
+    def get(room_name: str, user_name: str = None) -> List[str]:
+        return r.zrangebyscore(f"chat/{room_name}/connections", time.time()-connection_ttl, math.inf)

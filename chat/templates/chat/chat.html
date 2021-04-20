@@ -2,7 +2,7 @@
 {% load static %}
 {% load macros %}
 
-{% loadmacros "macros.html" %}
+{% loadmacros "chat/macros.html" %}
 
 {% block title %}#{{ room_name }} - {% endblock %}
 
@@ -48,6 +48,7 @@
 <template id="whisper_message_sent">{% usemacro whisper_message_sent "" "" "" "" is_chat_moderator %}</template>
 <template id="whisper_message_received">{% usemacro whisper_message_received "" "" "" "" is_chat_moderator %}</template>
 <template id="system_message">{% usemacro system_message "" "" "" "" is_chat_moderator %}</template>
+
 <style>
   .chat-log { overflow-wrap: anywhere; }
   .chat-message:nth-child(odd) { background-color: rgba(0,0,0,.05); }
