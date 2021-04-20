@@ -1,3 +1,4 @@
+from chat.consumers import ChatConsumer
 import json
 from chat.models import Message
 from django.core.management.base import BaseCommand, CommandError
@@ -13,9 +14,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if options['room'] and options['from'] and options['text']:
-            msg = Message()
-            msg.room = options['room']
-            msg.sender = options['from']
-            msg.content = options['text']
+            msg = Message(room_name=options['room'],sender=options['from'],content=options['text'])
+            ChatConsumer.send_message(msg)
             msg.save()
 

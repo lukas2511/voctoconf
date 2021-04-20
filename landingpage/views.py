@@ -9,4 +9,4 @@ def index(request):
     context['venueless_partners'] = Partner.objects.filter(hide=False, bbb__isnull=True).order_by("order") # lul :3
     context['page_live'] = settings.PAGE_LIVE or (request.GET.get("preview") is not None)
 
-    return render(request, "index.html", context)
+    return render(request, "landingpage/index.html", context)
