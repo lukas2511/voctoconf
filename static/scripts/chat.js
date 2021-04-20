@@ -27,6 +27,7 @@ class Chat{
     constructor(container, roomName){
         this.connected = false;
         this.socket = null;
+        this.heartbeat = null;
         
         this.container = container;
         this.roomName = roomName;
@@ -59,6 +60,12 @@ class Chat{
         this.socket.onopen = this.onOpen.bind(this);
         this.socket.onclose = this.onClose.bind(this);
         this.socket.onerror = this.onError.bind(this);
+
+        this.heartbeat = setInterval(() => {
+            this.send({
+                'type': 'heartbeat'
+            });
+        }, 5000);
     }
 
     onMessage(e) {
@@ -213,13 +220,15 @@ class Chat{
     }
     
     onClose(e){
-        console.warn('Chat connection lost. Reconnect will be attempted in 1 second.', e.reason);
+        console.warn('Chat connection lost. Reconnect will be attempted in 1 second.', e);
         this.connected = false;
+        clearInterval(this.heartbeat)
+        this.heartbeat = null;
         setTimeout(()=>this.connect(), 1000);
     };
 
     onError(e){
-        console.error('Chat encountered error: ', e.message, 'Closing socket');
+        console.error('Chat encountered error: ', e, 'Closing socket');
         this.socket.close();
     }
 
