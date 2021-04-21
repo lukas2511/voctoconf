@@ -1,12 +1,13 @@
 import json
+import logging
+from uuid import uuid4
+
+import channels.layers
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
-from uuid import uuid4
-from .models import Message, Connections, Ban
+
+from .models import Ban, Connections, Message
 from .templatetags.is_chat_moderator import is_chat_moderator
-import channels.layers
-from datetime import datetime, timedelta
-import logging
 
 log = logging.getLogger()
 
@@ -14,7 +15,7 @@ log = logging.getLogger()
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
-        self.room_group_name = 'chat_%s' % self.room_name
+        self.room_group_name = f"chat.{self.room_name}"
         self.user_name = self.get_name()
         self.moderator = is_chat_moderator(self.scope['user'])
 
@@ -25,9 +26,9 @@ class ChatConsumer(WebsocketConsumer):
         )
 
         Connections.add(room_name=self.room_name, user_name=self.get_name())
-        self.update_user_count()
 
         self.accept()
+        self.update_user_count()
 
     def disconnect(self, close_code):
         # Leave room group
@@ -51,32 +52,28 @@ class ChatConsumer(WebsocketConsumer):
 
         # @TODO: fix magic values
         if type == 'chat_message' or type == 'whisper_message':
-            message = Message(room_name=self.room_name, type=type)
-
-            content = text_data_json['content']
-            if not content or content.isspace():
+            content = text_data_json['content'][:200].strip()
+            if not content:
+                return
+            
+            message = Message(room_name=self.room_name, sender=self.user_name, type=type, content=content)
+            
+            if not message.validate or not message.sender:
+                self.invalid_message()
                 return
 
-            message.sender = self.user_name
-            if not message.sender:
-                self.invalid_message()
-                return  # wat?
-
-            message.content = content[:200]
-            message.room_name = self.room_name
-
-            silent = Ban.objects.filter(user=self.user_name).count() != 0
+            silent = Ban.objects.filter(user_name=self.user_name).count() != 0
 
             if type == 'whisper_message':
-                receiver = text_data_json['receiver']
-                if not receiver or receiver.isspace():
+                recipient = text_data_json['recipient']
+                if not recipient or recipient.isspace():
                     self.invalid_message()
                     return
-                message.receiver = receiver
+                message.recipient = recipient
                 self.send_message(message, silent=silent)
 
-                if receiver in Connections.get(room=self.room_name):
-                    self.system_reply(f"Couldn't find user \"{receiver}\".")
+                if Connections.has(self.room_name, recipient):
+                    self.system_reply(f"Couldn't find user \"{recipient}\".")
 
             elif type == 'chat_message':
                 self.send_message(message, silent=silent)
@@ -93,11 +90,6 @@ class ChatConsumer(WebsocketConsumer):
                                   for connection in query_set)
             self.system_reply(
                 f"Connected users ({len(query_set)}): {usernames or '<none>'}")
-
-        elif type == 'purgeme':
-            Message.objects.filter(room=self.room_name,
-                                   sender=self.user_name).delete()
-            self.system_reply('Deleted all saved messages sent by you.')
 
         elif type == 'dice':
             self.system_reply('Rolled: 4')
@@ -123,40 +115,42 @@ class ChatConsumer(WebsocketConsumer):
 
         elif self.moderator:
             if type == 'system_message':
-                message = Message()
-                content = text_data_json['content']
-                if not content or content.isspace():
+                content = text_data_json['content'][:200].strip()
+                if not content:
+                    return
+                
+                message = Message(room_name=self.room_name, sender=None, type=type, content=content)
+                if not message.validate():
                     self.invalid_message()
                     return
-                message.type = "SYS"
-                message.content = content[:200]
-                message.room = self.room_name
+
                 self.send_message(message)
                 message.save()
-            elif type == 'ban' or type == 'pardon' or type == 'purge':
-                receiver = text_data_json['receiver']
-                if not receiver or receiver.isspace():
+
+            elif type == 'ban' or type == 'pardon':
+                recipient = text_data_json['recipient']
+                if not recipient or recipient.isspace():
                     self.invalid_message()
                     return
                 if type == 'ban':
-                    if Ban.objects.filter(user=receiver).count() == 0:
+                    if Ban.objects.filter(user=recipient).count() == 0:
                         Ban.objects.get_or_create(
-                            user=receiver, reason=text_data_json['content'])
+                            user=recipient, reason=text_data_json['content'])
                         self.system_reply(
-                            'Successfully banned "%s".' % receiver)
+                            'Successfully banned "%s".' % recipient)
                         self.system_reply(
                             'You may also want to delete their messages from the record using /purge <user_name>')
                     else:
                         self.system_reply(
-                            'Couldn\'t ban "%s" because they are already banned.' % receiver)
+                            'Couldn\'t ban "%s" because they are already banned.' % recipient)
                 elif type == 'pardon':
-                    if Ban.objects.filter(user=receiver).count() == 0:
+                    if Ban.objects.filter(user=recipient).count() == 0:
                         self.system_reply(
-                            'Couldn\'t pardon "%s" because they are not banned.' % receiver)
+                            'Couldn\'t pardon "%s" because they are not banned.' % recipient)
                     else:
-                        Ban.objects.filter(user=receiver).delete()
+                        Ban.objects.filter(user=recipient).delete()
                         self.system_reply(
-                            'Successfully pardoned "%s".' % receiver)
+                            'Successfully pardoned "%s".' % recipient)
             elif type == 'purge':
                 Message.purge(self.room_name)
                 self.system_reply('Cleared message backlog.')
@@ -169,34 +163,26 @@ class ChatConsumer(WebsocketConsumer):
     @staticmethod
     def send_message(message: Message, silent: bool = False):
         channel_layer = channels.layers.get_channel_layer()
-        async_to_sync(channel_layer.group_send)('chat_%s' % message.room_name,
+        async_to_sync(channel_layer.group_send)(f"chat.{message.room_name}",
                                                 {
-                                                    'type': message.type,
+                                                    'type': 'chat_message',
                                                     'message': message.to_json(),
                                                     'silent': silent
                                                 })
 
+    def system_reply(self, content):
+        self.send_message(Message(room_name = self.room_name, recipient = self.user_name, type = 'system_message', content = content))
+    
+    def invalid_message(self):
+        self.system_reply("Invalid message.")
+    
     def update_user_count(self):
         channel_layer = channels.layers.get_channel_layer()
-        async_to_sync(channel_layer.group_send)('chat_%s' % self.room_name,
+        async_to_sync(channel_layer.group_send)(self.room_group_name,
                                                 {
                                                     'type': 'usercount',
                                                     'message': Connections.count(self.room_name)
                                                 })
-
-    def invalid_message(self):
-        self.system_reply("Invalid message.")
-
-    def system_reply(self, content):
-        message = Message()
-        message.type = 'system_message'
-        message.room = self.room_name
-        message.receiver = self.user_name
-        message.content = content
-        self.system_message({
-            'type': message.type,
-            'message': message.to_json()
-        })
 
     def get_name(self):
         if self.scope['user'].is_authenticated:
@@ -211,40 +197,17 @@ class ChatConsumer(WebsocketConsumer):
     ######
 
     # Receive message from room group
-
     def chat_message(self, event):
-        # If message is silent because the user is banned, only the sender can see the message they sent
-        if event['silent']:
-            if event["message"]['sender'] != self.user_name:
-                return
-
-        self.send(text_data=json.dumps({
-            'type': event['type'],
-            'message': event['message']
-        }))
-
-    # Receive message from room group
-    def whisper_message(self, event):
         message = event["message"]
 
         # If message is silent because the user is banned, only the sender can see the message they sent
-        if event['silent']:
-            if message['sender'] != self.user_name:
-                return
-
-        if self.user_name != message['receiver'] and self.user_name != message['sender']:
+        if event['silent'] and message['sender'] != self.user_name:
             return
-
-        self.send(text_data=json.dumps({
-            'type': event['type'],
-            'sent': self.user_name != message['receiver'],
-            'message': event['message']
-        }))
-
-    # Receive message from room group
-    def system_message(self, event):
-        message = event["message"]
-        if message['receiver'] and self.user_name != message['receiver']:
+        
+        print(message)
+        print(self.user_name)
+        # If a recipient is set only send the message to sender and recipient
+        if message['recipient'] and self.user_name != message['recipient'] and self.user_name != message['sender']:
             return
 
         self.send(text_data=json.dumps({
