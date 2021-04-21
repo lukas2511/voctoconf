@@ -19,8 +19,10 @@ def chatview(request, room=None):
     return render(request, "chat/chat.html", {
         'room_name': room,
         # @TODO: implement guest name
-        'user_name': request.user.username if request.user.is_authenticated else '',
-        'backlog': backlog,
+        'chat_settings': { 
+            'user_name': request.user.username if request.user.is_authenticated else '',
+            'room_name': room,
+            'backlog': backlog },
         'is_chat_moderator': is_chat_moderator(request.user),
         'usercount': Connections.count(room_name=room)
     })
