@@ -78,10 +78,10 @@ class Chat {
   }
 
   onMessage(e) {
-    console.debug("Chat message received:", e.data);
-    const data = JSON.parse(e.data);
-    const type = data.type;
-    const payload = data.payload;
+    const message = JSON.parse(e.data);
+    console.debug("Chat message received:", { message });
+    const type = message.type;
+    const payload = message.payload;
 
     if (type == "user_count") {
       this.container
@@ -144,17 +144,29 @@ class Chat {
     this.scrollDown();
   }
 
-  send(data) {
-    this.socket.send(JSON.stringify(data));
+  send(message) {
+    console.debug("Chat message sent:", { message });
+    this.socket.send(JSON.stringify(message));
   }
 
-  sendMessage(data) {
-    this.socket.send(
-      JSON.stringify({
-        type: "chat_message",
-        payload: data,
-      })
-    );
+  sendMessage(props) {
+    this.send({
+      type: "chat_message",
+      payload: {
+        ...props,
+        room_name: this.roomName,
+      },
+    });
+  }
+
+  sendCommand(command, ...args) {
+    this.send({
+      type: "command",
+      payload: {
+        command,
+        args,
+      },
+    });
   }
 
   submit() {
@@ -173,23 +185,6 @@ class Chat {
           recipient: components[1],
         });
       }
-    } else if (content.startsWith("/ban ")) {
-      const components = content.split(" ");
-      if (components[1]) {
-        this.send({
-          type: "ban",
-          content: components.slice(2).join(" "),
-          recipient: components[1],
-        });
-      }
-    } else if (content.startsWith("/pardon ")) {
-      const components = content.split(" ");
-      if (components[1]) {
-        this.send({
-          type: "pardon",
-          recipient: components[1],
-        });
-      }
     } else if (content.startsWith("/system ")) {
       const components = content.split(" ");
       this.sendMessage({
@@ -198,9 +193,10 @@ class Chat {
       });
     } else if (content.startsWith("/")) {
       const components = content.split(" ");
-      this.send({
-        type: components[0].substring(1),
-      });
+      const command = components[0].substring(1);
+      if (command) {
+        this.sendCommand(command, ...components.slice(1));
+      }
     } else {
       if (content.trim()) {
         this.sendMessage({
