@@ -1,12 +1,13 @@
 from enum import Enum
 import json
 import logging
-from typing import Optional
+from typing import List, Optional, Union
 from uuid import uuid4
 
 import channels.layers
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
+from django.db import connections
 from pydantic.main import BaseModel
 
 from .models import Ban, Connections, Message, MessageTypes
@@ -20,9 +21,13 @@ class ClientEventType(str, Enum):
     heartbeat = 'heartbeat',
     command = 'command'
 
+class ClientCommand(BaseModel):
+    command: str
+    args: List[str] = []
+
 class ClientEvent(BaseModel):
     type: ClientEventType
-    payload: Optional[dict] = None
+    payload: Union[ClientCommand, Message] = None
 
 class ServerEventType(str, Enum):
     chat_message = 'chat_message',
@@ -63,12 +68,18 @@ class ChatConsumer(WebsocketConsumer):
         type = event.type
 
         if type == ClientEventType.chat_message:
-            message = Message(**event.payload, room_name=self.room_name, sender=self.user_name)
+            if not isinstance(event.payload, Message):
+                return self.invalid_message()
+
+            message: Message = event.payload
+            if message.room_name != self.room_name:
+                return self.invalid_message()
+            
             silent = Ban.objects.filter(user_name=self.user_name).count() != 0
 
             if message.type == MessageTypes.whisper_message:
                 if not message.recipient or message.recipient.isspace():
-                    return self.invalid_message()
+                    return self.system_reply('Missing target for command.')
                 
                 self.send_message(message, silent=silent)
 
@@ -84,31 +95,37 @@ class ChatConsumer(WebsocketConsumer):
 
             elif message.type == MessageTypes.system_message:
                 if not self.moderator:
-                    return self.invalid_message()
+                    return self.missing_perms()
                 
                 message.sender = '*system*'
                 self.send_message(message)
+                message.save()
 
-        elif type == 'heartbeat':
+        elif type == ClientEventType.heartbeat:
             Connections.add(room_name=self.room_name,
                             user_name=self.get_name())
 
-        else:
-            self.system_reply("Invalid command \"%s\"." % type)
-        """
-        elif type == 'userlist':
-            query_set = Connections.get(room_name=self.room_name)
-            usernames = ", ".join(connection.decode('utf8')
-                                for connection in query_set)
-            self.system_reply(
-                f"Connected users ({len(query_set)}): {usernames or '<none>'}")
+        elif type == ClientEventType.command:
+            if not isinstance(event.payload, ClientCommand):
+                return self.invalid_message()
+            
+            self.handle_command(event.payload.command, event.payload.args)
 
-        elif type == 'dice':
+        else:
+            self.system_reply(f"Invalid event type: \"{type}\".")
+
+    def handle_command(self, command: str, args: List[str]):
+        if command == 'userlist':
+            connections = Connections.get(room_name=self.room_name)
+            usernames = ", ".join(c.decode('utf8') for c in connections)
+            self.system_reply(f"Connected users ({len(connections)}): {usernames or '<none>'}")
+
+        elif command == 'dice':
             self.system_reply('Rolled: 4')
             self.system_reply('// chosen by fair dice roll.')
             self.system_reply('// guaranteed to be random.')
 
-        elif type == 'help':
+        elif command == 'help':
             self.system_reply('Available Commands:')
             self.system_reply('/w <user_name> <text> - private message')
             self.system_reply('/userlist - list of currently connected users')
@@ -121,42 +138,46 @@ class ChatConsumer(WebsocketConsumer):
                 self.system_reply(
                     '/ban <user_name> [reason] - ban a user, their messages will no longer be visible to others')
                 self.system_reply(
+                    '/baninfo <user_name> - display the reason why a user was banned')
+                self.system_reply(
                     '/pardon <user_name> - revoke a user\'s ban so they can write in chat again')
                 self.system_reply(
                     '/purge - cleare the whole backlog of saved messages')
-
-        elif self.moderator:
-            if type == 'ban' or type == 'pardon':
-                recipient = text_data_json['recipient']
-                if not recipient or recipient.isspace():
-                    self.invalid_message()
-                    return
-                if type == 'ban':
-                    if Ban.objects.filter(user=recipient).count() == 0:
-                        Ban.objects.get_or_create(
-                            user=recipient, reason=text_data_json['content'])
-                        self.system_reply(
-                            'Successfully banned "%s".' % recipient)
-                        self.system_reply(
-                            'You may also want to delete their messages from the record using /purge <user_name>')
-                    else:
-                        self.system_reply(
-                            'Couldn\'t ban "%s" because they are already banned.' % recipient)
-                elif type == 'pardon':
-                    if Ban.objects.filter(user=recipient).count() == 0:
-                        self.system_reply(
-                            'Couldn\'t pardon "%s" because they are not banned.' % recipient)
-                    else:
-                        Ban.objects.filter(user=recipient).delete()
-                        self.system_reply(
-                            'Successfully pardoned "%s".' % recipient)
-            elif type == 'purge':
-                Message.purge(self.room_name)
-                self.system_reply('Cleared message backlog.')
-            else:
-                self.system_reply("Invalid command \"%s\"." % type)
-        """
-
+        elif command == 'ban' or command == 'baninfo' or command == 'pardon':
+            if not self.moderator:
+                return self.missing_perms()
+            if not len(args):
+                return self.system_reply('Missing target for command.')
+            target = args[0]
+            if not target or target.isspace():
+                return self.system_reply('Missing target for command.')
+            
+            if command == 'ban':
+                if Ban.objects.filter(user=target).count() == 0:
+                    Ban.objects.get_or_create(user=target, reason=' '.join(args[1:]))
+                    self.system_reply(f"Successfully banned \"{target}\".")
+                else:
+                    self.system_reply(f"Couldn't ban \"{target}\" because they are already banned.")
+            elif type == 'baninfo':
+                queryset = Ban.objects.filter(user=target)
+                if queryset.count() == 0:
+                    self.system_reply(f"Couldn't get ban reason for \"{target}\" because they are not banned.")
+                else:
+                    self.system_reply(f"\"{target}\" was banned for the following reason: {queryset.first().reason}")
+            elif type == 'pardon':
+                if Ban.objects.filter(user=target).count() == 0:
+                    self.system_reply(f"Couldn't pardon \"{target}\" because they are not banned.")
+                else:
+                    Ban.objects.filter(user=target).delete()
+                    self.system_reply(f"Successfully pardoned \"{target}\".")
+        elif type == 'purge':
+            if not self.moderator:
+                return self.missing_perms()
+            
+            Message.purge(self.room_name)
+            self.system_reply('Cleared message backlog.')
+        else:
+            self.system_reply(f"Invalid command: \"{type}\".")
 
     @staticmethod
     def send_message(message: Message, silent: bool = False):
@@ -169,10 +190,13 @@ class ChatConsumer(WebsocketConsumer):
                                                 },)
 
     def system_reply(self, content):
-        self.send({
+        self.send(text_data=json.dumps({
             'type': ServerEventType.chat_message,
-            'payload': Message(room_name = self.room_name, recipient = self.user_name, type = 'system_message', content = content)
-        })
+            'payload': Message(room_name = self.room_name, recipient = self.user_name, type = 'system_message', content = content).dict()
+        }))
+    
+    def missing_perms(self):
+        self.system_reply("I'm sorry, Dave. I'm afraid I can't do that.")
     
     def invalid_message(self):
         self.system_reply("Invalid message.")
@@ -205,8 +229,6 @@ class ChatConsumer(WebsocketConsumer):
         if event['silent'] and message['sender'] != self.user_name:
             return
         
-        print(message)
-        print(self.user_name)
         # If a recipient is set only send the message to sender and recipient
         if message['recipient'] and self.user_name != message['recipient'] and self.user_name != message['sender']:
             return
