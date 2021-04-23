@@ -1,0 +1,25 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+bleach = "*"
+channels = "*"
+channels-redis = "*"
+django-extensions = "*"
+django-templates-macros = "*"
+psycopg2 = "*"
+redis = "*"
+requests = "*"
+websockets = "*"
+xmltodict = "*"
+Django = "*"
+Markdown = "*"
+Pillow = "*"
+pydantic = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"

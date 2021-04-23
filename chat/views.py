@@ -10,9 +10,9 @@ def chatview(request, room=None):
     if room is None:
         return redirect("/chat/lobby")
 
-    messages = Message.get_messages(room, 100)
+    messages = Message.get_message_jsons(room, 100)
     if messages:
-        backlog = [msg.to_json() for msg in messages]
+        backlog = [*messages]
     else:
         backlog = []
 

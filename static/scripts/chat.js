@@ -81,14 +81,14 @@ class Chat {
     console.debug("Chat message received:", e.data);
     const data = JSON.parse(e.data);
     const type = data.type;
-    const message = data.message;
+    const payload = data.payload;
 
-    if (type == "usercount") {
+    if (type == "user_count") {
       this.container
         .querySelectorAll("[data-chat-usercount]")
-        .forEach((e) => (e.textContent = "" + message));
+        .forEach((e) => (e.textContent = "" + payload));
     } else {
-      this.addChatMessage(message);
+      this.addChatMessage(payload);
     }
   }
 
@@ -148,6 +148,15 @@ class Chat {
     this.socket.send(JSON.stringify(data));
   }
 
+  sendMessage(data) {
+    this.socket.send(
+      JSON.stringify({
+        type: "chat_message",
+        payload: data,
+      })
+    );
+  }
+
   submit() {
     if (!this.connected) return;
     const content = this.input.value;
@@ -158,7 +167,7 @@ class Chat {
     ) {
       const components = content.split(" ");
       if (components[1]) {
-        this.send({
+        this.sendMessage({
           type: "whisper_message",
           content: components.slice(2).join(" "),
           recipient: components[1],
@@ -183,7 +192,7 @@ class Chat {
       }
     } else if (content.startsWith("/system ")) {
       const components = content.split(" ");
-      this.send({
+      this.sendMessage({
         type: "system_message",
         content: components.slice(1).join(" "),
       });
@@ -194,7 +203,7 @@ class Chat {
       });
     } else {
       if (content.trim()) {
-        this.send({
+        this.sendMessage({
           type: "chat_message",
           content: content,
         });
