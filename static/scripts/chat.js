@@ -155,6 +155,7 @@ class Chat {
       payload: {
         ...props,
         room_name: this.roomName,
+        sender: this.userName,
       },
     });
   }
@@ -223,9 +224,9 @@ class Chat {
       const message = this.input.value;
       let prefix;
       if (action == "whisper") {
-        prefix = `/w ${target.getAttribute("data-chat-name")}`;
+        prefix = `/w ${target.getAttribute("data-chat-name")} `;
       } else if (action == "ban") {
-        prefix = `/ban ${target.getAttribute("data-chat-name")}`;
+        prefix = `/ban ${target.getAttribute("data-chat-name")} `;
       }
 
       if (!message.startsWith(prefix)) this.input.value = prefix + message;
