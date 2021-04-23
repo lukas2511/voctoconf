@@ -33,11 +33,25 @@ class MessageTypes(str, Enum):
 class Message(BaseModel):
     room_name: str
     content: str
-    sender: str = None
+    sender: str
     recipient: Optional[str] = None
     type: MessageTypes = 'chat_message'
     time: str = datetime.now().isoformat()
 
+    @validator('sender')
+    def validate_sender(cls, value: str):
+        sender = value.strip()
+        if not sender:
+            raise ValueError('Empty sender')
+        return sender
+    
+    @validator('recipient')
+    def validate_recipient(cls, value: str):
+        recipient = value.strip()
+        if recipient is not None and not recipient:
+            raise ValueError('Invalid sender')
+        return recipient
+    
     @validator('content')
     def validate_content(cls, value: str):
         content = value[:_config().max_message_length].strip()
@@ -82,6 +96,7 @@ class Ban(models.Model):
 
 
 class Connections:
+    @staticmethod
     def add(room_name: str, user_name: str):
         pipeline = _redis().pipeline()
         pipeline.zremrangebyscore(
@@ -92,12 +107,15 @@ class Connections:
                       })
         pipeline.execute()
 
+    @staticmethod
     def count(room_name: str):
         return _redis().zcount(f"chat:{room_name}:connections",
                         time.time()-_config().connection_ttl, math.inf) or 0
 
+    @staticmethod
     def get(room_name: str, user_name: str = None) -> List[str]:
-        return _redis().zrangebyscore(f"chat:{room_name}:connections", time.time()-_config().connection_ttl, math.inf)
+        return (name.decode('utf8') for name in _redis().zrangebyscore(f"chat:{room_name}:connections", time.time()-_config().connection_ttl, math.inf))
 
-    def has(room_name: str, user_name: str) -> bool:
-        return user_name in _redis().zrangebyscore(f"chat:{room_name}:connections", time.time()-_config().connection_ttl, math.inf)
+    @classmethod
+    def has(cls, room_name: str, user_name: str) -> bool:
+        return user_name in cls.get(room_name=room_name, user_name=user_name)

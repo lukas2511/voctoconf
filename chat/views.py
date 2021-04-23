@@ -1,3 +1,4 @@
+from os import name
 from django.shortcuts import render, redirect
 from .models import Message
 from authstuff.names import name_required
@@ -20,9 +21,10 @@ def chatview(request, room=None):
         'room_name': room,
         # @TODO: implement guest name
         'chat_settings': { 
-            'user_name': request.user.username if request.user.is_authenticated else '',
+            'user_name': request.username,
             'room_name': room,
             'backlog': backlog },
         'is_chat_moderator': is_chat_moderator(request.user),
         'usercount': Connections.count(room_name=room)
     })
+

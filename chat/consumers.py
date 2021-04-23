@@ -37,10 +37,12 @@ class ServerEventType(str, Enum):
 class ChatConsumer(WebsocketConsumer):
 
     def connect(self):
-        self.config = apps.get_app_config('chat')
-        self.room_name = self.scope['url_route']['kwargs']['room_name']
+        self.room_name: str = self.scope['url_route']['kwargs']['room_name']
+        self.user_name: str = self.get_name()
+        if not self.room_name or not self.user_name:
+            return self.close(code=4000)
+
         self.room_group_name = f"chat.{self.room_name}"
-        self.user_name = self.get_name()
         self.moderator = is_chat_moderator(self.scope['user'])
 
         # Join room group
@@ -49,7 +51,7 @@ class ChatConsumer(WebsocketConsumer):
             self.channel_name
         )
 
-        Connections.add(room_name=self.room_name, user_name=self.get_name())
+        Connections.add(room_name=self.room_name, user_name=self.user_name)
 
         self.accept()
         self.update_user_count()
@@ -72,19 +74,19 @@ class ChatConsumer(WebsocketConsumer):
                 return self.invalid_message()
 
             message: Message = event.payload
-            if message.room_name != self.room_name:
+            if message.room_name != self.room_name or message.sender != self.user_name:
                 return self.invalid_message()
             
             silent = Ban.objects.filter(user_name=self.user_name).count() != 0
 
             if message.type == MessageTypes.whisper_message:
-                if not message.recipient or message.recipient.isspace():
+                if not message.recipient:
                     return self.system_reply('Missing target for command.')
-                
-                self.send_message(message, silent=silent)
 
-                if Connections.has(self.room_name, message.recipient):
+                if not Connections.has(self.room_name, message.recipient):
                     self.system_reply(f"Couldn't find user \"{message.recipient}\".")
+                else:
+                    self.send_message(message, silent=silent)
 
             elif message.type == MessageTypes.chat_message:
                 if message.recipient:
@@ -103,7 +105,7 @@ class ChatConsumer(WebsocketConsumer):
 
         elif type == ClientEventType.heartbeat:
             Connections.add(room_name=self.room_name,
-                            user_name=self.get_name())
+                            user_name=self.user_name)
 
         elif type == ClientEventType.command:
             if not isinstance(event.payload, ClientCommand):
@@ -153,24 +155,24 @@ class ChatConsumer(WebsocketConsumer):
                 return self.system_reply('Missing target for command.')
             
             if command == 'ban':
-                if Ban.objects.filter(user=target).count() == 0:
-                    Ban.objects.get_or_create(user=target, reason=' '.join(args[1:]))
+                if Ban.objects.filter(user_name=target).count() == 0:
+                    Ban.objects.get_or_create(user_name=target, reason=' '.join(args[1:]))
                     self.system_reply(f"Successfully banned \"{target}\".")
                 else:
                     self.system_reply(f"Couldn't ban \"{target}\" because they are already banned.")
-            elif type == 'baninfo':
-                queryset = Ban.objects.filter(user=target)
+            elif command == 'baninfo':
+                queryset = Ban.objects.filter(user_name=target)
                 if queryset.count() == 0:
                     self.system_reply(f"Couldn't get ban reason for \"{target}\" because they are not banned.")
                 else:
                     self.system_reply(f"\"{target}\" was banned for the following reason: {queryset.first().reason}")
-            elif type == 'pardon':
-                if Ban.objects.filter(user=target).count() == 0:
+            elif command == 'pardon':
+                if Ban.objects.filter(user_name=target).count() == 0:
                     self.system_reply(f"Couldn't pardon \"{target}\" because they are not banned.")
                 else:
-                    Ban.objects.filter(user=target).delete()
+                    Ban.objects.filter(user_name=target).delete()
                     self.system_reply(f"Successfully pardoned \"{target}\".")
-        elif type == 'purge':
+        elif command == 'purge':
             if not self.moderator:
                 return self.missing_perms()
             
@@ -192,7 +194,7 @@ class ChatConsumer(WebsocketConsumer):
     def system_reply(self, content):
         self.send(text_data=json.dumps({
             'type': ServerEventType.chat_message,
-            'payload': Message(room_name = self.room_name, recipient = self.user_name, type = 'system_message', content = content).dict()
+            'payload': Message(room_name = self.room_name, sender='*system*', recipient = self.user_name, type = MessageTypes.system_message, content = content).dict()
         }))
     
     def missing_perms(self):
@@ -209,7 +211,7 @@ class ChatConsumer(WebsocketConsumer):
                                                     'payload': Connections.count(self.room_name)
                                                 })
 
-    def get_name(self):
+    def get_name(self) -> str:
         if self.scope['user'].is_authenticated:
             return self.scope['user'].username
         elif 'name' in self.scope['session']:
