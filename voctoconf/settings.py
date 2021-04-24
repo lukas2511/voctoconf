@@ -1,35 +1,13 @@
 import os
+import sys
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-# defaults
-DEFAULT_SECRET_KEY = 'lolinsecure1337lolinsecure1337lolinsecure1337lolinsecure1337lolinsecure1337lolinsecure1337lolinsecure1337lolinsecure1337lolinsecure1337lolinsecure1337'
-SECRET_KEY = DEFAULT_SECRET_KEY
-
-DEBUG = True
-PAGE_LIVE = True
-
-DOMAIN = "localhost"
-ALLOWED_HOSTS = ["*"]
-
-BBB_SECRETS_DIR = os.path.join(BASE_DIR, "_bbb_secrets")
-STATIC_ROOT = os.path.join(BASE_DIR, "_static")
-MEDIA_ROOT = os.path.join(BASE_DIR, "_media")
-
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-]
-
-MEDIA_URL = '/media/'
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, '_db.sqlite3'),
-    }
-}
+if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), "local_settings.py")):
+    from .local_settings import *
+elif os.path.exists("/etc/voctoconf/local_settings.py"):
+    sys.path.append("/etc/voctoconf")
+    from local_settings import *
+else:
+    raise Exception("local_settings.py not found, can't continue")
 
 # Application definition
 INSTALLED_APPS = [
@@ -84,7 +62,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'voctoconf.wsgi.application'
 
-
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
@@ -108,18 +85,17 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'en-us'
 LANGUAGES = (
     ('en', 'English'),
     ('de', 'Deutsch'),
 )
 
 TIME_ZONE = 'Europe/Berlin'
-
+DATE_FORMAT = 'd.m.Y'
+DATETIME_FORMAT = 'd.m.Y H:i:s'
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 ASGI_APPLICATION = 'voctoconf.routing.application'
@@ -131,19 +107,3 @@ CHANNEL_LAYERS = {
         },
     },
 }
-
-try:
-    from .local_settings import *
-except:
-    print("#############")
-    print("## WARNING ##")
-    print("#############")
-    print("")
-    print("NO LOCAL CONFIGURATION FOUND")
-    print("USING DEV DEFAULTS")
-    print("DONT RUN THIS ON THE INTERWEBZ")
-    print("")
-
-if not DEBUG and SECRET_KEY == DEFAULT_SECRET_KEY:
-    print("LOL NOPE")
-    sys.exit(1)

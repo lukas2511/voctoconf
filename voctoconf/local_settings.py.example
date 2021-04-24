@@ -1,0 +1,33 @@
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# defaults
+DEFAULT_SECRET_KEY = 'lolinsecure1337lolinsecure1337lolinsecure1337lolinsecure1337lolinsecure1337lolinsecure1337lolinsecure1337lolinsecure1337lolinsecure1337lolinsecure1337'
+SECRET_KEY = DEFAULT_SECRET_KEY
+
+DEBUG = True
+PAGE_LIVE = True
+
+DOMAIN = "localhost"
+ALLOWED_HOSTS = ["*"]
+
+BBB_SECRETS_DIR = os.path.join(BASE_DIR, "_bbb_secrets")
+STATIC_ROOT = os.path.join(BASE_DIR, "_static")
+MEDIA_ROOT = os.path.join(BASE_DIR, "_media")
+
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
+MEDIA_URL = '/media/'
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, '_db.sqlite3'),
+    }
+}
+
+LANGUAGE_CODE = 'en'
