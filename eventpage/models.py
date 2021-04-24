@@ -13,7 +13,7 @@ class Track(models.Model):
 
 class Announcement(models.Model):
     ident = models.CharField('Identification (visible to admin only)', blank=False, null=False, max_length=250)
-    html = models.TextField(blank=False, null=False)
+    markdown = models.TextField(blank=False, null=False)
     hide = models.BooleanField(default=False)
 
     def __str__(self):

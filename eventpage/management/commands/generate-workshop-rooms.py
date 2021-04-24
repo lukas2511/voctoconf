@@ -3,9 +3,6 @@ from eventpage.models import Event
 import bbb.models
 
 import random
-import requests
-import json
-import dateutil.parser
 
 class Command(BaseCommand):
     help = 'Generate/Update BBB rooms for workshops'
