@@ -1,0 +1,66 @@
+{% load macros %}
+
+{% macro user_actions target moderator %}
+    <a href="#" class="fa fa-comment-alt small" data-chat-action="whisper" data-chat-name></a>
+    {% if moderator %}<a href="#" class="fa fa-ban small" data-chat-action="ban" data-chat-name></a>{% endif %}
+{% endmacro %}
+
+{% macro time_display %}
+  <span class="d-none d-sm-inline small text-muted" data-chat-time></span>
+{% endmacro %}
+
+{% macro templates moderator %}
+<template id="chat_message">
+  <div class="chat-message w-100">
+    <div class="chat-message-inner w-100">
+      {% usemacro time_display date %}
+      <span>
+        <span data-chat-sender></span>
+        {% usemacro user_actions moderator %}
+        : 
+      </span>
+      <span data-chat-content></span>
+    </div>
+  </div>
+</template>
+<template id="whisper_message_sent">
+  <div class="chat-message chat-message-whisper chat-message-whisper-sent w-100">
+    <div class="chat-message-inner w-100">
+      {% usemacro time_display date %}
+      <span>
+        <span data-chat-recipient></span>
+        {% usemacro user_actions moderator %}
+        <i class="ml-auto fa fa-caret-left"></i>
+        : 
+      </span>
+      <span data-chat-content></span>
+    </div>
+  </div>
+</template>
+<template id="whisper_message_received">
+  <div class="chat-message chat-message-whisper chat-message-whisper-received w-100">
+    <div class="chat-message-inner w-100">
+      {% usemacro time_display date %}
+      <span>
+        <span data-chat-sender></span>
+        {% usemacro user_actions moderator %}
+        <i class="ml-auto fa fa-caret-right"></i>
+        : 
+      </span>
+      <span data-chat-content></span>
+    </div>
+  </div>
+</template>
+<template id="system_message">
+  <div class="chat-message chat-message-system">
+    <div class="chat-message-inner w-100">
+      {% usemacro time_display %}
+      <span>
+        <span data-chat-sender></span>
+        : 
+      </span>
+      <span data-chat-content></span>
+    </div>
+  </div>
+</template>
+{% endmacro %}

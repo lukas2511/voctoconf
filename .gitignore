@@ -2,3 +2,5 @@ voctoconf/local_settings.py
 /_*
 /sync.sh
 *.pyc
+/.vscode
+__pycache__

@@ -63,4 +63,6 @@ We might implement this stuff at some point, or we might not. PRs welecome ;)
 * Update current events, workshops, user count automatically
 * announcements using markdown
 * cleanup event overview lectures section to allow for none BBB lectures
+* proper approach to translations
+* no hardcoded froscon stuff
 * ...

@@ -1,23 +1,22 @@
-from django.core.management.base import BaseCommand, CommandError
+from chat.consumers import ChatConsumer
 from chat.models import Message
-import requests
-import json
-import dateutil.parser
-import traceback
+from django.core.management.base import BaseCommand
+
 
 class Command(BaseCommand):
     help = 'Send chat message'
 
     def add_arguments(self, parser):
-        parser.add_argument('room', type=str)
-        parser.add_argument('from', type=str)
+        parser.add_argument('-r','--room','--roomname',type=str, required=True)
+        parser.add_argument('-f','--from', type=str, required=True)
+        parser.add_argument('-t','--to', type=str)
+        parser.add_argument('-T','--type', type=str, default='chat_message')
         parser.add_argument('text', type=str)
 
     def handle(self, *args, **options):
         if options['room'] and options['from'] and options['text']:
-            msg = Message()
-            msg.room = options['room']
-            msg.sender = options['from']
-            msg.content = options['text']
-            msg.save()
+            msg = Message(room_name=options['room'],sender=options['from'],recipient=options['to'],type=options['type'],content=options['text'])
+            ChatConsumer.send_message(msg)
+            if not options['to']:
+                msg.save()
 
