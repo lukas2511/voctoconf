@@ -8,11 +8,14 @@ import urllib.parse
 import hashlib
 import requests
 import xmltodict
-import traceback
 import random
 import json
 from django.conf import settings
+from django.dispatch import Signal
 from helpers.models import lock
+
+room_opened : Signal = Signal()
+room_closed : Signal = Signal()
 
 def bbb_apiurl(url, secret, apicall, params):
     urlparams = urllib.parse.urlencode(params)
@@ -242,6 +245,7 @@ class Room(models.Model):
             post_data += '</modules>'
             print(post_data)
 
+        room_opened.send_robust(Room,self)
         return bbb_apicall(self.server.url, self.server.get_secret(), "create", params, post_data)
 
 class RoomStats(models.Model):
