@@ -1,8 +1,9 @@
+{% load gfm %}
 <h1><i class="fa fa-bullhorn"></i> {% if LANGUAGE_CODE == "de" %}Ankündigungen{% else %}Announcements{% endif %}</h1>
 {% for announcement in announcements %}
 <div class="row">
     <div class="col py-1">
-        {{ announcement.html|safe }}
+        {{ announcement.markdown|gfm|safe }}
     </div>
 </div>
 <hr />

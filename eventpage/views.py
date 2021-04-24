@@ -1,6 +1,5 @@
+from django.http.response import Http404
 from django.shortcuts import render
-from authstuff.names import name_required
-from django.http import HttpResponse
 from .models import Room as EventRoom, Event, Announcement, Person
 import partners.models
 from django.utils.timezone import utc

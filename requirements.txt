@@ -1,6 +1,7 @@
 bleach
 channels
 channels_redis
+cmarkgfm
 django
 django-extensions
 django-templates-macros

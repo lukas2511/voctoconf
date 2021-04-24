@@ -18,6 +18,7 @@ Django = "*"
 Markdown = "*"
 Pillow = "*"
 pydantic = "*"
+cmarkgfm = "*"
 
 [dev-packages]
 
