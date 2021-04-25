@@ -1,0 +1,13 @@
+{% include "django/forms/widgets/textarea.html" %}
+{% with 'editor-'|add:widget.attrs.id as editorid %}
+<div id="{{ editorid }}"></div>
+<script type="text/javascript">
+  if (window.django_tuieditor) {
+    django_tuieditor.initEditor("#{{ widget.attrs.id }}", "#{{ editorid }}");
+  } else {
+    window.addEventListener("load", function () {
+      django_tuieditor.initEditor("#{{ widget.attrs.id }}", "#{{ editorid }}");
+    });
+  }
+</script>
+{% endwith %}

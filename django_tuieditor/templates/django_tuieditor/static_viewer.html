@@ -1,0 +1,2 @@
+{% load gfm %}
+<div {% include "django/forms/widgets/attrs.html" %}>{% if widget.value %}{{widget.value|gfm}}{% endif %}</div>
