@@ -1,0 +1,11 @@
+form .aligned .tui-editor-contents ul {
+  padding-left: 24px;
+  margin: 6px 0 10px;
+}
+form .aligned .te-heading-add ul {
+  padding: 0;
+  margin: 0;
+}
+form .aligned .tui-editor-contents h2 {
+  background-color: inherit;
+}

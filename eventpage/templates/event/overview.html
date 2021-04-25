@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load is_bbb_mod %}
+{% load render_widget %}
+
+
+{% block scripts %}
+{% if announcements %}
+{{ announcements_widget|render_widget_media }}
+{% endif %}
+{% endblock %}
 
 {% block content %}
 <main class="container py-4">

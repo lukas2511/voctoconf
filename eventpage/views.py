@@ -1,17 +1,22 @@
-from django.http.response import Http404
-from django.shortcuts import render
-from .models import Room as EventRoom, Event, Announcement, Person
-import partners.models
-from django.utils.timezone import utc
 import datetime
-from django.shortcuts import get_object_or_404
-import bbb.models
 import re
+
+import bbb.models
+import partners.models
+from django.http.response import Http404
+from django.shortcuts import get_object_or_404, render
+from django.utils.timezone import utc
+from django_tuieditor.widgets import StaticMarkdownViewerWidget
+
+from .models import Announcement, Event, Person
+from .models import Room as EventRoom
+
 
 def event_overview(request):
     context = {}
     context['event_rooms'] = EventRoom.objects.filter(hide=False).order_by('order')
     context['partners'] = partners.models.Partner.objects.filter(hide=False, bbb__isnull=False).order_by("order")
+    context['announcements_widget'] = StaticMarkdownViewerWidget()
     context['announcements'] = Announcement.objects.filter(hide=False).order_by('-id')
     context['hangouts'] = bbb.models.Room.objects.filter(hangout_room=True)
 

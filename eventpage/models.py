@@ -2,6 +2,7 @@ from django.db import models
 import bbb.models
 from django.contrib.auth import get_user_model
 from django.utils.timezone import utc
+from django_tuieditor.models import MarkdownField
 import datetime
 import html
 
@@ -13,7 +14,7 @@ class Track(models.Model):
 
 class Announcement(models.Model):
     ident = models.CharField('Identification (visible to admin only)', blank=False, null=False, max_length=250)
-    markdown = models.TextField(blank=False, null=False)
+    markdown = MarkdownField(blank=False, null=False)
     hide = models.BooleanField(default=False)
 
     def __str__(self):

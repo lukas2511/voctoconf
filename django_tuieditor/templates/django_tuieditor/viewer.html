@@ -1,0 +1,25 @@
+{% load gfm %}
+<div {% include "django/forms/widgets/attrs.html" %}>{% if widget.value %}{{widget.value|gfm}}{% endif %}</div>
+{% with 'content-'|add:widget.attrs.id as jsonid %}
+{% with 'viewer-'|add:widget.attrs.id as viewerid %}
+{{ widget.value|json_script:jsonid }}
+<div id="{{ viewerid }}"></div>
+<script type="text/javascript">
+  if (window.django_tuieditor) {
+    django_tuieditor.initViewer(
+      "#{{ viewerid }}",
+      JSON.parse(document.getElementById("{{ jsonid }}").textContent),
+      "#{{ widget.attrs.id }}"
+    );
+  } else {
+    window.addEventListener("load", function () {
+      django_tuieditor.initViewer(
+        "#{{ viewerid }}",
+        JSON.parse(document.getElementById("{{ jsonid }}").textContent),
+        "#{{ widget.attrs.id }}"
+      );
+    });
+  }
+</script>
+{% endwith %}
+{% endwith %}
