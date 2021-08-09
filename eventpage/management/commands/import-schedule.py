@@ -31,7 +31,7 @@ class Command(BaseCommand):
         if not obj.image_modified:
             newimage = person['image']
             if newimage:
-                newimage = "https://programm.froscon.de/2020" + newimage.replace("/original/", "/large/")
+                newimage = "https://programm.froscon.de/2021" + newimage.replace("/original/", "/large/")
 
             if obj.image != newimage:
                 print("Person %d image changed: %s -> %s" % (obj.id, obj.image, newimage))
@@ -90,7 +90,7 @@ class Command(BaseCommand):
         if not obj.logo_modified:
             newlogo = event['logo']
             if newlogo:
-                newlogo = "https://programm.froscon.de/2020" + newlogo
+                newlogo = "https://programm.froscon.de/2021" + newlogo
             if obj.logo != newlogo:
                 print("Event %d logo changed: %s -> %s" % (obj.id, obj.logo, newlogo))
                 obj.logo = newlogo
