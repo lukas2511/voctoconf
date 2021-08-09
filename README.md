@@ -2,7 +2,7 @@
 
 ## About
 
-You have found the conference website we've written for FrOSCon 2020 (Cloud Edition) \o/
+You have found the conference website we've written for FrOSCon 2020/2021 (Cloud Edition) \o/
 
 This code is (at least in some parts) really hacky. It was written over the span of just a few days and last fixes were applied during the conference itself.
 

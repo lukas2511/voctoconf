@@ -245,7 +245,7 @@ class Room(models.Model):
             post_data += '</modules>'
             print(post_data)
 
-        room_opened.send_robust(Room,self)
+        room_opened.send_robust(Room)
         return bbb_apicall(self.server.url, self.server.get_secret(), "create", params, post_data)
 
 class RoomStats(models.Model):
