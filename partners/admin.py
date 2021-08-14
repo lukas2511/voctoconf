@@ -5,7 +5,7 @@ class PartnerAdmin(admin.ModelAdmin):
     autocomplete_fields = ["owner"]
     fieldsets = (
         ('Details', {
-            'fields': ('name', 'slug', 'hide', 'url', 'logo', 'description_de', 'description_en')
+            'fields': ('name', 'slug', 'hide', 'is_project', 'url', 'logo', 'description_de', 'description_en')
         }),
         ('Order override', {
             'fields': ('order', )
