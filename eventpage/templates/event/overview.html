@@ -39,6 +39,10 @@
 	<hr />
 	{% endif %}
 
+	{% if projects %}
+	{% include "event/overview_projects.html" %}
+	{% endif %}
+
 	{% if partners %}
 	{% include "event/overview_partners.html" %}
 	{% endif %}

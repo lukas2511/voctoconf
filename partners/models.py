@@ -38,6 +38,7 @@ class Partner(models.Model):
 
     url = models.URLField(blank=False, null=False)
     logo = models.ImageField(blank=False, null=False, upload_to='partners')
+    is_project = models.BooleanField(default=False, null=False, blank=False)
 
     hide = models.BooleanField(default=False)
 
