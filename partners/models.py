@@ -7,8 +7,9 @@ import bleach
 import markdown
 
 def parse_markdown(text):
-    html = markdown.markdown(text)
+    html = markdown.markdown(text, extensions=['nl2br'])
     allowed_tags = {
+        'br': [],
         'b': [],
         'em': [],
         'i': [],
