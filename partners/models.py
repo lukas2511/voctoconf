@@ -60,6 +60,15 @@ class Partner(models.Model):
         else:
             return "/partner/%s" % self.id
 
+    def has_description_or_room(self):
+        if self.description_de:
+            return True
+        if self.description_en:
+            return True
+        if self.bbb:
+            return True
+        return False
+
     def save(self, *args, **kwargs):
         self.description_de_html = parse_markdown(self.description_de)
         self.description_en_html = parse_markdown(self.description_en)
