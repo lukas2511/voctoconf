@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load staticpage %}
+{% load thumbnail %}
 
 {% block header %}
 <header>
@@ -66,7 +67,9 @@
 		{% for partner in venue_partners %}
 		<figure class="col partner-logo">
 			{% if page_live %}<a href="{{ partner.link }}" title="{{ partner.name }}">{% endif %}
-				<img src="{{ partner.logo.url }}" alt="{{ partner.name }}" />
+      {% thumbnail partner.logo "256x256" as logo %}
+				<img src="{{ logo.url }}" alt="{{ partner.name }}" />
+			{% endthumbnail %}
 			{% if page_live %}</a>{% endif %}
 		</figure>
 		{% endfor %}
@@ -77,7 +80,9 @@
 		{% for partner in venueless_partners %}
 		<figure class="col partner-logo">
 			{% if page_live %}<a href="{{ partner.link }}" title="{{ partner.name }}">{% endif %}
-				<img src="{{ partner.logo.url }}" alt="{{ partner.name }}" />
+      {% thumbnail partner.logo "256x256" as logo %}
+				<img src="{{ logo.url }}" alt="{{ partner.name }}" />
+      {% endthumbnail %}
 			{% if page_live %}</a>{% endif %}
 		</figure>
 		{% endfor %}
