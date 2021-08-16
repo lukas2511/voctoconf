@@ -1,4 +1,5 @@
 {% load is_bbb_mod %}
+{% load thumbnail %}
 
 <div class="d-flex w-100">
     <div>
@@ -16,7 +17,9 @@
     <div class="col-12 col-sm-6 col-md-4 col-lg-3 mx-auto d-flex flex-column align-self-stretch pt-3 px-2">
         <figure class="flex-grow-1 d-flex align-items-center align-self-center partner-logo">
             <a href="{% if not partner.has_description_or_loop %}{{ partner.url }}{% else %}{{ partner.link }}{% endif %}" {% if partner.bbb.get_stats.running %}class="partner-online{% endif %}"  title="{{ partner.name }}">
-                <img src="{{ partner.logo.url }}" alt="{{ partner.name }}">
+              {% thumbnail partner.logo "256x256" as logo %}
+                <img src="{{ logo.url }}" alt="{{ partner.name }}">
+              {% endthumbnail %}
             </a>
         </figure>
         <div>
