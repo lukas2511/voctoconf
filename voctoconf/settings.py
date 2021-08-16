@@ -27,7 +27,8 @@ INSTALLED_APPS = [
     'eventpage',
     'helpers',
     'authstuff',
-    'staticpages'
+    'staticpages',
+    'sorl.thumbnail'
 ]
 
 MIDDLEWARE = [
@@ -108,3 +109,6 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+THUMBNAIL_COLORSPACE = None
+THUMBNAIL_PRESERVE_FORMAT = True

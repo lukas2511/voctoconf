@@ -5,6 +5,7 @@ import urllib.parse
 import html
 import bleach
 import markdown
+from sorl.thumbnail import ImageField
 
 def parse_markdown(text):
     html = markdown.markdown(text, extensions=['nl2br'])
@@ -38,7 +39,7 @@ class Partner(models.Model):
     slug = models.SlugField(max_length=35, blank=True, null=True)
 
     url = models.URLField(blank=False, null=False)
-    logo = models.ImageField(blank=False, null=False, upload_to='partners')
+    logo = ImageField(blank=False, null=False, upload_to='partners')
     is_project = models.BooleanField(default=False, null=False, blank=False)
 
     hide = models.BooleanField(default=False)
