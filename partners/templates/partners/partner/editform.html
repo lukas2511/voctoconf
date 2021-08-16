@@ -2,9 +2,9 @@
 {% if form %}
 
 {% if LANGUAGE_CODE == "de" %}
-<h1>Partner-Beschreibung bearbeiten</h1>
+<h1>{% if partner.is_project %}Projekt{% else %}Partner{% endif %}-Beschreibung bearbeiten</h1>
 {% else %}
-<h1>Change partner description</h1>
+<h1>Change {% if partner.is_project %}project{% else %}partner{% endif %} description</h1>
 {% endif %}
 
 <p>

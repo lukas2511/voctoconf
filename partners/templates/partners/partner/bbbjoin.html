@@ -3,10 +3,18 @@
 
 <div class="row">
 	<div class="col-sm-8 col-12 py-1">
+		{% if partner.is_project %}
+		{% if LANGUAGE_CODE == "de" %}
+		Trete der Videokonferenz des Projekts bei
+		{% else %}
+		Join this project in its video conference
+		{% endif %}
+		{% else %}
 		{% if LANGUAGE_CODE == "de" %}
 		Kontaktiere diesen Partner in einer Videokonferenz
 		{% else %}
 		Contact this partner in a video conference
+		{% endif %}
 		{% endif %}
 	</div>
 	<div class="col-sm-4 col-12 py-1">
