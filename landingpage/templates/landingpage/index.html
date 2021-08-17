@@ -66,7 +66,7 @@
 	<div class="row align-items-center align-content-around text-center mb-4 w-100 venue-partners">
 		{% for partner in venue_partners %}
 		<figure class="col partner-logo">
-			{% if page_live %}<a href="{{ partner.link }}" title="{{ partner.name }}">{% endif %}
+			{% if page_live %}<a href="{% if not partner.has_description_or_loop %}{{ partner.url }}{% else %}{{ partner.link }}{% endif %}" title="{{ partner.name }}">{% endif %}
       {% thumbnail partner.logo "256x256" as logo %}
 				<img src="{{ logo.url }}" alt="{{ partner.name }}" />
 			{% endthumbnail %}
@@ -79,7 +79,7 @@
 	<div class="row align-items-center align-content-around text-center w-100">
 		{% for partner in venueless_partners %}
 		<figure class="col partner-logo">
-			{% if page_live %}<a href="{{ partner.link }}" title="{{ partner.name }}">{% endif %}
+			{% if page_live %}<a href="{% if not partner.has_description_or_loop %}{{ partner.url }}{% else %}{{ partner.link }}{% endif %}" title="{{ partner.name }}">{% endif %}
       {% thumbnail partner.logo "256x256" as logo %}
 				<img src="{{ logo.url }}" alt="{{ partner.name }}" />
       {% endthumbnail %}
