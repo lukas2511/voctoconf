@@ -10,7 +10,7 @@ class RoomAdmin(admin.ModelAdmin):
     ordering = ['server', 'name']
     fieldsets = (
         ('Basics', {'fields': ('id', 'name', 'slug', 'server', 'record')}),
-        ('Visibility', {'fields': ('live', 'hangout_room', )}),
+        ('Visibility', {'fields': ('live', 'hangout_room', 'hangout_order')}),
         ('Joining', {'fields': ('moderators', 'yolomode', 'guest_policy', 'max_participants', 'mute_on_start', 'start_as_guest')}),
         ('Branding', {'fields': ('logo', 'welcome_msg', 'slides')}),
         ('Lockdown', {'fields': ('lock_cams', 'lock_mics', 'lock_private_chat', 'lock_public_chat', 'lock_shared_notes', 'lock_layout')}),

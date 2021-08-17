@@ -19,7 +19,7 @@ def event_overview(request):
     context['projects'] = partners.models.Partner.objects.filter(hide=False,is_project=True).order_by("order")
     context['announcements_widget'] = StaticMarkdownViewerWidget()
     context['announcements'] = Announcement.objects.filter(hide=False).order_by('-id')
-    context['hangouts'] = bbb.models.Room.objects.filter(hangout_room=True)
+    context['hangouts'] = bbb.models.Room.objects.filter(hangout_room=True).order_by('hangout_order')
 
     try:
         context['poctisch'] = bbb.models.Room.objects.get(slug="poctischdummyforstats")
