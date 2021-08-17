@@ -89,6 +89,7 @@ class Room(models.Model):
     attendee_pw = models.CharField(max_length=100, blank=True, null=True)
 
     hangout_room = models.BooleanField(default=False)
+    hangout_order = models.IntegerField(default=9000, null=False, blank=False)
 
     guest_policy = models.CharField("Guest policy", null=False, blank=False, default='ALWAYS_ACCEPT', choices=(('ALWAYS_ACCEPT', 'Always accept'), ('ALWAYS_DENY', 'Always deny'), ('ASK_MODERATOR', 'Ask moderator')), max_length=30)
 
