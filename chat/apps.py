@@ -16,8 +16,8 @@ class ChatConfig(AppConfig):
 
     def ready(self):
         if not self.redis_instance:
-            if not self.redis_host:
-                log.warn('Redis host was not set, defaulting to localhost')
+#            if not self.redis_host:
+#                log.warn('Redis host was not set, defaulting to localhost')
             self.redis_instance = Redis(self.redis_host or 'localhost', self.redis_port)
         else:
             log.debug('Using supplied Redis instance')
