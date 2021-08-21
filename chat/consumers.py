@@ -8,6 +8,7 @@ import channels.layers
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from django.db import connections
+from datetime import datetime
 from pydantic.main import BaseModel
 
 from .models import Ban, Connections, Message, MessageTypes
@@ -74,6 +75,8 @@ class ChatConsumer(WebsocketConsumer):
                 return self.invalid_message()
 
             message: Message = event.payload
+            message.time = datetime.now().isoformat()
+
             if message.room_name != self.room_name or message.sender != self.user_name:
                 return self.invalid_message()
             
