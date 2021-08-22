@@ -7,6 +7,7 @@ from django.http.response import Http404
 from django.shortcuts import get_object_or_404, render
 from django.utils.timezone import utc
 from django_tuieditor.widgets import StaticMarkdownViewerWidget
+from django.db.models import Q
 
 from .models import Announcement, Event, Person
 from .models import Room as EventRoom
@@ -14,7 +15,7 @@ from .models import Room as EventRoom
 
 def event_overview(request):
     context = {}
-    context['event_rooms'] = EventRoom.objects.filter(hide=False).order_by('order')
+    context['event_rooms'] = EventRoom.objects.filter(hide=False).filter(Q(stream__isnull=False) | Q(stream__isnull=False)).order_by('order')
     context['partners'] = partners.models.Partner.objects.filter(hide=False,is_project=False).order_by("order")
     context['projects'] = partners.models.Partner.objects.filter(hide=False,is_project=True).order_by("order")
     context['announcements_widget'] = StaticMarkdownViewerWidget()
