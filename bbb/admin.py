@@ -1,7 +1,10 @@
 from django.contrib import admin
 from .models import Server, Room, RoomStats
 
-admin.site.register(Server)
+class ServerAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'num_rooms')
+
+admin.site.register(Server, ServerAdmin)
 
 class RoomAdmin(admin.ModelAdmin):
     autocomplete_fields = ['moderators']
