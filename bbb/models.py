@@ -42,6 +42,9 @@ class Server(models.Model):
     class Meta:
         verbose_name = 'BigBlueButton Server'
 
+    def num_rooms(self):
+        return Room.objects.filter(server=self).count()
+
     def get_secret(self):
         if os.path.exists(self.get_secretfile()):
             return open(self.get_secretfile(), "r").read()
