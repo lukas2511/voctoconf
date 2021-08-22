@@ -247,7 +247,12 @@ class Room(models.Model):
             post_data += '<document url="%s" filename="default.pdf"/>' % self.slides.url
             post_data += '</module>'
             post_data += '</modules>'
-            print(post_data)
+        else:
+            post_data = '<modules>'
+            post_data += '<module name="presentation">'
+            #post_data += '<document url="%s" filename="default.pdf"/>' % self.slides.url
+            post_data += '</module>'
+            post_data += '</modules>'
 
         room_opened.send_robust(Room)
         return bbb_apicall(self.server.url, self.server.get_secret(), "create", params, post_data)
